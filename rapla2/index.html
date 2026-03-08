@@ -1863,7 +1863,7 @@
   <aside id="sidebar">
     <div class="logo">
       <div class="logo-mark">rapla 2</div>
-      <div class="logo-sub">TINF23BD - DHBW - v2.1.5</div>
+      <div class="logo-sub">TINF23BD - DHBW - v2.2.0</div>
     </div>
 
     <!-- User Section -->
@@ -2017,44 +2017,7 @@
         <div class="modal-title">🔔 Benachrichtigungen</div>
         <button class="modal-close" onclick="closeModal('modalNotifications')">✕</button>
       </div>
-      <div class="modal-body">
-        <div class="notif-item notif-unread">
-          <div class="notif-icon-wrap change">⚠️</div>
-          <div class="notif-content">
-            <div class="notif-text"><strong>Raumänderung:</strong> Interaktive Systeme am 05.03. findet in
-              <strong>LE1-A4.07</strong> statt (zuvor A4.09).
-            </div>
-            <div class="notif-time">Vor 2 Stunden</div>
-          </div>
-        </div>
-        <div class="notif-item notif-unread">
-          <div class="notif-icon-wrap cancel">❌</div>
-          <div class="notif-content">
-            <div class="notif-text"><strong>Ausfall:</strong> Cloud Computing am 20.03. fällt aus.</div>
-            <div class="notif-time">Vor 5 Stunden</div>
-          </div>
-        </div>
-        <div class="notif-item">
-          <div class="notif-icon-wrap info">ℹ️</div>
-          <div class="notif-content">
-            <div class="notif-text"><strong>Neuer Termin:</strong> Prüfungsvorbereitung am 31.03. wurde hinzugefügt.
-            </div>
-            <div class="notif-time">Gestern</div>
-          </div>
-        </div>
-        <div class="notif-item">
-          <div class="notif-icon-wrap change">⚠️</div>
-          <div class="notif-content">
-            <div class="notif-text"><strong>Zeitänderung:</strong> Verteilte Systeme am 10.03. jetzt 10:00 – 14:00
-              (zuvor 9:00 – 13:00).</div>
-            <div class="notif-time">Vor 2 Tagen</div>
-          </div>
-        </div>
-        <div class="modal-divider"></div>
-        <div style="text-align:center;">
-          <button class="modal-btn modal-btn-secondary" onclick="closeModal('modalNotifications')">Alle als gelesen
-            markieren</button>
-        </div>
+      <div class="modal-body" id="notifModalBody">
       </div>
     </div>
   </div>
@@ -2227,36 +2190,29 @@
 
     // Events
     const events = [
+      { date: '2026-03-02', start: 8 * 60 + 30, end: 12 * 60, title: 'Datenbanken II', room: 'LE1-A4.09', group: 'STG-TINF23BD', type: 'green', tag: 'Vorlesung' },
       { date: '2026-03-02', start: 13 * 60, end: 15 * 60 + 45, title: 'Wahlfächer: Advanced UX', room: 'LE1-C3.08', group: 'STG-TINF23BD', type: 'amber', tag: 'Wahlfach' },
       { date: '2026-03-03', start: 8 * 60 + 45, end: 12 * 60, title: 'Verteilte Systeme', room: 'LE1-A4.09', group: 'STG-TINF23BD', type: 'green', tag: 'Vorlesung' },
       { date: '2026-03-03', start: 13 * 60, end: 16 * 60 + 15, title: 'Grundlagen der KI', room: 'LE1-A4.09', group: 'STG-TINF23BD', type: 'green', tag: 'Vorlesung' },
-      { date: '2026-03-04', start: 9 * 60, end: 12 * 60, title: 'Integrationsseminar Digitalisierung', room: 'Online (Zoom)', group: 'STG-TINF23BD / 23A', type: 'purple', tag: 'Seminar', online: true },
-      { date: '2026-03-04', start: 12 * 60 + 45, end: 16 * 60, title: 'IT-Sicherheit', room: 'Online (Webex)', group: 'STG-TINF23BD', type: 'blue', tag: 'Vorlesung', online: true },
+      { date: '2026-03-04', start: 9 * 60, end: 12 * 60, title: 'Integrationsseminar Digitalisierung', room: 'Zoom', group: 'STG-TINF23BD / 23A', type: 'purple', tag: 'Seminar', online: true },
+      { date: '2026-03-04', start: 12 * 60 + 45, end: 16 * 60, title: 'IT-Sicherheit', room: 'Webex', group: 'STG-TINF23BD', type: 'blue', tag: 'Vorlesung', online: true },
       { date: '2026-03-05', start: 10 * 60, end: 13 * 60, title: 'Datenbanken II', room: 'LE1-A4.09', group: 'STG-TINF23BD', type: 'green', tag: 'Vorlesung' },
-      { date: '2026-03-05', start: 14 * 60, end: 17 * 60 + 15, title: 'Interaktive Systeme', room: 'LE1-A4.07', group: 'STG-TINF23BD', type: 'green', tag: 'Vorlesung' },
+      { date: '2026-03-05', start: 14 * 60, end: 17 * 60 + 15, title: 'Interaktive Systeme', room: 'LE1-A4.07', group: 'STG-TINF23BD', type: 'green', tag: 'Vorlesung', notif: { type: 'change', icon: '⚠️', badge: 'Raumänderung', text: 'Raumänderung: Jetzt in LE1-A4.07 (zuvor A4.09)', time: 'Vor 2 Stunden', unread: true } },
       { date: '2026-03-06', start: 8 * 60 + 45, end: 15 * 60 + 15, title: 'Interaktive Systeme (Projekt)', room: 'LE1-A4.09', group: 'STG-TINF23BD', type: 'green', tag: 'Vorlesung' },
       { date: '2026-03-09', start: 9 * 60, end: 12 * 60, title: 'Software Engineering II', room: 'LE1-A4.12', group: 'STG-TINF23BD', type: 'green', tag: 'Vorlesung' },
-      { date: '2026-03-10', start: 10 * 60, end: 14 * 60, title: 'Verteilte Systeme', room: 'LE1-A4.09', group: 'STG-TINF23BD', type: 'green', tag: 'Vorlesung' },
+      { date: '2026-03-10', start: 10 * 60, end: 14 * 60, title: 'Verteilte Systeme', room: 'LE1-A4.09', group: 'STG-TINF23BD', type: 'green', tag: 'Vorlesung', notif: { type: 'change', icon: '⚠️', badge: 'Zeitänderung', text: 'Zeitänderung: Jetzt 10:00 – 14:00 (zuvor 9:00 – 13:00)', time: 'Vor 2 Tagen', unread: false } },
       { date: '2026-03-12', start: 13 * 60, end: 16 * 60, title: 'IT-Recht', room: 'Online', group: 'STG-TINF23BD', type: 'blue', tag: 'Vorlesung', online: true },
       { date: '2026-03-16', start: 9 * 60, end: 15 * 60, title: 'Hackathon Vorbereitung', room: 'LE1-A4.07', group: 'STG-TINF23BD', type: 'purple', tag: 'Seminar' },
       { date: '2026-03-18', start: 14 * 60, end: 17 * 60, title: 'Machine Learning Basics', room: 'LE1-A4.11', group: 'STG-TINF23BD', type: 'green', tag: 'Vorlesung' },
-      { date: '2026-03-20', start: 10 * 60, end: 12 * 60, title: 'Cloud Computing', room: 'Online', group: 'STG-TINF23BD', type: 'blue', tag: 'Vorlesung', online: true },
+      { date: '2026-03-20', start: 10 * 60, end: 12 * 60, title: 'Cloud Computing', room: 'Online', group: 'STG-TINF23BD', type: 'blue', tag: 'Vorlesung', online: true, notif: { type: 'cancel', icon: '❌', badge: 'Ausfall', text: 'Diese Veranstaltung fällt aus', time: 'Vor 5 Stunden', unread: true } },
       { date: '2026-03-24', start: 8 * 60 + 45, end: 12 * 60, title: 'Datenbanken II', room: 'LE1-A4.09', group: 'STG-TINF23BD', type: 'green', tag: 'Vorlesung' },
       { date: '2026-03-25', start: 13 * 60, end: 18 * 60, title: 'Wahlfächer: Game Dev', room: '—', group: 'STG-TINF23BD', type: 'amber', tag: 'Wahlfach' },
       { date: '2026-03-27', start: 9 * 60, end: 14 * 60, title: 'Interaktive Systeme', room: 'LE1-A4.07', group: 'STG-TINF23BD', type: 'green', tag: 'Vorlesung' },
-      { date: '2026-03-31', start: 10 * 60, end: 15 * 60, title: 'Prüfungsvorbereitung', room: 'LE1-A4.09', group: 'STG-TINF23BD', type: 'purple', tag: 'Seminar' }
-    ];
-
-    // Notifications linked to events
-    const notifications = [
-      { date: '2026-03-05', titleMatch: 'Interaktive Systeme', type: 'change', icon: '⚠️', badge: 'Raumänderung', text: 'Raumänderung: Jetzt in LE1-A4.07 (zuvor A4.09)', time: 'Vor 2 Stunden' },
-      { date: '2026-03-20', titleMatch: 'Cloud Computing', type: 'cancel', icon: '❌', badge: 'Ausfall', text: 'Diese Veranstaltung fällt aus', time: 'Vor 5 Stunden' },
-      { date: '2026-03-31', titleMatch: 'Prüfungsvorbereitung', type: 'info', icon: 'ℹ️', badge: 'Neu', text: 'Neuer Termin: Wurde kürzlich hinzugefügt', time: 'Gestern' },
-      { date: '2026-03-10', titleMatch: 'Verteilte Systeme', type: 'change', icon: '⚠️', badge: 'Zeitänderung', text: 'Zeitänderung: Jetzt 10:00 - 14:00 (zuvor 9:00 - 13:00)', time: 'Vor 2 Tagen' }
+      { date: '2026-03-31', start: 10 * 60, end: 15 * 60, title: 'Prüfungsvorbereitung', room: 'LE1-A4.09', group: 'STG-TINF23BD', type: 'purple', tag: 'Seminar', notif: { type: 'info', icon: 'ℹ️', badge: 'Neu', text: 'Neuer Termin: Wurde kürzlich hinzugefügt', time: 'Gestern', unread: false } }
     ];
 
     function getEventNotification(ev) {
-      return notifications.find(n => n.date === ev.date && ev.title.includes(n.titleMatch));
+      return ev.notif || null;
     }
 
     // Helpers
@@ -2916,11 +2872,80 @@
       }, 2500);
     }
 
+    // Notification Modal dynamisch befüllen
+    function renderNotifications() {
+      const container = document.getElementById('notifModalBody');
+      const notifEvents = events.filter(ev => ev.notif);
+      // Sort: unread first, then by date descending
+      notifEvents.sort((a, b) => {
+        if (a.notif.unread && !b.notif.unread) return -1;
+        if (!a.notif.unread && b.notif.unread) return 1;
+        return b.date.localeCompare(a.date);
+      });
+
+      if (notifEvents.length === 0) {
+        container.innerHTML = '<p style="text-align:center;color:var(--text-muted);">Keine Benachrichtigungen vorhanden.</p>';
+        return;
+      }
+
+      let html = '';
+      notifEvents.forEach(ev => {
+        const n = ev.notif;
+        const iconClass = n.type === 'cancel' ? 'cancel' : (n.type === 'info' ? 'info' : 'change');
+        const dateParts = ev.date.split('-');
+        const dateShort = dateParts[2] + '.' + dateParts[1] + '.';
+
+        let notifText = '';
+        if (n.type === 'cancel') {
+          notifText = `<strong>Ausfall:</strong> ${ev.title} am ${dateShort} fällt aus.`;
+        } else if (n.type === 'info') {
+          notifText = `<strong>Neuer Termin:</strong> ${ev.title} am ${dateShort} wurde hinzugefügt.`;
+        } else {
+          notifText = `<strong>${n.badge}:</strong> ${ev.title} am ${dateShort} – ${n.text.replace(n.badge + ': ', '')}`;
+        }
+
+        html += `<div class="notif-item${n.unread ? ' notif-unread' : ''}" style="cursor:pointer;" onclick="closeModal('modalNotifications'); openEventFromNotif('${ev.date}', '${ev.title.replace(/'/g, "\\'")}')">\n`;
+        html += `  <div class="notif-icon-wrap ${iconClass}">${n.icon}</div>\n`;
+        html += `  <div class="notif-content">\n`;
+        html += `    <div class="notif-text">${notifText}</div>\n`;
+        html += `    <div class="notif-time">${n.time}</div>\n`;
+        html += `  </div>\n`;
+        html += `</div>\n`;
+      });
+
+      html += '<div class="modal-divider"></div>';
+      html += '<div style="text-align:center;">';
+      html += '<button class="modal-btn modal-btn-secondary" onclick="markAllRead()">Alle als gelesen markieren</button>';
+      html += '</div>';
+
+      container.innerHTML = html;
+    }
+
+    function openEventFromNotif(date, title) {
+      const ev = events.find(e => e.date === date && e.title === title);
+      if (ev) openEventDetail(ev);
+    }
+
+    function markAllRead() {
+      events.forEach(ev => { if (ev.notif) ev.notif.unread = false; });
+      updateNotifBadge();
+      renderNotifications();
+      showToast('✅ Alle Benachrichtigungen als gelesen markiert');
+    }
+
+    function updateNotifBadge() {
+      const hasUnread = events.some(ev => ev.notif && ev.notif.unread);
+      const badge = document.querySelector('.topbar-notif-badge');
+      badge.style.display = hasUnread ? '' : 'none';
+      const sidebarDot = document.querySelector('.notif-dot');
+      if (sidebarDot) sidebarDot.style.display = hasUnread ? '' : 'none';
+    }
+
     // Modal Buttons
     document.getElementById('userAvatarBtn').addEventListener('click', () => openModal('modalLogin'));
     document.getElementById('userInfoBtn').addEventListener('click', () => openModal('modalLogin'));
     document.getElementById('btnSettings').addEventListener('click', () => openModal('modalSettings'));
-    document.getElementById('topbarNotifBtn').addEventListener('click', () => openModal('modalNotifications'));
+    document.getElementById('topbarNotifBtn').addEventListener('click', () => { renderNotifications(); openModal('modalNotifications'); });
     document.getElementById('btnNewEntry').addEventListener('click', () => openModal('modalNewEntry'));
 
     // Theme toggle
@@ -2958,6 +2983,7 @@
     renderWeekView();
     renderMiniCal();
     updateHeader();
+    updateNotifBadge();
 
   </script>
 </body>
