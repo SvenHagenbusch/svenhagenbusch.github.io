@@ -890,6 +890,86 @@
       background: rgba(255, 255, 255, 0.1);
     }
 
+    /* Event Notification Badge */
+    .event-notif-badge {
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--amber);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: var(--radius-pill);
+      z-index: 3;
+      box-shadow: 0 2px 6px rgba(125, 87, 0, 0.35);
+      animation: notifPulse 2s ease-in-out infinite;
+      line-height: 1.3;
+      letter-spacing: 0.02em;
+    }
+
+    .event-notif-badge.cancel {
+      background: #E13D3D;
+      box-shadow: 0 2px 6px rgba(225, 61, 61, 0.35);
+    }
+
+    .event-notif-badge.info {
+      background: var(--blue);
+      box-shadow: 0 2px 6px rgba(0, 99, 153, 0.35);
+    }
+
+    @keyframes notifPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+
+    .event-notif-banner {
+      background: var(--amber-bg);
+      border: 1px solid var(--amber-border);
+      border-radius: 8px;
+      padding: 6px 10px;
+      margin-top: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--amber);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      line-height: 1.3;
+    }
+
+    .event-notif-banner.cancel {
+      background: rgba(225, 61, 61, 0.08);
+      border-color: rgba(225, 61, 61, 0.3);
+      color: #E13D3D;
+    }
+
+    .event-notif-banner.info {
+      background: var(--blue-bg);
+      border-color: var(--blue-border);
+      color: var(--blue);
+    }
+
+    .event.has-cancel {
+      opacity: 0.5;
+      text-decoration: line-through;
+      filter: grayscale(0.4);
+    }
+
+    .event.has-cancel .event-title {
+      text-decoration: line-through;
+    }
+
+    .month-event-notif {
+      display: inline-flex;
+      font-size: 10px;
+      margin-left: 2px;
+      vertical-align: middle;
+    }
+
     /* Monatsansicht */
     .month-wrapper {
       flex: 1;
@@ -1776,7 +1856,7 @@
   <aside id="sidebar">
     <div class="logo">
       <div class="logo-mark">rapla 2</div>
-      <div class="logo-sub">TINF23BD - DHBW</div>
+      <div class="logo-sub">TINF23BD - DHBW - v2.1.0</div>
     </div>
 
     <!-- User Section -->
@@ -2140,25 +2220,37 @@
 
     // Events
     const events = [
-      { date: '2026-03-02', start: 13 * 60, end: 15 * 60 + 45, title: 'Wahlfächer: Advanced UX', room: '—', group: 'STG-TINF23BD', type: 'amber', tag: 'Wahlfach' },
+      { date: '2026-03-02', start: 13 * 60, end: 15 * 60 + 45, title: 'Wahlfächer: Advanced UX', room: 'LE1-C3.08', group: 'STG-TINF23BD', type: 'amber', tag: 'Wahlfach' },
       { date: '2026-03-03', start: 8 * 60 + 45, end: 12 * 60, title: 'Verteilte Systeme', room: 'LE1-A4.09', group: 'STG-TINF23BD', type: 'green', tag: 'Vorlesung' },
       { date: '2026-03-03', start: 13 * 60, end: 16 * 60 + 15, title: 'Grundlagen der KI', room: 'LE1-A4.09', group: 'STG-TINF23BD', type: 'green', tag: 'Vorlesung' },
       { date: '2026-03-04', start: 9 * 60, end: 12 * 60, title: 'Integrationsseminar Digitalisierung', room: 'Online (Zoom)', group: 'STG-TINF23BD / 23A', type: 'purple', tag: 'Seminar', online: true },
-      { date: '2026-03-04', start: 12 * 60 + 45, end: 16 * 60, title: 'IT-Sicherheit', room: 'Online (Webex)', group: 'STG-TINF23BD', type: 'blue', tag: 'Online', online: true },
+      { date: '2026-03-04', start: 12 * 60 + 45, end: 16 * 60, title: 'IT-Sicherheit', room: 'Online (Webex)', group: 'STG-TINF23BD', type: 'blue', tag: 'Vorlesung', online: true },
       { date: '2026-03-05', start: 10 * 60, end: 13 * 60, title: 'Datenbanken II', room: 'LE1-A4.09', group: 'STG-TINF23BD', type: 'green', tag: 'Vorlesung' },
       { date: '2026-03-05', start: 14 * 60, end: 17 * 60 + 15, title: 'Interaktive Systeme', room: 'LE1-A4.07', group: 'STG-TINF23BD', type: 'green', tag: 'Vorlesung' },
       { date: '2026-03-06', start: 8 * 60 + 45, end: 15 * 60 + 15, title: 'Interaktive Systeme (Projekt)', room: 'LE1-A4.09', group: 'STG-TINF23BD', type: 'green', tag: 'Vorlesung' },
       { date: '2026-03-09', start: 9 * 60, end: 12 * 60, title: 'Software Engineering II', room: 'LE1-A4.12', group: 'STG-TINF23BD', type: 'green', tag: 'Vorlesung' },
       { date: '2026-03-10', start: 10 * 60, end: 14 * 60, title: 'Verteilte Systeme', room: 'LE1-A4.09', group: 'STG-TINF23BD', type: 'green', tag: 'Vorlesung' },
-      { date: '2026-03-12', start: 13 * 60, end: 16 * 60, title: 'IT-Recht', room: 'Online', group: 'STG-TINF23BD', type: 'blue', tag: 'Online', online: true },
+      { date: '2026-03-12', start: 13 * 60, end: 16 * 60, title: 'IT-Recht', room: 'Online', group: 'STG-TINF23BD', type: 'blue', tag: 'Vorlesung', online: true },
       { date: '2026-03-16', start: 9 * 60, end: 15 * 60, title: 'Hackathon Vorbereitung', room: 'LE1-A4.07', group: 'STG-TINF23BD', type: 'purple', tag: 'Seminar' },
       { date: '2026-03-18', start: 14 * 60, end: 17 * 60, title: 'Machine Learning Basics', room: 'LE1-A4.11', group: 'STG-TINF23BD', type: 'green', tag: 'Vorlesung' },
-      { date: '2026-03-20', start: 10 * 60, end: 12 * 60, title: 'Cloud Computing', room: 'Online', group: 'STG-TINF23BD', type: 'blue', tag: 'Online', online: true },
+      { date: '2026-03-20', start: 10 * 60, end: 12 * 60, title: 'Cloud Computing', room: 'Online', group: 'STG-TINF23BD', type: 'blue', tag: 'Vorlesung', online: true },
       { date: '2026-03-24', start: 8 * 60 + 45, end: 12 * 60, title: 'Datenbanken II', room: 'LE1-A4.09', group: 'STG-TINF23BD', type: 'green', tag: 'Vorlesung' },
       { date: '2026-03-25', start: 13 * 60, end: 18 * 60, title: 'Wahlfächer: Game Dev', room: '—', group: 'STG-TINF23BD', type: 'amber', tag: 'Wahlfach' },
       { date: '2026-03-27', start: 9 * 60, end: 14 * 60, title: 'Interaktive Systeme', room: 'LE1-A4.07', group: 'STG-TINF23BD', type: 'green', tag: 'Vorlesung' },
       { date: '2026-03-31', start: 10 * 60, end: 15 * 60, title: 'Prüfungsvorbereitung', room: 'LE1-A4.09', group: 'STG-TINF23BD', type: 'purple', tag: 'Seminar' }
     ];
+
+    // Notifications linked to events
+    const notifications = [
+      { date: '2026-03-05', titleMatch: 'Interaktive Systeme', type: 'change', icon: '⚠️', badge: 'Raumänderung', text: 'Raumänderung: Jetzt in LE1-A4.07 (zuvor A4.09)', time: 'Vor 2 Stunden' },
+      { date: '2026-03-20', titleMatch: 'Cloud Computing', type: 'cancel', icon: '❌', badge: 'Ausfall', text: 'Diese Veranstaltung fällt aus', time: 'Vor 5 Stunden' },
+      { date: '2026-03-31', titleMatch: 'Prüfungsvorbereitung', type: 'info', icon: 'ℹ️', badge: 'Neu', text: 'Neuer Termin: Wurde kürzlich hinzugefügt', time: 'Gestern' },
+      { date: '2026-03-10', titleMatch: 'Verteilte Systeme', type: 'change', icon: '⚠️', badge: 'Zeitänderung', text: 'Zeitänderung: Jetzt 10:00 - 14:00 (zuvor 9:00 - 13:00)', time: 'Vor 2 Tagen' }
+    ];
+
+    function getEventNotification(ev) {
+      return notifications.find(n => n.date === ev.date && ev.title.includes(n.titleMatch));
+    }
 
     // Helpers
     function timeLabel(mins) {
@@ -2236,7 +2328,23 @@
       el.style.height = height + 'px';
       const showMeta = height > 60;
       const showTime = height > 35;
+
+      const notif = getEventNotification(ev);
+      const isCancel = notif && notif.type === 'cancel';
+      if (isCancel) el.classList.add('has-cancel');
+
+      let notifBadgeHTML = '';
+      let notifBannerHTML = '';
+      if (notif) {
+        const badgeClass = notif.type === 'cancel' ? ' cancel' : (notif.type === 'info' ? ' info' : '');
+        notifBadgeHTML = `<div class="event-notif-badge${badgeClass}">${notif.icon} ${notif.badge}</div>`;
+        if (height > 90) {
+          notifBannerHTML = `<div class="event-notif-banner${badgeClass}">${notif.icon} ${notif.text}</div>`;
+        }
+      }
+
       el.innerHTML = `
+    ${notifBadgeHTML}
     ${showTime ? `<div class="event-time">${timeLabel(ev.start)} – ${timeLabel(ev.end)}</div>` : ''}
     <div class="event-title">${ev.title}</div>
     ${showMeta ? `<div class="event-meta">
@@ -2244,6 +2352,7 @@
       ${ev.online ? '<span class="online-badge">Online</span>' : ''}
       <span style="opacity: 0.8"> ${ev.room}</span>
     </div>` : ''}
+    ${notifBannerHTML}
   `;
       el.addEventListener('mouseenter', (e) => showTooltip(e, ev));
       el.addEventListener('mousemove', moveTooltip);
@@ -2438,7 +2547,14 @@
         dayEvs.forEach(ev => {
           const evEl = document.createElement('div');
           evEl.className = `month-event ${ev.type}`;
-          evEl.textContent = `${timeLabel(ev.start)} ${ev.title}`;
+          const notif = getEventNotification(ev);
+          let notifIndicator = '';
+          if (notif) {
+            notifIndicator = `<span class="month-event-notif">${notif.icon}</span>`;
+            if (notif.type === 'cancel') evEl.style.textDecoration = 'line-through';
+            if (notif.type === 'cancel') evEl.style.opacity = '0.5';
+          }
+          evEl.innerHTML = `${timeLabel(ev.start)} ${ev.title} ${notifIndicator}`;
           evEl.addEventListener('mouseenter', (e) => showTooltip(e, ev));
           evEl.addEventListener('mousemove', moveTooltip);
           evEl.addEventListener('mouseleave', hideTooltip);
@@ -2681,7 +2797,25 @@
       const dayName = DOW_NAMES_LONG[evDate.getDay()];
       const dateFormatted = `${dayName}, ${evDate.getDate()}. ${MONTH_NAMES[evDate.getMonth()]} ${evDate.getFullYear()}`;
 
+      const notif = getEventNotification(ev);
+      let notifDetailHTML = '';
+      if (notif) {
+        const notifColor = notif.type === 'cancel' ? '#E13D3D' : (notif.type === 'info' ? 'var(--blue)' : 'var(--amber)');
+        const notifBg = notif.type === 'cancel' ? 'rgba(225,61,61,0.08)' : (notif.type === 'info' ? 'var(--blue-bg)' : 'var(--amber-bg)');
+        const notifBorder = notif.type === 'cancel' ? 'rgba(225,61,61,0.3)' : (notif.type === 'info' ? 'var(--blue-border)' : 'var(--amber-border)');
+        notifDetailHTML = `
+        <div style="background:${notifBg};border:1px solid ${notifBorder};border-radius:12px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px;">
+          <span style="font-size:18px;">${notif.icon}</span>
+          <div>
+            <div style="font-weight:700;font-size:13px;color:${notifColor};">${notif.badge}</div>
+            <div style="font-size:12px;color:${notifColor};opacity:0.85;margin-top:2px;">${notif.text}</div>
+            <div style="font-size:11px;color:var(--text-dim);margin-top:4px;">${notif.time}</div>
+          </div>
+        </div>`;
+      }
+
       body.innerHTML = `
+    ${notifDetailHTML}
     <div class="event-detail-header">
       <div class="event-detail-color ${ev.type}"></div>
       <div>
