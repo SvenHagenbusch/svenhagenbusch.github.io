@@ -922,8 +922,15 @@
     }
 
     @keyframes notifPulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.06); }
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.06);
+      }
     }
 
     .event-notif-banner {
@@ -1856,7 +1863,7 @@
   <aside id="sidebar">
     <div class="logo">
       <div class="logo-mark">rapla 2</div>
-      <div class="logo-sub">TINF23BD - DHBW - v2.1.0</div>
+      <div class="logo-sub">TINF23BD - DHBW - v2.1.5</div>
     </div>
 
     <!-- User Section -->
@@ -2418,15 +2425,6 @@
         col.appendChild(nowLine);
       }
 
-      // Scroll
-      setTimeout(() => {
-        const wrapper = document.getElementById('dayWrapper');
-        if (isToday) {
-          wrapper.scrollTop = ((14 * 60 + 30 - START_HOUR * 60) / 60 * HOUR_PX) - 100;
-        } else {
-          wrapper.scrollTop = 1.5 * HOUR_PX;
-        }
-      }, 50);
     }
 
     // Wochenansicht
@@ -2481,16 +2479,7 @@
         body.appendChild(col);
       });
 
-      // Scroll
-      setTimeout(() => {
-        const wrapper = document.getElementById('calWrapper');
-        const weekHasToday = weekDates.some(d => sameDay(d, TODAY));
-        if (weekHasToday) {
-          wrapper.scrollTop = ((14 * 60 + 30 - START_HOUR * 60) / 60 * HOUR_PX) - 100;
-        } else {
-          wrapper.scrollTop = 1.5 * HOUR_PX;
-        }
-      }, 50);
+
     }
 
     // Monatsansicht
