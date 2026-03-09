@@ -1,3 +1,5 @@
+<!-- LTeX: disabled = true -->
+
 <!DOCTYPE html>
 <html lang="de" data-theme="light">
 
@@ -1878,6 +1880,62 @@
       }
     }
 
+    /* Mobile Bottom Nav */
+    .mobile-bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      z-index: 80;
+      padding: 6px 0;
+      padding-bottom: max(6px, env(safe-area-inset-bottom));
+    }
+
+    .mobile-bottom-nav-inner {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .mobile-nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 6px 16px;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .mobile-nav-item.active {
+      color: var(--green);
+    }
+
+    .mobile-nav-item:active {
+      transform: scale(0.95);
+    }
+
+    .mobile-nav-icon {
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .mobile-nav-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
     @media (max-width: 768px) {
       aside {
         position: fixed;
@@ -1894,19 +1952,53 @@
         display: block;
       }
 
+      .mobile-bottom-nav {
+        display: block;
+      }
+
+      main {
+        padding-bottom: 60px;
+      }
+
       .topbar {
-        padding: 0 16px;
+        padding: 0 12px;
+        gap: 8px;
+        height: 56px;
+      }
+
+      .mobile-menu-btn {
+        font-size: 20px;
+        margin-right: 2px;
+        padding: 2px;
       }
 
       .nav-btn {
-        width: 36px;
-        height: 36px;
+        width: 32px;
+        height: 32px;
         font-size: 14px;
       }
 
       .today-btn {
-        padding: 6px 12px;
-        font-size: 12px;
+        padding: 5px 10px;
+        font-size: 11px;
+      }
+
+      .date-label {
+        font-size: 15px;
+      }
+
+      .topbar-notif,
+      .topbar-theme-toggle {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+      }
+
+      .topbar-notif-badge {
+        top: 4px;
+        right: 4px;
+        width: 8px;
+        height: 8px;
       }
 
       .cal-grid-inner {
@@ -1945,6 +2037,52 @@
       .view-toggle {
         display: none;
       }
+
+      .date-picker-popup {
+        position: fixed;
+        top: auto;
+        bottom: 70px;
+        left: 16px;
+        right: 16px;
+        min-width: unset;
+      }
+
+      .day-head-single {
+        padding: 12px 16px;
+      }
+
+      .day-head-single .day-num {
+        font-size: 28px;
+        width: 48px;
+        height: 48px;
+      }
+
+      .event {
+        padding: 8px 10px;
+      }
+
+      .event-title {
+        font-size: 12px;
+      }
+
+      .event-meta {
+        margin-top: 4px;
+        gap: 4px;
+      }
+
+      .modal {
+        max-width: 96vw;
+        max-height: 90vh;
+        border-radius: 16px;
+      }
+
+      .modal-header {
+        padding: 16px 18px 12px;
+      }
+
+      .modal-title {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
@@ -1957,7 +2095,7 @@
   <aside id="sidebar">
     <div class="logo">
       <div class="logo-mark">rapla 2</div>
-      <div class="logo-sub">TINF23BD - DHBW - v2.2.5</div>
+      <div class="logo-sub">TINF23BD - DHBW - v2.3.0</div>
     </div>
 
     <!-- User Section -->
@@ -2065,6 +2203,24 @@
       </div>
     </div>
   </main>
+
+  <!-- Mobile Bottom Nav -->
+  <nav class="mobile-bottom-nav" id="mobileBottomNav">
+    <div class="mobile-bottom-nav-inner">
+      <button class="mobile-nav-item" data-target="dayView">
+        <span class="mobile-nav-icon">📅</span>
+        <span class="mobile-nav-label">Tag</span>
+      </button>
+      <button class="mobile-nav-item active" data-target="weekView">
+        <span class="mobile-nav-icon">📆</span>
+        <span class="mobile-nav-label">Woche</span>
+      </button>
+      <button class="mobile-nav-item" data-target="monthView">
+        <span class="mobile-nav-icon">🗓️</span>
+        <span class="mobile-nav-label">Monat</span>
+      </button>
+    </div>
+  </nav>
 
   <!-- Tooltip -->
   <div class="tooltip" id="tooltip">
@@ -2653,6 +2809,9 @@
       document.querySelectorAll('.view-btn').forEach(b => {
         b.classList.toggle('active', b.getAttribute('data-target') === target);
       });
+      document.querySelectorAll('.mobile-nav-item').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('data-target') === target);
+      });
 
       // Toggle layers
       document.querySelectorAll('.view-layer').forEach(v => {
@@ -2670,6 +2829,11 @@
 
     // View toggle buttons
     document.querySelectorAll('.view-btn').forEach(btn => {
+      btn.addEventListener('click', () => switchView(btn.getAttribute('data-target')));
+    });
+
+    // Mobile bottom nav
+    document.querySelectorAll('.mobile-nav-item').forEach(btn => {
       btn.addEventListener('click', () => switchView(btn.getAttribute('data-target')));
     });
 
