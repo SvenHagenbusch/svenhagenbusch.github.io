@@ -167,6 +167,100 @@
       background: var(--border);
     }
 
+    .mini-date-picker-btn {
+      background: var(--surface2);
+      border: none;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 14px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .mini-date-picker-btn:hover {
+      background: var(--border);
+    }
+
+    .mini-date-picker-btn svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .date-picker-popup {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      padding: 16px;
+      z-index: 200;
+      min-width: 220px;
+    }
+
+    .date-picker-popup.show {
+      display: block;
+    }
+
+    .date-picker-popup label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .date-picker-popup input[type="date"] {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface2);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .date-picker-popup input[type="date"]:focus {
+      border-color: var(--green);
+    }
+
+    .date-picker-go-btn {
+      margin-top: 10px;
+      width: 100%;
+      padding: 8px;
+      background: var(--green);
+      color: var(--accent-fg);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .date-picker-go-btn:hover {
+      opacity: 0.85;
+    }
+
     .mini-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
@@ -1879,9 +1973,20 @@
     <div class="mini-cal">
       <div class="mini-cal-header">
         <span class="mini-cal-title" id="miniCalTitle"></span>
-        <div style="display:flex; gap: 4px;">
+        <div style="display:flex; gap: 4px; align-items: center; position: relative;">
           <button class="mini-nav" id="miniCalPrev">‹</button>
           <button class="mini-nav" id="miniCalNext">›</button>
+          <button class="mini-date-picker-btn" id="miniDatePickerBtn" title="Datum auswählen">
+            <svg viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="7" />
+              <line x1="16.5" y1="16.5" x2="21" y2="21" />
+            </svg>
+          </button>
+          <div class="date-picker-popup" id="datePickerPopup">
+            <label for="datePickerInput">Datum wählen</label>
+            <input type="date" id="datePickerInput">
+            <button class="date-picker-go-btn" id="datePickerGoBtn">Gehe zu Datum</button>
+          </div>
         </div>
       </div>
       <div class="mini-grid" id="miniCalGrid"></div>
@@ -2711,6 +2816,53 @@
       miniCalMonth++;
       if (miniCalMonth > 11) { miniCalMonth = 0; miniCalYear++; }
       renderMiniCal();
+    });
+
+    // Date picker popup
+    const datePickerBtn = document.getElementById('miniDatePickerBtn');
+    const datePickerPopup = document.getElementById('datePickerPopup');
+    const datePickerInput = document.getElementById('datePickerInput');
+    const datePickerGoBtn = document.getElementById('datePickerGoBtn');
+
+    datePickerBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = datePickerPopup.classList.contains('show');
+      datePickerPopup.classList.toggle('show');
+      if (!isOpen) {
+        const y = currentDate.getFullYear();
+        const m = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const d = String(currentDate.getDate()).padStart(2, '0');
+        datePickerInput.value = `${y}-${m}-${d}`;
+        datePickerInput.focus();
+      }
+    });
+
+    datePickerPopup.addEventListener('click', (e) => e.stopPropagation());
+
+    function goToPickedDate() {
+      const val = datePickerInput.value;
+      if (!val) return;
+      const parts = val.split('-');
+      const picked = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+      if (isNaN(picked.getTime())) return;
+      currentDate = picked;
+      miniCalMonth = picked.getMonth();
+      miniCalYear = picked.getFullYear();
+      if (currentView === 'weekView') renderWeekView();
+      else if (currentView === 'dayView') renderDayView();
+      else renderMonthView();
+      updateHeader();
+      renderMiniCal();
+      datePickerPopup.classList.remove('show');
+    }
+
+    datePickerGoBtn.addEventListener('click', goToPickedDate);
+    datePickerInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') goToPickedDate();
+    });
+
+    document.addEventListener('click', () => {
+      datePickerPopup.classList.remove('show');
     });
 
     // Modals
