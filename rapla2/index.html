@@ -1445,7 +1445,7 @@
     }
 
     .modal-btn-primary {
-      background: var(--green);
+      background: var(--green2);
       color: var(--accent-fg);
       border-color: var(--green);
     }
@@ -1675,42 +1675,110 @@
 
     .color-picker-row {
       display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
     }
 
-    .color-pick {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
+    .cat-sel {
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 700;
       cursor: pointer;
-      border: 3px solid transparent;
+      border: 1px solid transparent;
       transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .color-pick:hover {
-      transform: scale(1.15);
+    .cat-sel:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
     }
 
-    .color-pick.active {
+    .cat-sel.active {
+      transform: scale(1.05);
+      box-shadow: var(--shadow-md);
       border-color: var(--text);
-      transform: scale(1.15);
     }
 
-    .color-pick.c-green {
-      background: var(--green);
+    .cat-sel.c-green { background: var(--green-bg); color: var(--green); border-color: var(--green-border); }
+    .cat-sel.c-green.active { border-color: var(--green); border-width: 2px; }
+    
+    .cat-sel.c-blue { background: var(--blue-bg); color: var(--blue); border-color: var(--blue-border); }
+    .cat-sel.c-blue.active { border-color: var(--blue); border-width: 2px; }
+
+    .cat-sel.c-purple { background: var(--purple-bg); color: var(--purple); border-color: var(--purple-border); }
+    .cat-sel.c-purple.active { border-color: var(--purple); border-width: 2px; }
+
+    .cat-sel.c-amber { background: var(--amber-bg); color: var(--amber); border-color: var(--amber-border); }
+    .cat-sel.c-amber.active { border-color: var(--amber); border-width: 2px; }
+
+    .cat-sel::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 24px;
+      height: 24px;
+      opacity: 0.35;
+      pointer-events: none;
+      border-radius: 0 0 var(--radius-sm) 0;
     }
 
-    .color-pick.c-blue {
-      background: var(--blue);
+    .cat-sel.c-green::after {
+      background: repeating-linear-gradient(45deg, var(--green) 0px, var(--green) 2px, transparent 2px, transparent 5px);
+    }
+    .cat-sel.c-blue::after {
+      background: radial-gradient(circle, var(--blue) 1.5px, transparent 1.5px);
+      background-size: 6px 6px;
+    }
+    .cat-sel.c-purple::after {
+      background: repeating-linear-gradient(45deg, var(--purple) 0px, var(--purple) 1.5px, transparent 1.5px, transparent 5px),
+                  repeating-linear-gradient(-45deg, var(--purple) 0px, var(--purple) 1.5px, transparent 1.5px, transparent 5px);
+    }
+    .cat-sel.c-amber::after {
+      background: repeating-linear-gradient(0deg, var(--amber) 0px, var(--amber) 2px, transparent 2px, transparent 5px);
     }
 
-    .color-pick.c-purple {
-      background: var(--purple);
+    /* Colorblind patterns for legend-dot */
+    .legend-dot {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .legend-dot::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.4;
+      pointer-events: none;
     }
 
-    .color-pick.c-amber {
-      background: var(--amber);
+    [data-theme="dark"] .legend-dot::after {
+      opacity: 0.6;
+    }
+
+    .legend-dot.dot-green::after {
+      background: repeating-linear-gradient(45deg, var(--bg) 0px, var(--bg) 2px, transparent 2px, transparent 5px);
+    }
+
+    .legend-dot.dot-blue::after {
+      background: radial-gradient(circle, var(--bg) 1.5px, transparent 1.5px);
+      background-size: 6px 6px;
+    }
+
+    .legend-dot.dot-purple::after {
+      background: repeating-linear-gradient(45deg, var(--bg) 0px, var(--bg) 1.5px, transparent 1.5px, transparent 5px),
+                  repeating-linear-gradient(-45deg, var(--bg) 0px, var(--bg) 1.5px, transparent 1.5px, transparent 5px);
+    }
+
+    .legend-dot.dot-amber::after {
+      background: repeating-linear-gradient(0deg, var(--bg) 0px, var(--bg) 2px, transparent 2px, transparent 5px);
     }
 
     /* Avatar*/
@@ -2230,7 +2298,7 @@
   <aside id="sidebar">
     <div class="logo">
       <div class="logo-mark">rapla 2</div>
-      <div class="logo-sub">TINF23BD - DHBW - v2.4.2</div>
+      <div class="logo-sub">TINF23BD - DHBW - v2.4.3</div>
     </div>
 
     <!-- User Section -->
@@ -2522,26 +2590,11 @@
         <label class="modal-label">Raum / Ort</label>
         <input class="modal-input" type="text" placeholder="z.B. LE1-A4.09 oder Online (Zoom)">
 
-        <label class="modal-label">Kategorie</label>
         <div class="color-picker-row">
-          <div class="color-pick c-green active" data-color="green" onclick="pickColor(this)" title="Vorlesung"></div>
-          <div class="color-pick c-blue" data-color="blue" onclick="pickColor(this)" title="Online"></div>
-          <div class="color-pick c-purple" data-color="purple" onclick="pickColor(this)" title="Seminar"></div>
-          <div class="color-pick c-amber" data-color="amber" onclick="pickColor(this)" title="Wahlfach"></div>
-        </div>
-        <div class="color-legend-row" style="display:flex; gap:16px; margin-bottom:12px; flex-wrap:wrap;">
-          <span
-            style="display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text-muted); font-weight:500;"><span
-              class="legend-dot dot-green" style="width:8px;height:8px;"></span>Vorlesung</span>
-          <span
-            style="display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text-muted); font-weight:500;"><span
-              class="legend-dot dot-blue" style="width:8px;height:8px;"></span>Online</span>
-          <span
-            style="display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text-muted); font-weight:500;"><span
-              class="legend-dot dot-purple" style="width:8px;height:8px;"></span>Seminar</span>
-          <span
-            style="display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text-muted); font-weight:500;"><span
-              class="legend-dot dot-amber" style="width:8px;height:8px;"></span>Wahlfach</span>
+          <div class="cat-sel c-green active" data-color="green" onclick="pickColor(this)">Vorlesung</div>
+          <div class="cat-sel c-blue" data-color="blue" onclick="pickColor(this)">Online</div>
+          <div class="cat-sel c-purple" data-color="purple" onclick="pickColor(this)">Seminar</div>
+          <div class="cat-sel c-amber" data-color="amber" onclick="pickColor(this)">Wahlfach</div>
         </div>
 
         <label class="modal-label">Notizen (optional)</label>
@@ -3299,7 +3352,7 @@
 
     // Neuer Eintrag
     function pickColor(el) {
-      document.querySelectorAll('.color-pick').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.cat-sel').forEach(c => c.classList.remove('active'));
       el.classList.add('active');
     }
 
