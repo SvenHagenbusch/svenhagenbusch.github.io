@@ -899,6 +899,66 @@
       border-color: var(--amber-border);
     }
 
+    /* Colorblind-friendly corner patterns */
+    .event::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 24px;
+      height: 24px;
+      opacity: 0.35;
+      pointer-events: none;
+      border-radius: 0 0 var(--radius-sm) 0;
+    }
+
+    /* Green/Vorlesung: diagonal lines */
+    .event.green::after {
+      background: repeating-linear-gradient(
+        45deg,
+        var(--green) 0px,
+        var(--green) 2px,
+        transparent 2px,
+        transparent 5px
+      );
+    }
+
+    /* Blue/Online: dots */
+    .event.blue::after {
+      background: radial-gradient(circle, var(--blue) 1.5px, transparent 1.5px);
+      background-size: 6px 6px;
+    }
+
+    /* Purple/Seminar: crosshatch */
+    .event.purple::after {
+      background:
+        repeating-linear-gradient(
+          45deg,
+          var(--purple) 0px,
+          var(--purple) 1.5px,
+          transparent 1.5px,
+          transparent 5px
+        ),
+        repeating-linear-gradient(
+          -45deg,
+          var(--purple) 0px,
+          var(--purple) 1.5px,
+          transparent 1.5px,
+          transparent 5px
+        );
+    }
+
+    /* Amber/Wahlfach: horizontal lines */
+    .event.amber::after {
+      background: repeating-linear-gradient(
+        0deg,
+        var(--amber) 0px,
+        var(--amber) 2px,
+        transparent 2px,
+        transparent 5px
+      );
+    }
+
     .event-time {
       font-size: 11px;
       font-weight: 700;
