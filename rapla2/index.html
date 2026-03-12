@@ -21,6 +21,7 @@
       --text-muted: #535353;
       --text-dim: #74776D;
       --green: #446824;
+      --green2: #6dad39;
       --green-bg: #D7F0B4;
       --green-border: #9CD554;
       --blue: #006399;
@@ -29,9 +30,9 @@
       --purple: #6A4FA3;
       --purple-bg: #E8DDFF;
       --purple-border: #BBA3FF;
-      --amber: #7D5700;
-      --amber-bg: #FFDE9D;
-      --amber-border: #F7B500;
+      --amber: #B5446E;
+      --amber-bg: #FFE0EB;
+      --amber-border: #F06292;
       --today: #E6E8E2;
       --accent: #B3D163;
       --accent-fg: #1A1C18;
@@ -64,9 +65,9 @@
       --purple: #BEA6FF;
       --purple-bg: #291B4D;
       --purple-border: #4A3380;
-      --amber: #FFC95C;
-      --amber-bg: #3D2900;
-      --amber-border: #7D5700;
+      --amber: #F48FB1;
+      --amber-bg: #3D1626;
+      --amber-border: #B5446E;
       --today: #1A1A1E;
       --accent: #B3D163;
       --accent-fg: #111114;
@@ -305,7 +306,7 @@
     }
 
     .mini-day.today {
-      background: var(--green);
+      background: var(--green2);
       color: var(--accent-fg);
       font-weight: 700;
     }
@@ -677,7 +678,7 @@
     }
 
     .day-head.today-col .day-num {
-      background: var(--green);
+      background: var(--green2);
       color: var(--accent-fg);
     }
 
@@ -2557,18 +2558,15 @@
       const isCancel = notif && notif.type === 'cancel';
       if (isCancel) el.classList.add('has-cancel');
 
-      let notifBadgeHTML = '';
       let notifBannerHTML = '';
       if (notif) {
         const badgeClass = notif.type === 'cancel' ? ' cancel' : (notif.type === 'info' ? ' info' : '');
-        notifBadgeHTML = `<div class="event-notif-badge${badgeClass}">${notif.icon} ${notif.badge}</div>`;
         if (height > 90) {
           notifBannerHTML = `<div class="event-notif-banner${badgeClass}">${notif.icon} ${notif.text}</div>`;
         }
       }
 
       el.innerHTML = `
-    ${notifBadgeHTML}
     ${showTime ? `<div class="event-time">${timeLabel(ev.start)} – ${timeLabel(ev.end)}</div>` : ''}
     <div class="event-title">${ev.title}</div>
     ${showMeta ? `<div class="event-meta">
