@@ -900,20 +900,23 @@
       border-color: var(--amber-border);
     }
 
-    /* Colorblind-friendly corner patterns */
     .event::after {
       content: '';
       position: absolute;
       bottom: 0;
       right: 0;
-      width: 24px;
-      height: 24px;
-      opacity: 0.35;
+      width: 44px;
+      height: 44px;
+      opacity: 0.45;
       pointer-events: none;
       border-radius: 0 0 var(--radius-sm) 0;
+      clip-path: polygon(100% 0, 0 100%, 100% 100%);
     }
 
-    /* Green/Vorlesung: diagonal lines */
+    [data-theme="dark"] .event::after {
+      opacity: 0.6;
+    }
+
     .event.green::after {
       background: repeating-linear-gradient(
         45deg,
@@ -924,13 +927,11 @@
       );
     }
 
-    /* Blue/Online: dots */
     .event.blue::after {
       background: radial-gradient(circle, var(--blue) 1.5px, transparent 1.5px);
-      background-size: 6px 6px;
+      background-size: 7px 7px;
     }
 
-    /* Purple/Seminar: crosshatch */
     .event.purple::after {
       background:
         repeating-linear-gradient(
@@ -949,7 +950,6 @@
         );
     }
 
-    /* Amber/Wahlfach: horizontal lines */
     .event.amber::after {
       background: repeating-linear-gradient(
         0deg,
@@ -1723,11 +1723,16 @@
       position: absolute;
       bottom: 0;
       right: 0;
-      width: 24px;
-      height: 24px;
-      opacity: 0.35;
+      width: 32px;
+      height: 32px;
+      opacity: 0.45;
       pointer-events: none;
       border-radius: 0 0 var(--radius-sm) 0;
+      clip-path: polygon(100% 0, 0 100%, 100% 100%);
+    }
+
+    [data-theme="dark"] .cat-sel::after {
+      opacity: 0.6;
     }
 
     .cat-sel.c-green::after {
@@ -1735,7 +1740,7 @@
     }
     .cat-sel.c-blue::after {
       background: radial-gradient(circle, var(--blue) 1.5px, transparent 1.5px);
-      background-size: 6px 6px;
+      background-size: 7px 7px;
     }
     .cat-sel.c-purple::after {
       background: repeating-linear-gradient(45deg, var(--purple) 0px, var(--purple) 1.5px, transparent 1.5px, transparent 5px),
@@ -1745,7 +1750,6 @@
       background: repeating-linear-gradient(0deg, var(--amber) 0px, var(--amber) 2px, transparent 2px, transparent 5px);
     }
 
-    /* Colorblind patterns for legend-dot */
     .legend-dot {
       position: relative;
       overflow: hidden;
@@ -2298,7 +2302,7 @@
   <aside id="sidebar">
     <div class="logo">
       <div class="logo-mark">rapla 2</div>
-      <div class="logo-sub">TINF23BD - DHBW - v2.4.3</div>
+      <div class="logo-sub">TINF23BD - DHBW - v2.6.7</div>
     </div>
 
     <!-- User Section -->
