@@ -287,8 +287,8 @@ const RAW = {
   },
 };
 
-const activeModels = new Set(MODELS.map(m => m.key));
-const activeLangs = new Set(['en', 'de']); // Starte der Übersichtlichkeit halber nur mit 2 Sprachen
+const activeModels = new Set(['gemini']);
+const activeLangs = new Set(LANGS.map(l => l.key));
 
 let hoveredModel = null;
 let hoveredLang = null;
