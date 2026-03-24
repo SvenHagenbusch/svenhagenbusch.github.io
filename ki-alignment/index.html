@@ -103,9 +103,15 @@
   /* --- Tabs System --- */
   .tabs-container {
     display: flex;
-    gap: 24px;
+    align-items: flex-end;
     border-bottom: 2px solid var(--border-color);
     margin-bottom: 8px;
+  }
+
+  .tabs-group {
+    display: flex;
+    gap: 24px;
+    flex: 1;
   }
 
   .tab {
@@ -126,6 +132,36 @@
   .tab.active {
     color: var(--text-primary);
     border-bottom-color: #378ADD;
+  }
+
+  .export-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background: white;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-family: var(--font-sans);
+    transition: all 0.2s ease;
+    margin-bottom: 6px;
+  }
+
+  .export-btn:hover {
+    background: #f1f5f9;
+    color: var(--text-primary);
+    border-color: #cbd5e1;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  .spin {
+    animation: spin 1s linear infinite;
   }
 
   .view-panel {
@@ -299,9 +335,15 @@
   </div>
 
   <div class="tabs-container">
-    <div class="tab active" onclick="switchTab('line', this)">Linien-Diagramm</div>
-    <div class="tab" onclick="switchTab('heatmap', this)">Heatmap</div>
-    <div class="tab" onclick="switchTab('single', this)">Einzelansicht</div>
+    <div class="tabs-group">
+      <div class="tab active" onclick="switchTab('line', this)">Linien-Diagramm</div>
+      <div class="tab" onclick="switchTab('heatmap', this)">Heatmap</div>
+      <div class="tab" onclick="switchTab('single', this)">Einzelansicht</div>
+    </div>
+    <button class="export-btn" onclick="exportImage()" title="Aktuelle Ansicht als PNG speichern">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1M16 12l-4 4-4-4M12 16V4"/></svg>
+      Exportieren
+    </button>
   </div>
 
   <!-- View 1: Linien-Diagramm -->
@@ -338,6 +380,7 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
 function hexToRgba(hex, alpha) {
   let r = parseInt(hex.slice(1, 3), 16),
@@ -454,8 +497,58 @@ function switchTab(viewId, element) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active'));
   
-  element.classList.add('active');
+  if(element) element.classList.add('active');
   document.getElementById('view-' + viewId).classList.add('active');
+}
+
+// Bild Exportieren
+function exportImage() {
+  const activeView = document.querySelector('.view-panel.active');
+  const viewId = activeView.id; // view-line, view-heatmap, view-single
+  const filename = `bias-analyse-${viewId.replace('view-', '')}.png`;
+
+  // UI Feedback: Lade-Spinner anzeigen
+  const btn = document.querySelector('.export-btn');
+  const originalText = btn.innerHTML;
+  btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg> Exportiert...`;
+  
+  // Kurz warten, damit der Browser die UI aktualisieren kann (Spinner)
+  setTimeout(() => {
+    if (viewId === 'view-line' || viewId === 'view-single') {
+      // Bei Chart.js direkt das Canvas exportieren (für schärfere Qualität)
+      const canvas = activeView.querySelector('canvas');
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = canvas.width;
+      tempCanvas.height = canvas.height;
+      const ctx = tempCanvas.getContext('2d');
+      
+      // Chart.js Hintergrund ist transparent, wir füllen ihn weiß
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+      ctx.drawImage(canvas, 0, 0);
+
+      const link = document.createElement('a');
+      link.download = filename;
+      link.href = tempCanvas.toDataURL('image/png', 1.0);
+      link.click();
+      
+      btn.innerHTML = originalText;
+    } else if (viewId === 'view-heatmap') {
+      // Bei der Heatmap (DOM/HTML) nutzen wir html2canvas
+      const heatmapElement = document.getElementById('heatmap-container');
+      html2canvas(heatmapElement, {
+        backgroundColor: '#ffffff',
+        scale: 2 // Hohe Auflösung
+      }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = filename;
+        link.href = canvas.toDataURL('image/png', 1.0);
+        link.click();
+        
+        btn.innerHTML = originalText;
+      });
+    }
+  }, 100);
 }
 
 // Chart.js Datensätze aufbauen
