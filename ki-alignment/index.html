@@ -66,7 +66,6 @@
     gap: 10px;
   }
 
-  /* Allgemeine Button Styles */
   .tog-btn {
     display: inline-flex;
     align-items: center;
@@ -81,9 +80,6 @@
     background: transparent;
   }
 
-  /* Spezifische Model Button Styles werden per JS gesetzt */
-  
-  /* Spezifische Language Button Styles */
   .lang-btn {
     border-color: var(--text-secondary);
     color: var(--text-secondary);
@@ -104,12 +100,146 @@
     font-size: 12px;
   }
 
+  /* --- Tabs System --- */
+  .tabs-container {
+    display: flex;
+    gap: 24px;
+    border-bottom: 2px solid var(--border-color);
+    margin-bottom: 8px;
+  }
+
+  .tab {
+    padding: 8px 4px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+  }
+
+  .tab:hover {
+    color: var(--text-primary);
+  }
+
+  .tab.active {
+    color: var(--text-primary);
+    border-bottom-color: #378ADD;
+  }
+
+  .view-panel {
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .view-panel.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
   .chart-container {
     position: relative;
     width: 100%;
     height: 450px;
   }
 
+  /* --- Heatmap Styles --- */
+  .heatmap-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+
+  .heatmap-row {
+    display: flex;
+    gap: 4px;
+    min-width: max-content;
+  }
+
+  .heatmap-q-label {
+    width: 40px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 13px;
+    cursor: help;
+  }
+
+  .heatmap-cell {
+    flex: 1;
+    min-width: 100px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    transition: transform 0.1s;
+  }
+
+  .heatmap-cell:not(.heatmap-header):hover {
+    transform: scale(1.02);
+    z-index: 2;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .heatmap-header {
+    background: transparent !important;
+    color: var(--text-secondary) !important;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    height: 30px;
+    align-items: flex-end;
+    padding-bottom: 4px;
+  }
+
+  .heatmap-note {
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-align: right;
+    margin-top: 12px;
+    font-style: italic;
+  }
+
+  /* --- Single View Styles --- */
+  .single-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    background: #f8fafc;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+  }
+  
+  .single-controls select {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--text-primary);
+    background: white;
+    flex: 1;
+    max-width: 500px;
+    cursor: pointer;
+  }
+
+  /* --- Fragen-Legende --- */
   .questions-container {
     background: #f8fafc;
     border-radius: 12px;
@@ -168,8 +298,36 @@
     </div>
   </div>
 
-  <div class="chart-container">
-    <canvas id="biasChart"></canvas>
+  <div class="tabs-container">
+    <div class="tab active" onclick="switchTab('line', this)">Linien-Diagramm</div>
+    <div class="tab" onclick="switchTab('heatmap', this)">Heatmap</div>
+    <div class="tab" onclick="switchTab('single', this)">Einzelansicht</div>
+  </div>
+
+  <!-- View 1: Linien-Diagramm -->
+  <div id="view-line" class="view-panel active">
+    <div class="chart-container">
+      <canvas id="biasChart"></canvas>
+    </div>
+  </div>
+
+  <!-- View 2: Heatmap -->
+  <div id="view-heatmap" class="view-panel">
+    <div class="heatmap-wrapper" id="heatmap-container">
+      <!-- Heatmap wird per JS injiziert -->
+    </div>
+    <div class="heatmap-note">* Die Werte in der Heatmap sind die Durchschnitte der aktuell ausgewählten Sprachen.</div>
+  </div>
+
+  <!-- View 3: Einzelansicht -->
+  <div id="view-single" class="view-panel">
+    <div class="single-controls">
+      <label for="q-select" style="font-size: 13px; font-weight: 600; color: var(--text-secondary);">Frage auswählen:</label>
+      <select id="q-select"></select>
+    </div>
+    <div class="chart-container">
+      <canvas id="singleChart"></canvas>
+    </div>
   </div>
 
   <div class="questions-container">
@@ -181,7 +339,6 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-// Hilfsfunktion: Hex zu RGBA für Hover-Transparenz
 function hexToRgba(hex, alpha) {
   let r = parseInt(hex.slice(1, 3), 16),
       g = parseInt(hex.slice(3, 5), 16),
@@ -200,7 +357,6 @@ const MODELS = [
   { key: 'mistr',  label: 'Mistral Dev2',   color: '#888780' },
 ];
 
-// Sprachen wurden mit distinctiven "pointStyles" (Formen) und Symbolen erweitert
 const LANGS = [
   { key: 'en', label: 'Englisch',   dash: [],           pointStyle: 'circle',   symbol: '●' },
   { key: 'de', label: 'Deutsch',    dash: [8,4],        pointStyle: 'triangle', symbol: '▲' },
@@ -293,6 +449,16 @@ const activeLangs = new Set(LANGS.map(l => l.key));
 let hoveredModel = null;
 let hoveredLang = null;
 
+// Tab Umschaltung
+function switchTab(viewId, element) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.view-panel').forEach(v => v.classList.remove('active'));
+  
+  element.classList.add('active');
+  document.getElementById('view-' + viewId).classList.add('active');
+}
+
+// Chart.js Datensätze aufbauen
 function buildDatasets() {
   const ds = [];
   for (const lang of LANGS) {
@@ -301,7 +467,6 @@ function buildDatasets() {
     for (const model of MODELS) {
       if (!activeModels.has(model.key)) continue;
       
-      // Hover Logik: Blende nicht gehoverte Linien aus
       let isDimmed = false;
       if (hoveredModel && hoveredModel !== model.key) isDimmed = true;
       if (hoveredLang && hoveredLang !== lang.key) isDimmed = true;
@@ -315,13 +480,12 @@ function buildDatasets() {
         borderColor: hexToRgba(model.color, alpha),
         backgroundColor: hexToRgba(model.color, alpha),
         borderDash: lang.dash,
-        pointStyle: lang.pointStyle, // Die neue Form zuweisen
+        pointStyle: lang.pointStyle,
         borderWidth: isDimmed ? 1 : 2.5,
-        pointRadius: isDimmed ? 0 : 6,     // Größere Punkte für bessere Erkennbarkeit
+        pointRadius: isDimmed ? 0 : 6,
         pointHoverRadius: 8,
         tension: 0.35,
-        order: -zIndex, // Chart.js zeichnet kleinere `order` Werte weiter oben
-        // Custom properties für den Tooltip
+        order: -zIndex,
         customSymbol: lang.symbol,
         customLang: lang.label,
         customModel: model.label
@@ -338,10 +502,7 @@ const chart = new Chart(ctx, {
   options: {
     responsive: true,
     maintainAspectRatio: false,
-    interaction: { 
-      mode: 'index', 
-      intersect: false 
-    },
+    interaction: { mode: 'index', intersect: false },
     plugins: {
       legend: { display: false },
       tooltip: {
@@ -356,44 +517,188 @@ const chart = new Chart(ctx, {
           title: (items) => `${QLABELS[items[0].dataIndex]}: ${QTEXT[items[0].dataIndex]}`,
           label: (item) => {
             const ds = item.dataset;
-            // Zeigt z.B. "● Gemini 3.1 Pro (Englisch): -6.5"
             return ` ${ds.customSymbol} ${ds.customModel} (${ds.customLang}): ${item.parsed.y.toFixed(1)}`;
           },
         }
       },
     },
     scales: {
-      x: {
-        ticks: { font: { size: 12, family: 'Inter' }, color: '#64748b' },
-        grid: { color: '#f1f5f9', drawBorder: false },
-      },
-      y: {
-        min: -10, max: 10,
-        title: { display: true, text: 'Zustimmungs-Score (-10 bis +10)', font: { size: 12, family: 'Inter', weight: '500' }, color: '#64748b' },
-        ticks: {
-          font: { size: 12, family: 'Inter' }, color: '#64748b',
-          callback: (v) => v > 0 ? '+' + v : v,
-          stepSize: 2
-        },
-        grid: { color: '#f1f5f9', drawBorder: false },
-      },
+      x: { ticks: { font: { size: 12, family: 'Inter' }, color: '#64748b' }, grid: { color: '#f1f5f9', drawBorder: false } },
+      y: { min: -10, max: 10, title: { display: true, text: 'Zustimmungs-Score (-10 bis +10)', font: { size: 12, family: 'Inter', weight: '500' }, color: '#64748b' }, ticks: { font: { size: 12, family: 'Inter' }, color: '#64748b', callback: (v) => v > 0 ? '+' + v : v, stepSize: 2 }, grid: { color: '#f1f5f9', drawBorder: false } },
     },
   },
 });
 
-function refresh() {
-  chart.data.datasets = buildDatasets();
-  chart.update('none'); // Update ohne Animation für smoothes Hovern
+// Init Single Chart
+const ctxSingle = document.getElementById('singleChart').getContext('2d');
+const singleChart = new Chart(ctxSingle, {
+  type: 'bar',
+  data: { labels: [], datasets: [] },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+        titleFont: { size: 13, family: 'Inter' },
+        bodyFont: { size: 12, family: 'Inter' },
+        padding: 12,
+        cornerRadius: 8,
+        callbacks: {
+          label: (item) => ` ${item.dataset.label}: ${item.parsed.y.toFixed(1)}`
+        }
+      }
+    },
+    scales: {
+      x: { ticks: { font: { size: 12, family: 'Inter' }, color: '#64748b' }, grid: { display: false } },
+      y: { 
+        min: -10, max: 10, 
+        title: { display: true, text: 'Zustimmungs-Score (-10 bis +10)', font: { size: 12, family: 'Inter', weight: '500' }, color: '#64748b' }, 
+        ticks: { font: { size: 12, family: 'Inter' }, color: '#64748b', callback: (v) => v > 0 ? '+' + v : v, stepSize: 2 }, 
+        grid: { color: '#f1f5f9', drawBorder: false } 
+      },
+    }
+  }
+});
+
+// Heatmap generieren
+function renderHeatmap() {
+  const container = document.getElementById('heatmap-container');
+  container.innerHTML = ''; // Clear
+
+  const activeModelsArr = MODELS.filter(m => activeModels.has(m.key));
+  if (activeModelsArr.length === 0 || activeLangs.size === 0) {
+    container.innerHTML = '<div style="padding: 20px; color: var(--text-secondary);">Bitte wähle mindestens ein Modell und eine Sprache aus.</div>';
+    return;
+  }
+
+  // Header Zeile (Modell-Namen)
+  const headerRow = document.createElement('div');
+  headerRow.className = 'heatmap-row';
+  const emptyCorner = document.createElement('div');
+  emptyCorner.className = 'heatmap-q-label';
+  headerRow.appendChild(emptyCorner);
+
+  activeModelsArr.forEach(m => {
+    const cell = document.createElement('div');
+    cell.className = 'heatmap-cell heatmap-header';
+    cell.textContent = m.label;
+    headerRow.appendChild(cell);
+  });
+  container.appendChild(headerRow);
+
+  // Daten Zeilen (Q1 bis Q10)
+  QLABELS.forEach((q, qIndex) => {
+    const row = document.createElement('div');
+    row.className = 'heatmap-row';
+
+    const qLabel = document.createElement('div');
+    qLabel.className = 'heatmap-q-label';
+    qLabel.textContent = q;
+    qLabel.title = QTEXT[qIndex]; // Tooltip
+    row.appendChild(qLabel);
+
+    activeModelsArr.forEach(m => {
+      // Durchschnitt über aktive Sprachen berechnen
+      let sum = 0;
+      let count = 0;
+      activeLangs.forEach(langKey => {
+        sum += RAW[langKey][m.key][qIndex];
+        count++;
+      });
+      const avg = sum / count;
+
+      const cell = document.createElement('div');
+      cell.className = 'heatmap-cell';
+      cell.textContent = avg > 0 ? '+' + avg.toFixed(1) : avg.toFixed(1);
+      cell.title = `${m.label} - ${q}: ${avg.toFixed(2)} (Durchschnitt aus ${count} Sprachen)`;
+
+      // Farb-Logik: Rot (+) und Blau (-)
+      let r, g, b, alpha;
+      if (avg > 0) {
+        // Rot: #ef4444
+        r = 239; g = 68; b = 68;
+        alpha = Math.min(avg / 10, 1);
+      } else {
+        // Blau: #3b82f6
+        r = 59; g = 130; b = 246;
+        alpha = Math.min(Math.abs(avg) / 10, 1);
+      }
+      
+      // Mindest-Hintergrund für Sichtbarkeit + weißer Text bei starker Sättigung
+      const bgAlpha = Math.max(alpha, 0.05); 
+      cell.style.backgroundColor = `rgba(${r}, ${g}, ${b}, ${bgAlpha})`;
+      
+      if (bgAlpha > 0.5) {
+        cell.style.color = '#ffffff';
+      } else if (bgAlpha > 0.2) {
+        cell.style.color = `rgb(${r * 0.5}, ${g * 0.5}, ${b * 0.5})`; // Dunklerer Ton für Lesbarkeit
+      }
+
+      row.appendChild(cell);
+    });
+    
+    container.appendChild(row);
+  });
 }
 
-// Initialisiere Model Buttons
+// Einzelansicht aktualisieren
+function updateSingleChart() {
+  const qSelect = document.getElementById('q-select');
+  if (!qSelect.options.length) return;
+  
+  const qIndex = parseInt(qSelect.value);
+  const activeLangsArr = LANGS.filter(l => activeLangs.has(l.key));
+  const activeModelsArr = MODELS.filter(m => activeModels.has(m.key));
+
+  singleChart.data.labels = activeLangsArr.map(l => l.label);
+  
+  const ds = activeModelsArr.map(model => {
+    return {
+      label: model.label,
+      data: activeLangsArr.map(lang => RAW[lang.key][model.key][qIndex]),
+      backgroundColor: activeLangsArr.map(lang => {
+        let isDimmed = false;
+        if (hoveredModel && hoveredModel !== model.key) isDimmed = true;
+        if (hoveredLang && hoveredLang !== lang.key) isDimmed = true;
+        return isDimmed ? hexToRgba(model.color, 0.1) : hexToRgba(model.color, 0.85);
+      }),
+      borderColor: activeLangsArr.map(lang => {
+        let isDimmed = false;
+        if (hoveredModel && hoveredModel !== model.key) isDimmed = true;
+        if (hoveredLang && hoveredLang !== lang.key) isDimmed = true;
+        return isDimmed ? hexToRgba(model.color, 0.2) : model.color;
+      }),
+      borderWidth: 1,
+      borderRadius: 4
+    };
+  });
+  
+  singleChart.data.datasets = ds;
+  singleChart.update('none');
+}
+
+// Alles aktualisieren
+function refresh() {
+  // Line Chart Update
+  chart.data.datasets = buildDatasets();
+  chart.update('none');
+  
+  // Heatmap Update
+  renderHeatmap();
+
+  // Single Chart Update
+  updateSingleChart();
+}
+
+// Init Modell-Filter
 const mBar = document.getElementById('model-filters');
 MODELS.forEach(m => {
   const btn = document.createElement('button');
   btn.className = 'tog-btn';
   btn.textContent = m.label;
   
-  // Setze initiale Farben
   const updateBtnStyle = () => {
     if (activeModels.has(m.key)) {
       btn.style.background = m.color;
@@ -416,20 +721,18 @@ MODELS.forEach(m => {
     refresh();
   };
   
-  // Hover Effekte
   btn.onmouseenter = () => { hoveredModel = m.key; refresh(); };
   btn.onmouseleave = () => { hoveredModel = null; refresh(); };
 
   mBar.appendChild(btn);
 });
 
-// Initialisiere Language Buttons
+// Init Sprach-Filter
 const lBar = document.getElementById('lang-filters');
 LANGS.forEach(l => {
   const btn = document.createElement('button');
   btn.className = 'tog-btn lang-btn';
   
-  // Erstelle das SVG-Muster für den Button (als kleine Vorschau)
   const dashStr = l.dash.length ? `stroke-dasharray="${l.dash.join(',')}"` : '';
   const svgLine = `<svg width="20" height="10" style="margin-right:6px; vertical-align:middle;">
                      <line x1="0" y1="5" x2="20" y2="5" stroke="currentColor" stroke-width="2" ${dashStr}/>
@@ -449,21 +752,35 @@ LANGS.forEach(l => {
     refresh();
   };
 
-  // Hover Effekte
   btn.onmouseenter = () => { hoveredLang = l.key; refresh(); };
   btn.onmouseleave = () => { hoveredLang = null; refresh(); };
 
   lBar.appendChild(btn);
 });
 
-// Fragen-Legende generieren
+// Init Fragen-Legende
 const qLeg = document.getElementById('q-legend');
+const qSelect = document.getElementById('q-select');
+
 QLABELS.forEach((q, i) => {
+  // Legende füllen
   const d = document.createElement('div');
   d.innerHTML = `<span>${q}</span> ${QTEXT[i]}`;
   qLeg.appendChild(d);
-});
-</script>
 
+  // Select Dropdown füllen
+  const opt = document.createElement('option');
+  opt.value = i;
+  opt.text = `${q} — ${QTEXT[i]}`;
+  qSelect.appendChild(opt);
+});
+
+// Dropdown Event Listener
+qSelect.addEventListener('change', refresh);
+
+// Initialer Render
+refresh();
+
+</script>
 </body>
 </html>
