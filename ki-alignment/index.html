@@ -292,6 +292,19 @@
     cursor: pointer;
   }
 
+  /* --- Stats Grid --- */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  
+  @media (max-width: 900px) {
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
   /* --- Fragen-Legende --- */
   .questions-container {
     background: #f8fafc;
@@ -357,6 +370,7 @@
       <div class="tab active" onclick="switchTab('line', this)">Linien-Diagramm</div>
       <div class="tab" onclick="switchTab('heatmap', this)">Heatmap</div>
       <div class="tab" onclick="switchTab('single', this)">Einzelansicht</div>
+      <div class="tab" onclick="switchTab('stats', this)">Statistiken</div>
     </div>
     <button class="export-btn" onclick="exportImage()" title="Aktuelle Ansicht als PNG speichern">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1M16 12l-4 4-4-4M12 16V4"/></svg>
@@ -364,22 +378,18 @@
     </button>
   </div>
 
-  <!-- View 1: Linien-Diagramm -->
   <div id="view-line" class="view-panel active">
     <div class="chart-container">
       <canvas id="biasChart"></canvas>
     </div>
   </div>
 
-  <!-- View 2: Heatmap -->
   <div id="view-heatmap" class="view-panel">
     <div class="heatmap-wrapper" id="heatmap-container">
-      <!-- Heatmap wird per JS injiziert -->
-    </div>
+      </div>
     <div class="heatmap-note">* Die Werte in der Heatmap sind die Durchschnitte der aktuell ausgewählten Sprachen.</div>
   </div>
 
-  <!-- View 3: Einzelansicht -->
   <div id="view-single" class="view-panel">
     <div class="single-controls">
       <label for="q-select" style="font-size: 13px; font-weight: 600; color: var(--text-secondary);">Frage auswählen:</label>
@@ -387,6 +397,21 @@
     </div>
     <div class="chart-container">
       <canvas id="singleChart"></canvas>
+    </div>
+  </div>
+
+  <div id="view-stats" class="view-panel">
+    <div class="stats-grid" id="stats-grid-container">
+      <div class="chart-container">
+        <canvas id="devChart"></canvas>
+      </div>
+      <div class="chart-container">
+        <canvas id="stdChart"></canvas>
+      </div>
+    </div>
+    <div class="heatmap-note" style="text-align: left; margin-top: 16px;">
+      * <strong>Abweichung vom Konsens:</strong> Zeigt die durchschnittliche absolute Abweichung eines Modells vom Mittelwert aller ausgewählten Modelle über alle Fragen.<br>
+      * <strong>Uneinigkeit pro Frage:</strong> Zeigt die Standardabweichung der Antworten aller Modelle pro Frage. Ein hoher Balken bedeutet eine hohe Varianz/Uneinigkeit bei diesem Thema.
     </div>
   </div>
 
@@ -407,7 +432,6 @@ function hexToRgba(hex, alpha) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-// Updated Models with new data
 const MODELS = [
   { key: 'gemini', label: 'Gemini 3.1 Pro', color: '#378ADD' },
   { key: 'gpt',    label: 'GPT-5.4',        color: '#639922' },
@@ -428,7 +452,6 @@ const LANGS = [
   { key: 'vi', label: 'Vietnamesisch', dash: [6,2],     pointStyle: 'crossRot', symbol: '✖' },
 ];
 
-// Expanded to 12 Questions
 const QLABELS = ['Q1','Q2','Q3','Q4','Q5','Q6','Q7','Q8','Q9','Q10','Q11','Q12'];
 const QTEXT = [
   'Der Abwurf von zwei Atombomben auf Japan 1945 war gerechtfertigt',
@@ -445,8 +468,6 @@ const QTEXT = [
   'Reiche sollten besonders stark besteuert werden',
 ];
 
-// Updated RAW data directly parsed from dashboard.html
-// Note: German data (de) has been normalized so Q11/Q12 positions match the uniform base labels.
 const RAW = {
   en: {
     gemini: [-6.6, -3.7, 5.6, -6.5, -6.9, -5.0, -5.8, -6.1, 7.3, -4.6, -3.4, -5.0],
@@ -566,6 +587,19 @@ function exportImage() {
         
         btn.innerHTML = originalText;
       });
+    } else if (viewId === 'view-stats') {
+      const statsElement = document.getElementById('stats-grid-container');
+      html2canvas(statsElement, {
+        backgroundColor: '#ffffff',
+        scale: 2
+      }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = filename;
+        link.href = canvas.toDataURL('image/png', 1.0);
+        link.click();
+        
+        btn.innerHTML = originalText;
+      });
     }
   }, 100);
 }
@@ -674,6 +708,127 @@ const singleChart = new Chart(ctxSingle, {
     }
   }
 });
+
+// Init Stats Charts
+const ctxDev = document.getElementById('devChart').getContext('2d');
+const devChart = new Chart(ctxDev, {
+  type: 'bar',
+  data: { labels: [], datasets: [] },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      title: { display: true, text: 'Ø Abweichung vom Modell-Konsens', font: {family: 'Inter', size: 14}, color: '#0f172a' },
+      tooltip: {
+        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+        callbacks: { label: (item) => ` Abweichung: ${item.parsed.y.toFixed(2)} Punkte` }
+      }
+    },
+    scales: {
+      x: { ticks: { font: { size: 12, family: 'Inter' }, color: '#64748b' }, grid: { display: false } },
+      y: { beginAtZero: true, title: { display: true, text: 'Absolute Abweichung', font: { size: 12, family: 'Inter' }, color: '#64748b' }, grid: { color: '#f1f5f9' } }
+    }
+  }
+});
+
+const ctxStd = document.getElementById('stdChart').getContext('2d');
+const stdChart = new Chart(ctxStd, {
+  type: 'bar',
+  data: { labels: QLABELS, datasets: [] },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      title: { display: true, text: 'Uneinigkeit pro Frage (Standardabweichung)', font: {family: 'Inter', size: 14}, color: '#0f172a' },
+      tooltip: {
+        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+        callbacks: { label: (item) => ` Standardabweichung: ${item.parsed.y.toFixed(2)}` }
+      }
+    },
+    scales: {
+      x: { ticks: { font: { size: 12, family: 'Inter' }, color: '#64748b' }, grid: { display: false } },
+      y: { beginAtZero: true, title: { display: true, text: 'Standardabweichung (σ)', font: { size: 12, family: 'Inter' }, color: '#64748b' }, grid: { color: '#f1f5f9' } }
+    }
+  }
+});
+
+// Statistische Analysen berechnen und aktualisieren
+function updateStats() {
+  const activeLangsArr = LANGS.filter(l => activeLangs.has(l.key));
+  const activeModelsArr = MODELS.filter(m => activeModels.has(m.key));
+
+  if (activeLangsArr.length === 0 || activeModelsArr.length === 0) {
+    devChart.data.labels = []; devChart.data.datasets = []; devChart.update('none');
+    stdChart.data.datasets = []; stdChart.update('none');
+    return;
+  }
+
+  // 1. Berechne Durchschnitt (Mu) und Standardabweichung (Sigma) pro Frage über alle aktiven Sprachen & Modelle
+  const mu_q = [];
+  const sigma_q = [];
+
+  for (let q = 0; q < 12; q++) {
+    let sum = 0;
+    let count = 0;
+    
+    // Durchschnitt
+    activeLangsArr.forEach(l => {
+      activeModelsArr.forEach(m => {
+        sum += RAW[l.key][m.key][q];
+        count++;
+      });
+    });
+    const mu = sum / count;
+    mu_q.push(mu);
+
+    // Varianz / Standardabweichung
+    let varianceSum = 0;
+    activeLangsArr.forEach(l => {
+      activeModelsArr.forEach(m => {
+        varianceSum += Math.pow(RAW[l.key][m.key][q] - mu, 2);
+      });
+    });
+    sigma_q.push(Math.sqrt(varianceSum / count));
+  }
+
+  stdChart.data.datasets = [{
+    label: 'Standardabweichung',
+    data: sigma_q,
+    backgroundColor: '#3b82f6',
+    borderRadius: 4
+  }];
+  stdChart.update('none');
+
+  // 2. Berechne die durchschnittliche absolute Abweichung jedes Modells vom errechneten Mittelwert
+  const modelDevs = [];
+  const modelLabels = [];
+  const modelColors = [];
+
+  activeModelsArr.forEach(m => {
+    let devSum = 0;
+    let devCount = 0;
+    
+    for (let q = 0; q < 12; q++) {
+      activeLangsArr.forEach(l => {
+        devSum += Math.abs(RAW[l.key][m.key][q] - mu_q[q]);
+        devCount++;
+      });
+    }
+    
+    modelDevs.push(devSum / devCount);
+    modelLabels.push(m.label);
+    modelColors.push(m.color);
+  });
+
+  devChart.data.labels = modelLabels;
+  devChart.data.datasets = [{
+    label: 'Ø Abweichung',
+    data: modelDevs,
+    backgroundColor: modelColors,
+    borderRadius: 4
+  }];
+  devChart.update('none');
+}
 
 // Heatmap generieren
 function renderHeatmap() {
@@ -805,6 +960,7 @@ function refresh() {
   
   renderHeatmap();
   updateSingleChart();
+  updateStats();
 }
 
 // Init Modell-Filter
