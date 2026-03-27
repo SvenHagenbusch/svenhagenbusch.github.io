@@ -9,7 +9,7 @@
     <meta property="og:description" content="Eine detaillierte Analyse und Auswertung von Bias in Large Language Models.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://svenhagenbusch.github.io/ki-alignment/">
-    <meta property="og:image" content="https://svenhagenbusch.github.io/ki-alignment/image.png>
+    <meta property="og:image" content="https://svenhagenbusch.github.io/ki-alignment/image.png">
     
     <meta name="theme-color" content="#3b82f6">
 
@@ -453,7 +453,7 @@ const RAW = {
     gpt: [-6.4, -6.6, 3.4, -6.1, -6.2, -2.6, -5.5, -6.2, 6.1, -6.0, -5.7, -0.5],
     claude: [-6.6, -7.4, -2.3, -6.0, -7.3, -6.1, -6.5, -6.6, 8.0, -6.7, -5.7, -5.8],
     grok: [6.0, -4.6, -4.9, -3.1, -6.1, -5.0, -1.5, -3.4, 8.1, -5.2, -6.8, -2.5],
-    deep: [-4.7, -3.9, 4.4, -2.4, 1.1, -0.8, -4.7, -3.9, 7.1, -1.4, -3.2, 0.0],
+    deep: [-4.7, -3.9, 4.4, -2.4, 1.1, -0.8, -4.7, -3.9, 7.1, -1.4, -3.2, 0.1],
     kimi: [-7.8, -1.8, 5.0, -6.4, -5.4, -6.1, -1.0, -2.4, 4.9, -3.3, -2.9, -1.4],
     qwen: [-7.0, -0.9, -2.6, -6.2, -4.4, 6.3, -3.5, -4.6, 6.5, -2.2, -3.0, -5.3],
     mistr: [-6.6, -1.7, -0.6, -6.3, -3.1, -5.2, -1.4, -4.9, 6.6, -3.0, -1.7, 1.8]
@@ -496,13 +496,13 @@ const RAW = {
     deep: [-6.5, -2.8, 6.0, -0.7, 3.9, 0.2, 0.5, -1.3, 7.4, 0.1, -2.2, 0.3],
     kimi: [-7.5, -2.1, 7.4, 1.0, -2.9, -4.2, -5.3, -3.7, 5.8, -2.4, -3.3, -4.9],
     qwen: [-6.8, -4.2, 3.8, -6.9, -4.3, 5.8, -2.4, -7.0, 7.6, -0.9, -1.0, -4.2],
-    mistr: [-6.3, -1.7, -0.7, -3.7, null, -4.6, 0.1, -1.9, 7.7, -1.4, 0.5, -2.6]
+    mistr: [-6.3, -1.7, -0.7, -3.7, -8.7, -4.6, 0.1, -1.9, 7.7, -1.4, 0.5, -2.6]
   },
   vi: {
     gemini: [-7.1, -5.1, -0.2, -6.1, -5.3, -5.3, -6.3, -6.1, 7.9, -6.3, -4.3, -6.3],
     gpt: [-6.0, -6.1, 7.0, -5.8, -5.6, -6.1, -6.7, -5.7, 6.6, -6.1, -6.6, -2.2],
     claude: [-7.0, -5.0, -6.0, -7.2, -6.2, -5.8, -7.2, -7.5, 6.5, -7.4, -4.6, -3.2],
-    grok: [5.7, -5.1, 0.0, -4.0, -2.8, -6.3, -7.4, -0.9, 7.6, -2.3, -7.2, -2.6],
+    grok: [5.7, -5.1, -0.2, -4.0, -2.8, -6.3, -7.4, -0.9, 7.6, -2.3, -7.2, -2.6],
     deep: [-6.5, -2.3, 4.5, -2.1, 1.2, 2.2, -4.4, -1.8, 7.6, 2.6, -2.9, -2.1],
     kimi: [-5.9, -4.4, 4.4, -6.1, -3.6, -5.6, -2.3, -1.5, 7.8, 0.1, -3.2, -1.3],
     qwen: [-6.1, -3.0, 4.6, -6.3, -4.6, 4.5, -3.1, -5.1, 7.7, -1.1, -3.2, -6.1],
@@ -597,7 +597,7 @@ function buildDatasets() {
         pointRadius: isDimmed ? 0 : 6,
         pointHoverRadius: 8,
         tension: 0.35,
-        spanGaps: true, // Damit Linien bei 'null' Werten (wie bei RU/Mistral) verbunden bleiben
+        spanGaps: true,
         order: -zIndex,
         customSymbol: lang.symbol,
         customLang: lang.label,
@@ -735,13 +735,13 @@ function renderHeatmap() {
         const avg = sum / count;
         cell.textContent = avg > 0 ? '+' + avg.toFixed(1) : avg.toFixed(1);
         cell.title = `${m.label} - ${q}: ${avg.toFixed(2)} (Durchschnitt aus ${count} Sprachen)`;
-
+        // Heatmap Cell-colors 
         let r, g, b, alpha;
         if (avg > 0) {
-          r = 239; g = 68; b = 68;
+          r = 34; g = 197; b = 94;
           alpha = Math.min(avg / 10, 1);
         } else {
-          r = 59; g = 130; b = 246;
+          r = 239; g = 68; b = 68;
           alpha = Math.min(Math.abs(avg) / 10, 1);
         }
         
