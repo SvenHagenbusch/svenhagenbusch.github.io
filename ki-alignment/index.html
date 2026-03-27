@@ -1,9 +1,23 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LLM Bias Analyse</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Bias Analyse</title>
+
+    <meta property="og:title" content="LLM Bias Analyse">
+    <meta property="og:description" content="Eine detaillierte Analyse und Auswertung von Bias in Large Language Models.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://svenhagenbusch.github.io/ki-alignment/">
+    <meta property="og:image" content="https://svenhagenbusch.github.io/ki-alignment/image.png>
+    
+    <meta name="theme-color" content="#3b82f6">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="LLM Bias Analyse">
+    <meta name="twitter:description" content="Eine detaillierte Analyse und Auswertung von Bias in Large Language Models.">
+    <meta name="twitter:image" content="https://svenhagenbusch.github.io/ki-alignment/image.png">
+    <link rel="icon" type="image/png" href="favicon.png">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
@@ -496,7 +510,7 @@ const RAW = {
   },
 };
 
-const activeModels = new Set(['gemini', 'gpt', 'claude']);
+const activeModels = new Set(['gemini']);
 const activeLangs = new Set(LANGS.map(l => l.key));
 
 let hoveredModel = null;
