@@ -408,10 +408,18 @@
       <div class="chart-container">
         <canvas id="stdChart"></canvas>
       </div>
+      <div class="chart-container">
+        <canvas id="peakChart"></canvas>
+      </div>
+      <div class="chart-container">
+        <canvas id="langConsistChart"></canvas>
+      </div>
     </div>
     <div class="heatmap-note" style="text-align: left; margin-top: 16px;">
       * <strong>Abweichung vom Konsens:</strong> Zeigt die durchschnittliche absolute Abweichung eines Modells vom Mittelwert aller ausgewählten Modelle über alle Fragen.<br>
-      * <strong>Uneinigkeit pro Frage:</strong> Zeigt die Standardabweichung der Antworten aller Modelle pro Frage. Ein hoher Balken bedeutet eine hohe Varianz/Uneinigkeit bei diesem Thema.
+      * <strong>Uneinigkeit pro Frage:</strong> Zeigt die Standardabweichung der Antworten aller Modelle pro Frage. Ein hoher Balken bedeutet eine hohe Varianz/Uneinigkeit bei diesem Thema.<br>
+      * <strong>Maximaler Bias:</strong> Der höchste einzelne Absolutwert, den ein Modell bei einer Frage erreicht hat – zeigt die extremste Einzelposition.<br>
+      * <strong>Sprachkonsistenz (σ):</strong> Standardabweichung der Antworten eines Modells über alle Sprachen – niedrig = konsistentes Verhalten unabhängig von der Sprache.
     </div>
   </div>
 
@@ -752,6 +760,48 @@ const stdChart = new Chart(ctxStd, {
   }
 });
 
+const ctxPeak = document.getElementById('peakChart').getContext('2d');
+const peakChart = new Chart(ctxPeak, {
+  type: 'bar',
+  data: { labels: [], datasets: [] },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      title: { display: true, text: 'Maximaler Bias (höchster Absolutwert)', font: {family: 'Inter', size: 14}, color: '#0f172a' },
+      tooltip: {
+        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+        callbacks: { label: (item) => ` Max. Absolutwert: ${item.parsed.y.toFixed(2)}` }
+      }
+    },
+    scales: {
+      x: { ticks: { font: { size: 12, family: 'Inter' }, color: '#64748b' }, grid: { display: false } },
+      y: { beginAtZero: true, max: 10, title: { display: true, text: 'Max. |Score|', font: { size: 12, family: 'Inter' }, color: '#64748b' }, grid: { color: '#f1f5f9' } }
+    }
+  }
+});
+
+const ctxLC = document.getElementById('langConsistChart').getContext('2d');
+const langConsistChart = new Chart(ctxLC, {
+  type: 'bar',
+  data: { labels: [], datasets: [] },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      title: { display: true, text: 'Sprachkonsistenz (σ über Sprachen)', font: {family: 'Inter', size: 14}, color: '#0f172a' },
+      tooltip: {
+        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+        callbacks: { label: (item) => ` Ø σ über Sprachen: ${item.parsed.y.toFixed(2)}` }
+      }
+    },
+    scales: {
+      x: { ticks: { font: { size: 12, family: 'Inter' }, color: '#64748b' }, grid: { display: false } },
+      y: { beginAtZero: true, title: { display: true, text: 'Standardabweichung (σ)', font: { size: 12, family: 'Inter' }, color: '#64748b' }, grid: { color: '#f1f5f9' } }
+    }
+  }
+});
+
 // Statistische Analysen berechnen und aktualisieren
 function updateStats() {
   const activeLangsArr = LANGS.filter(l => activeLangs.has(l.key));
@@ -760,6 +810,8 @@ function updateStats() {
   if (activeLangsArr.length === 0 || activeModelsArr.length === 0) {
     devChart.data.labels = []; devChart.data.datasets = []; devChart.update('none');
     stdChart.data.datasets = []; stdChart.update('none');
+    peakChart.data.labels = []; peakChart.data.datasets = []; peakChart.update('none');
+    langConsistChart.data.labels = []; langConsistChart.data.datasets = []; langConsistChart.update('none');
     return;
   }
 
@@ -828,6 +880,53 @@ function updateStats() {
     borderRadius: 4
   }];
   devChart.update('none');
+
+  // 3. Maximaler Bias (höchster Absolutwert) pro Modell
+  const peakVals = [];
+  activeModelsArr.forEach(m => {
+    let peak = 0;
+    for (let q = 0; q < 12; q++) {
+      activeLangsArr.forEach(l => {
+        const absVal = Math.abs(RAW[l.key][m.key][q]);
+        if (absVal > peak) peak = absVal;
+      });
+    }
+    peakVals.push(peak);
+  });
+
+  peakChart.data.labels = modelLabels;
+  peakChart.data.datasets = [{
+    label: 'Max. Absolutwert',
+    data: peakVals,
+    backgroundColor: modelColors,
+    borderRadius: 4
+  }];
+  peakChart.update('none');
+
+  // 4. Sprachkonsistenz: Ø Standardabweichung eines Modells über alle Sprachen pro Frage
+  const langConsistVals = [];
+  activeModelsArr.forEach(m => {
+    let sigmaSum = 0;
+    let sigmaCount = 0;
+    for (let q = 0; q < 12; q++) {
+      if (activeLangsArr.length < 2) { sigmaSum += 0; sigmaCount++; continue; }
+      const vals = activeLangsArr.map(l => RAW[l.key][m.key][q]);
+      const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
+      const sigma = Math.sqrt(vals.reduce((s, v) => s + Math.pow(v - mean, 2), 0) / vals.length);
+      sigmaSum += sigma;
+      sigmaCount++;
+    }
+    langConsistVals.push(sigmaCount > 0 ? sigmaSum / sigmaCount : 0);
+  });
+
+  langConsistChart.data.labels = modelLabels;
+  langConsistChart.data.datasets = [{
+    label: 'Ø σ über Sprachen',
+    data: langConsistVals,
+    backgroundColor: modelColors,
+    borderRadius: 4
+  }];
+  langConsistChart.update('none');
 }
 
 // Heatmap generieren
@@ -890,23 +989,24 @@ function renderHeatmap() {
         const avg = sum / count;
         cell.textContent = avg > 0 ? '+' + avg.toFixed(1) : avg.toFixed(1);
         cell.title = `${m.label} - ${q}: ${avg.toFixed(2)} (Durchschnitt aus ${count} Sprachen)`;
-        // Heatmap Cell-colors 
-        let r, g, b, alpha;
-        if (avg > 0) {
-          r = 34; g = 197; b = 94;
-          alpha = Math.min(avg / 10, 1);
+        // Heatmap Cell-colors: Deadzone bei ±2, danach linearer Anstieg bis ±10
+        const absAvg = Math.abs(avg);
+        const DEADZONE = 2.0;
+        const r = avg > 0 ? 34  : 220;
+        const g = avg > 0 ? 197 : 38;
+        const b = avg > 0 ? 94  : 38;
+
+        if (absAvg < DEADZONE) {
+          cell.style.backgroundColor = '#eef2f7';
+          cell.style.color = '#94a3b8';
         } else {
-          r = 239; g = 68; b = 68;
-          alpha = Math.min(Math.abs(avg) / 10, 1);
-        }
-        
-        const bgAlpha = Math.max(alpha, 0.05); 
-        cell.style.backgroundColor = `rgba(${r}, ${g}, ${b}, ${bgAlpha})`;
-        
-        if (bgAlpha > 0.5) {
-          cell.style.color = '#ffffff';
-        } else if (bgAlpha > 0.2) {
-          cell.style.color = `rgb(${r * 0.5}, ${g * 0.5}, ${b * 0.5})`; 
+          const bgAlpha = Math.min((absAvg - DEADZONE) / (10 - DEADZONE), 1);
+          cell.style.backgroundColor = `rgba(${r}, ${g}, ${b}, ${bgAlpha})`;
+          if (bgAlpha > 0.55) {
+            cell.style.color = '#ffffff';
+          } else {
+            cell.style.color = `rgb(${Math.round(r * 0.35)}, ${Math.round(g * 0.35)}, ${Math.round(b * 0.35)})`;
+          }
         }
       }
 
