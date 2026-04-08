@@ -292,7 +292,38 @@
     cursor: pointer;
   }
 
-  /* --- Stats Grid --- */
+  /* --- Stats Legend --- */
+  .stats-legend {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 8px;
+    background: #f8fafc;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+  }
+
+  .stats-legend-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .stats-legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  .stats-legend-item strong {
+    color: var(--text-primary);
+  }
   .stats-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -401,6 +432,13 @@
   </div>
 
   <div id="view-stats" class="view-panel">
+    <div class="stats-legend">
+      <div class="stats-legend-item"><span class="stats-legend-dot" style="background:#3b82f6"></span><div><strong>Abweichung vom Konsens</strong> – Ø absolute Abweichung eines Modells vom Mittelwert aller Modelle über alle Fragen.</div></div>
+      <div class="stats-legend-item"><span class="stats-legend-dot" style="background:#8b5cf6"></span><div><strong>Uneinigkeit pro Frage</strong> – Standardabweichung der Antworten aller Modelle pro Frage. Hoher Balken = hohe Uneinigkeit.</div></div>
+      <div class="stats-legend-item"><span class="stats-legend-dot" style="background:#f59e0b"></span><div><strong>Maximaler Bias</strong> – Höchster einzelner Absolutwert eines Modells über alle Fragen und Sprachen.</div></div>
+      <div class="stats-legend-item"><span class="stats-legend-dot" style="background:#10b981"></span><div><strong>Sprachkonsistenz (σ)</strong> – Ø σ der Antworten eines Modells über alle Sprachen. Niedrig = sprachunabhängig konsistent.</div></div>
+      <div class="stats-legend-item"><span class="stats-legend-dot" style="background:#64748b"></span><div><strong>Ø Score pro Frage</strong> – Durchschnitt aller aktiven Modelle &amp; Sprachen pro Frage. Zeigt den globalen Konsens-Trend.</div></div>
+    </div>
     <div class="stats-grid" id="stats-grid-container">
       <div class="chart-container">
         <canvas id="devChart"></canvas>
@@ -415,11 +453,8 @@
         <canvas id="langConsistChart"></canvas>
       </div>
     </div>
-    <div class="heatmap-note" style="text-align: left; margin-top: 16px;">
-      * <strong>Abweichung vom Konsens:</strong> Zeigt die durchschnittliche absolute Abweichung eines Modells vom Mittelwert aller ausgewählten Modelle über alle Fragen.<br>
-      * <strong>Uneinigkeit pro Frage:</strong> Zeigt die Standardabweichung der Antworten aller Modelle pro Frage. Ein hoher Balken bedeutet eine hohe Varianz/Uneinigkeit bei diesem Thema.<br>
-      * <strong>Maximaler Bias:</strong> Der höchste einzelne Absolutwert, den ein Modell bei einer Frage erreicht hat – zeigt die extremste Einzelposition.<br>
-      * <strong>Sprachkonsistenz (σ):</strong> Standardabweichung der Antworten eines Modells über alle Sprachen – niedrig = konsistentes Verhalten unabhängig von der Sprache.
+    <div class="chart-container" style="margin-top: 24px; height: 300px;">
+      <canvas id="avgChart"></canvas>
     </div>
   </div>
 
@@ -802,6 +837,35 @@ const langConsistChart = new Chart(ctxLC, {
   }
 });
 
+const ctxAvg = document.getElementById('avgChart').getContext('2d');
+const avgChart = new Chart(ctxAvg, {
+  type: 'bar',
+  data: { labels: QLABELS, datasets: [] },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      title: { display: true, text: 'Ø Score pro Frage (Konsens aller aktiven Modelle & Sprachen)', font: {family: 'Inter', size: 14}, color: '#0f172a' },
+      tooltip: {
+        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+        callbacks: {
+          title: (items) => `${QLABELS[items[0].dataIndex]}: ${QTEXT[items[0].dataIndex]}`,
+          label: (item) => ` Ø Score: ${item.parsed.y > 0 ? '+' : ''}${item.parsed.y.toFixed(2)}`
+        }
+      }
+    },
+    scales: {
+      x: { ticks: { font: { size: 12, family: 'Inter' }, color: '#64748b' }, grid: { display: false } },
+      y: {
+        min: -10, max: 10,
+        title: { display: true, text: 'Ø Zustimmungs-Score', font: { size: 12, family: 'Inter' }, color: '#64748b' },
+        ticks: { font: { size: 12, family: 'Inter' }, color: '#64748b', callback: (v) => v > 0 ? '+' + v : v, stepSize: 2 },
+        grid: { color: '#f1f5f9' }
+      }
+    }
+  }
+});
+
 // Statistische Analysen berechnen und aktualisieren
 function updateStats() {
   const activeLangsArr = LANGS.filter(l => activeLangs.has(l.key));
@@ -812,6 +876,7 @@ function updateStats() {
     stdChart.data.datasets = []; stdChart.update('none');
     peakChart.data.labels = []; peakChart.data.datasets = []; peakChart.update('none');
     langConsistChart.data.labels = []; langConsistChart.data.datasets = []; langConsistChart.update('none');
+    avgChart.data.datasets = []; avgChart.update('none');
     return;
   }
 
@@ -927,6 +992,17 @@ function updateStats() {
     borderRadius: 4
   }];
   langConsistChart.update('none');
+
+  // 5. Ø Score pro Frage (mu_q) – farbige Balken je nach Vorzeichen
+  avgChart.data.datasets = [{
+    label: 'Ø Score',
+    data: mu_q,
+    backgroundColor: mu_q.map(v => v >= 0 ? 'rgba(34,197,94,0.75)' : 'rgba(220,38,38,0.75)'),
+    borderColor:     mu_q.map(v => v >= 0 ? 'rgba(34,197,94,1)'    : 'rgba(220,38,38,1)'),
+    borderWidth: 1,
+    borderRadius: 4
+  }];
+  avgChart.update('none');
 }
 
 // Heatmap generieren
