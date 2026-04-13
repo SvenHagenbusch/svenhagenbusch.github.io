@@ -111,7 +111,7 @@
 
   .lang-symbol {
     margin-right: 6px;
-    font-size: 12px;
+    font-size: 14px;
   }
 
   /* --- Tabs System --- */
@@ -251,7 +251,7 @@
     background: transparent !important;
     color: var(--text-secondary) !important;
     font-weight: 600;
-    font-size: 12px;
+    font-size: 14px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     height: 30px;
@@ -260,7 +260,7 @@
   }
 
   .heatmap-note {
-    font-size: 12px;
+    font-size: 14px;
     color: var(--text-secondary);
     text-align: right;
     margin-top: 12px;
@@ -308,7 +308,7 @@
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    font-size: 12px;
+    font-size: 14px;
     color: var(--text-secondary);
     line-height: 1.5;
   }
@@ -354,7 +354,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 8px 24px;
-    font-size: 12px;
+    font-size: 14px;
     color: var(--text-secondary);
     line-height: 1.5;
   }
@@ -698,7 +698,7 @@ const chart = new Chart(ctx, {
       tooltip: {
         backgroundColor: 'rgba(15, 23, 42, 0.9)',
         titleFont: { size: 13, family: 'Inter' },
-        bodyFont: { size: 12, family: 'Inter' },
+        bodyFont: { size: 14, family: 'Inter' },
         padding: 12,
         cornerRadius: 8,
         boxPadding: 6,
@@ -713,8 +713,8 @@ const chart = new Chart(ctx, {
       },
     },
     scales: {
-      x: { ticks: { font: { size: 12, family: 'Inter' }, color: '#64748b' }, grid: { color: '#f1f5f9', drawBorder: false } },
-      y: { min: -10, max: 10, title: { display: true, text: 'Zustimmungs-Score (-10 bis +10)', font: { size: 12, family: 'Inter', weight: '500' }, color: '#64748b' }, ticks: { font: { size: 12, family: 'Inter' }, color: '#64748b', callback: (v) => v > 0 ? '+' + v : v, stepSize: 2 }, grid: { color: '#f1f5f9', drawBorder: false } },
+      x: { ticks: { font: { size: 14, family: 'Inter' }, color: '#0f172a' }, grid: { color: '#f1f5f9', drawBorder: false } },
+      y: { min: -10, max: 10, title: { display: true, text: 'Zustimmungs-Score (-10 bis +10)', font: { size: 14, family: 'Inter', weight: '500' }, color: '#0f172a' }, ticks: { font: { size: 14, family: 'Inter' }, color: '#0f172a', callback: (v) => v > 0 ? '+' + v : v, stepSize: 2 }, grid: { color: '#f1f5f9', drawBorder: false } },
     },
   },
 });
@@ -732,7 +732,7 @@ const singleChart = new Chart(ctxSingle, {
       tooltip: {
         backgroundColor: 'rgba(15, 23, 42, 0.9)',
         titleFont: { size: 13, family: 'Inter' },
-        bodyFont: { size: 12, family: 'Inter' },
+        bodyFont: { size: 14, family: 'Inter' },
         padding: 12,
         cornerRadius: 8,
         callbacks: {
@@ -741,11 +741,11 @@ const singleChart = new Chart(ctxSingle, {
       }
     },
     scales: {
-      x: { ticks: { font: { size: 12, family: 'Inter' }, color: '#64748b' }, grid: { display: false } },
+      x: { ticks: { font: { size: 14, family: 'Inter' }, color: '#0f172a' }, grid: { display: false } },
       y: { 
         min: -10, max: 10, 
-        title: { display: true, text: 'Zustimmungs-Score (-10 bis +10)', font: { size: 12, family: 'Inter', weight: '500' }, color: '#64748b' }, 
-        ticks: { font: { size: 12, family: 'Inter' }, color: '#64748b', callback: (v) => v > 0 ? '+' + v : v, stepSize: 2 }, 
+        title: { display: true, text: 'Zustimmungs-Score (-10 bis +10)', font: { size: 14, family: 'Inter', weight: '500' }, color: '#0f172a' }, 
+        ticks: { font: { size: 14, family: 'Inter' }, color: '#0f172a', callback: (v) => v > 0 ? '+' + v : v, stepSize: 2 }, 
         grid: { color: '#f1f5f9', drawBorder: false } 
       },
     }
@@ -768,8 +768,8 @@ const devChart = new Chart(ctxDev, {
       }
     },
     scales: {
-      x: { ticks: { font: { size: 12, family: 'Inter' }, color: '#64748b' }, grid: { display: false } },
-      y: { beginAtZero: true, title: { display: true, text: 'Absolute Abweichung', font: { size: 12, family: 'Inter' }, color: '#64748b' }, grid: { color: '#f1f5f9' } }
+      x: { ticks: { font: { size: 14, family: 'Inter' }, color: '#0f172a' }, grid: { display: false } },
+      y: { beginAtZero: true, title: { display: true, text: 'Absolute Abweichung', font: { size: 14, family: 'Inter' }, color: '#0f172a' }, grid: { color: '#f1f5f9' } }
     }
   }
 });
@@ -789,8 +789,8 @@ const stdChart = new Chart(ctxStd, {
       }
     },
     scales: {
-      x: { ticks: { font: { size: 12, family: 'Inter' }, color: '#64748b' }, grid: { display: false } },
-      y: { beginAtZero: true, title: { display: true, text: 'Standardabweichung (σ)', font: { size: 12, family: 'Inter' }, color: '#64748b' }, grid: { color: '#f1f5f9' } }
+      x: { ticks: { font: { size: 14, family: 'Inter' }, color: '#0f172a' }, grid: { display: false } },
+      y: { beginAtZero: true, title: { display: true, text: 'Standardabweichung (σ)', font: { size: 14, family: 'Inter' }, color: '#0f172a' }, grid: { color: '#f1f5f9' } }
     }
   }
 });
@@ -810,8 +810,8 @@ const peakChart = new Chart(ctxPeak, {
       }
     },
     scales: {
-      x: { ticks: { font: { size: 12, family: 'Inter' }, color: '#64748b' }, grid: { display: false } },
-      y: { beginAtZero: true, max: 10, title: { display: true, text: 'Max. |Score|', font: { size: 12, family: 'Inter' }, color: '#64748b' }, grid: { color: '#f1f5f9' } }
+      x: { ticks: { font: { size: 14, family: 'Inter' }, color: '#0f172a' }, grid: { display: false } },
+      y: { beginAtZero: true, max: 10, title: { display: true, text: 'Max. |Score|', font: { size: 14, family: 'Inter' }, color: '#0f172a' }, grid: { color: '#f1f5f9' } }
     }
   }
 });
@@ -831,8 +831,8 @@ const langConsistChart = new Chart(ctxLC, {
       }
     },
     scales: {
-      x: { ticks: { font: { size: 12, family: 'Inter' }, color: '#64748b' }, grid: { display: false } },
-      y: { beginAtZero: true, title: { display: true, text: 'Standardabweichung (σ)', font: { size: 12, family: 'Inter' }, color: '#64748b' }, grid: { color: '#f1f5f9' } }
+      x: { ticks: { font: { size: 14, family: 'Inter' }, color: '#0f172a' }, grid: { display: false } },
+      y: { beginAtZero: true, title: { display: true, text: 'Standardabweichung (σ)', font: { size: 14, family: 'Inter' }, color: '#0f172a' }, grid: { color: '#f1f5f9' } }
     }
   }
 });
@@ -855,11 +855,11 @@ const avgChart = new Chart(ctxAvg, {
       }
     },
     scales: {
-      x: { ticks: { font: { size: 12, family: 'Inter' }, color: '#64748b' }, grid: { display: false } },
+      x: { ticks: { font: { size: 14, family: 'Inter' }, color: '#0f172a' }, grid: { display: false } },
       y: {
         min: -10, max: 10,
-        title: { display: true, text: 'Ø Zustimmungs-Score', font: { size: 12, family: 'Inter' }, color: '#64748b' },
-        ticks: { font: { size: 12, family: 'Inter' }, color: '#64748b', callback: (v) => v > 0 ? '+' + v : v, stepSize: 2 },
+        title: { display: true, text: 'Ø Zustimmungs-Score', font: { size: 14, family: 'Inter' }, color: '#0f172a' },
+        ticks: { font: { size: 14, family: 'Inter' }, color: '#0f172a', callback: (v) => v > 0 ? '+' + v : v, stepSize: 2 },
         grid: { color: '#f1f5f9' }
       }
     }
