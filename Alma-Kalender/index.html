@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wahlfach-Planer · M.Sc. Informatik Tübingen</title>
+<style>
+:root{
+  --rot:#a51e37; --rot-hell:#c9455e; --rot-dunkel:#7d1629;
+  --bg:#0f1115; --bg2:#171a21; --bg3:#1e222b; --bg4:#262b36;
+  --line:#2e3440; --text:#e7e9ee; --dim:#9aa3b2; --dimmer:#6b7484;
+  --ok:#3ecf8e; --warn:#f0b429; --err:#f2545b; --info:#5b9cf5;
+  --r:12px;
+}
+[data-theme="light"]{
+  --bg:#f5f6f8; --bg2:#ffffff; --bg3:#ffffff; --bg4:#eef0f4;
+  --line:#dde1e8; --text:#1b1f27; --dim:#5d6675; --dimmer:#8b93a2;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:var(--bg);
+  color:var(--text);line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:var(--info)}
+button{font-family:inherit;font-size:inherit;cursor:pointer}
+input,select{font-family:inherit;font-size:inherit}
+
+/* ---------- Kopf ---------- */
+header{background:linear-gradient(135deg,var(--rot-dunkel),var(--rot));color:#fff;
+  padding:10px 0px 0px 0px;box-shadow:0 2px 16px rgba(0,0,0,.28);position:sticky;top:0;z-index:50}
+.kopf-zeile{display:flex;align-items:center;gap:16px;flex-wrap:wrap;max-width:1500px;margin:0 auto}
+.kopf-zeile h1{font-size:19px;margin:0;font-weight:650;letter-spacing:.2px}
+.kopf-zeile .sub{font-size:12.5px;opacity:.85;margin-top:2px}
+.kopf-rechts{margin-left:auto;display:flex;align-items:center;gap:10px}
+.gesamt{background:rgba(255,255,255,.14);border-radius:999px;padding:7px 15px;font-size:13px;
+  font-weight:600;white-space:nowrap;border:1px solid rgba(255,255,255,.22)}
+.gesamt b{font-size:15px}
+.icon-btn{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);color:#fff;
+  border-radius:8px;padding:7px 11px;font-size:13px;transition:.15s}
+.icon-btn:hover{background:rgba(255,255,255,.26)}
+nav.tabs{display:flex;gap:4px;max-width:1500px;margin:14px auto 0;flex-wrap:wrap}
+nav.tabs button{background:transparent;border:none;color:rgba(255,255,255,.72);padding:10px 16px;
+  border-radius:8px 8px 0 0;font-size:14px;font-weight:550;border-bottom:3px solid transparent;transition:.15s}
+nav.tabs button:hover{color:#fff;background:rgba(255,255,255,.09)}
+nav.tabs button.aktiv{color:#fff;background:var(--bg);border-bottom-color:var(--bg)}
+[data-theme="light"] nav.tabs button.aktiv{color:var(--rot)}
+nav.tabs button .zahl{display:inline-block;background:rgba(255,255,255,.2);border-radius:999px;
+  padding:0 7px;font-size:11.5px;margin-left:6px}
+nav.tabs button.aktiv .zahl{background:var(--rot);color:#fff}
+
+main{max-width:1500px;margin:0 auto;padding:22px 24px 80px}
+.seite{display:none}
+.seite.aktiv{display:block}
+h2{font-size:16px;margin:0 0 12px;font-weight:650;letter-spacing:.2px}
+h2 .anm{font-weight:400;color:var(--dim);font-size:13px;margin-left:8px}
+
+/* ---------- Bereichskarten ---------- */
+.karten{display:grid;grid-template-columns:repeat(auto-fill,minmax(305px,1fr));gap:14px;margin-bottom:26px}
+.karte{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:16px 17px;
+  transition:.18s;position:relative;overflow:hidden}
+.karte::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--akz,var(--dimmer))}
+.karte:hover{border-color:var(--akz,var(--line));transform:translateY(-1px)}
+.karte.fertig{--akz:var(--ok)}
+.karte h3{margin:0;font-size:14.5px;font-weight:640}
+.karte .code{font-size:11.5px;color:var(--dimmer);font-family:ui-monospace,Consolas,monospace;margin-top:2px}
+.karte .cp{display:flex;align-items:baseline;gap:6px;margin:12px 0 7px}
+.karte .cp .ist{font-size:26px;font-weight:700;line-height:1}
+.karte .cp .soll{font-size:13px;color:var(--dim)}
+.karte .cp .status{margin-left:auto;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:999px}
+.st-offen{background:rgba(240,180,41,.16);color:var(--warn)}
+.st-fertig{background:rgba(62,207,142,.16);color:var(--ok)}
+.st-zuviel{background:rgba(91,156,245,.16);color:var(--info)}
+.balken{height:8px;background:var(--bg4);border-radius:999px;overflow:hidden;display:flex}
+.balken i{display:block;height:100%;transition:width .35s cubic-bezier(.4,0,.2,1)}
+.balken i.best{background:var(--ok)}
+.karte .liste{margin-top:11px;font-size:12.5px;color:var(--dim);display:flex;flex-direction:column;gap:3px}
+.karte .liste span{display:flex;gap:7px}
+.karte .liste span b{color:var(--text);font-weight:550;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.karte .liste .leer{color:var(--dimmer);font-style:italic}
+
+/* ---------- Hinweise ---------- */
+.hinweise{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+.hinweis{display:flex;gap:11px;align-items:flex-start;font-size:13.5px;padding:11px 14px;
+  border-radius:10px;border:1px solid}
+.hinweis .h-ico{font-weight:700;font-size:13px;flex-shrink:0;margin-top:1px}
+.h-warn{background:rgba(240,180,41,.09);border-color:rgba(240,180,41,.32);color:var(--warn)}
+.h-err{background:rgba(242,84,91,.09);border-color:rgba(242,84,91,.32);color:var(--err)}
+.h-ok{background:rgba(62,207,142,.09);border-color:rgba(62,207,142,.32);color:var(--ok)}
+.h-info{background:rgba(91,156,245,.09);border-color:rgba(91,156,245,.3);color:var(--info)}
+.hinweis span{color:inherit;opacity:.95}
+
+/* ---------- Semesterübersicht ---------- */
+.sem-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.sem-box{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:13px 15px}
+.sem-box .kopf{display:flex;align-items:baseline;gap:8px;margin-bottom:9px}
+.sem-box .kopf b{font-size:13.5px}
+.sem-box .kopf i{margin-left:auto;font-style:normal;font-size:12.5px;color:var(--dim)}
+.sem-box .kopf i.voll{color:var(--warn)}
+.sem-box ul{margin:0;padding:0;list-style:none;font-size:12.5px;color:var(--dim);
+  display:flex;flex-direction:column;gap:3px}
+.sem-box li{display:flex;gap:8px}
+.sem-box li b{color:var(--text);font-weight:500;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ---------- Filter ---------- */
+.filter{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;
+  margin-bottom:16px;display:flex;gap:11px;flex-wrap:wrap;align-items:flex-end}
+.feld{display:flex;flex-direction:column;gap:4px}
+.feld label{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.feld input,.feld select{background:var(--bg3);border:1px solid var(--line);color:var(--text);
+  border-radius:8px;padding:8px 11px;font-size:13.5px;min-width:140px;outline:none;transition:.15s}
+.feld input:focus,.feld select:focus{border-color:var(--rot-hell);box-shadow:0 0 0 3px rgba(165,30,55,.15)}
+.feld.wachsen{flex:1;min-width:210px}
+.feld.wachsen input{width:100%}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{background:var(--bg3);border:1px solid var(--line);color:var(--dim);border-radius:999px;
+  padding:6px 13px;font-size:12.5px;font-weight:550;transition:.15s}
+.chip:hover{color:var(--text);border-color:var(--dimmer)}
+.chip.an{background:var(--rot);border-color:var(--rot);color:#fff}
+.treffer{font-size:12.5px;color:var(--dim);margin-bottom:9px}
+
+/* ---------- Tabelle ---------- */
+.tab-wrap{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:920px}
+thead th{background:var(--bg4);text-align:left;padding:10px 13px;font-size:11.5px;text-transform:uppercase;
+  letter-spacing:.5px;color:var(--dim);font-weight:650;position:sticky;top:0;z-index:2;
+  white-space:nowrap;cursor:pointer;user-select:none}
+thead th:hover{color:var(--text)}
+thead th.nosort{cursor:default}
+thead th .pfeil{opacity:.45;font-size:10px}
+tbody tr{border-top:1px solid var(--line);transition:background .12s;cursor:pointer}
+tbody tr:hover{background:var(--bg3)}
+tbody tr.drin{background:rgba(62,207,142,.07)}
+tbody td{padding:9px 13px;vertical-align:middle}
+td.nr{font-family:ui-monospace,Consolas,monospace;font-size:12px;color:var(--dim);white-space:nowrap}
+td.titel{font-weight:520;min-width:250px}
+td.titel small{display:block;color:var(--dimmer);font-weight:400;font-size:11.5px;margin-top:1px}
+td.cp{font-weight:650;text-align:right;white-space:nowrap}
+td.mitte{text-align:center}
+.tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.4px;padding:2px 7px;
+  border-radius:5px;margin-right:3px;white-space:nowrap}
+.t-PRAK{background:rgba(91,156,245,.17);color:#7fb3ff}
+.t-TECH{background:rgba(240,180,41,.17);color:#f0b429}
+.t-THEO{background:rgba(186,104,240,.17);color:#c48ef5}
+.t-INFO{background:rgba(62,207,142,.15);color:#4dd69b}
+[data-theme="light"] .t-PRAK{color:#1f6fd6}
+[data-theme="light"] .t-TECH{color:#a37209}
+[data-theme="light"] .t-THEO{color:#7d34b8}
+[data-theme="light"] .t-INFO{color:#12855a}
+.turnus{font-size:11.5px;color:var(--dim);white-space:nowrap}
+.turnus.W::before{content:"❄ "}
+.turnus.S::before{content:"☀ "}
+.turnus.J::before{content:"↻ "}
+.turnus.U::before{content:"~ "}
+.sprache{font-size:11px;color:var(--dimmer);border:1px solid var(--line);border-radius:4px;padding:1px 5px}
+.nichtgeplant{font-size:10.5px;color:var(--warn);opacity:.85;white-space:nowrap}
+.add-btn{background:var(--rot);border:none;color:#fff;border-radius:7px;padding:6px 12px;
+  font-size:12.5px;font-weight:600;transition:.15s;white-space:nowrap}
+.add-btn:hover{background:var(--rot-hell)}
+.add-btn.drin{background:var(--bg4);color:var(--ok);cursor:default}
+.add-btn.drin-aktiv{background:var(--bg4);color:var(--err);cursor:pointer}
+.add-btn.drin-aktiv:hover{background:rgba(242,84,91,.18);color:var(--err)}
+.geplant-alt{font-size:10.5px;color:var(--warn);display:block;margin-top:1px}
+.alma-zeiten{font-size:12px;color:var(--dim);margin-top:4px;line-height:1.6}
+.alma-zeiten .az-block{display:block;padding:2px 0;border-top:1px solid var(--line)}
+.alma-keine{font-size:11px;color:var(--dimmer);font-style:italic}
+.zeit-konflikt{background:rgba(242,84,91,.1);border:1px solid rgba(242,84,91,.3);border-radius:8px;padding:10px 13px;margin-bottom:7px;font-size:13px}
+.zeit-konflikt strong{color:var(--err)}
+.leer-box{padding:44px 20px;text-align:center;color:var(--dim);font-size:14px}
+.leer-box .gross{font-size:34px;margin-bottom:10px;opacity:.4}
+
+/* ---------- Plan ---------- */
+.plan-sem{margin-bottom:20px}
+.plan-sem-kopf{display:flex;align-items:center;gap:12px;margin-bottom:9px;padding-bottom:8px;
+  border-bottom:2px solid var(--line)}
+.plan-sem-kopf h3{margin:0;font-size:15px;font-weight:650}
+.plan-sem-kopf .cp-sum{font-size:12.5px;font-weight:600;padding:3px 11px;border-radius:999px;
+  background:var(--bg4);color:var(--dim)}
+.plan-sem-kopf .cp-sum.gut{background:rgba(62,207,142,.15);color:var(--ok)}
+.plan-sem-kopf .cp-sum.viel{background:rgba(240,180,41,.15);color:var(--warn)}
+.plan-zeile{display:flex;align-items:center;gap:11px;background:var(--bg2);border:1px solid var(--line);
+  border-radius:10px;padding:10px 13px;margin-bottom:7px;flex-wrap:wrap}
+.plan-zeile.best{border-left:3px solid var(--ok)}
+.plan-zeile .pz-nr{font-family:ui-monospace,Consolas,monospace;font-size:11.5px;color:var(--dim);min-width:92px}
+.plan-zeile .pz-titel{flex:1;min-width:190px;font-size:13.5px;font-weight:520;cursor:pointer}
+.plan-zeile .pz-titel:hover{color:var(--rot-hell)}
+.plan-zeile .pz-titel small{display:block;color:var(--dimmer);font-weight:400;font-size:11.5px}
+.plan-zeile .pz-cp{font-weight:700;font-size:14px;min-width:52px;text-align:right}
+.plan-zeile select{background:var(--bg3);border:1px solid var(--line);color:var(--text);
+  border-radius:7px;padding:6px 9px;font-size:12.5px;outline:none}
+.plan-zeile select.warn{border-color:var(--warn);color:var(--warn)}
+.del-btn{background:transparent;border:1px solid var(--line);color:var(--dim);border-radius:7px;
+  padding:5px 10px;font-size:14px;line-height:1;transition:.15s}
+.del-btn:hover{border-color:var(--err);color:var(--err);background:rgba(242,84,91,.08)}
+.pz-check{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--dim);cursor:pointer;user-select:none}
+.pz-check input{accent-color:var(--ok);width:15px;height:15px;cursor:pointer}
+
+/* ---------- Werkzeuge / Infobox ---------- */
+.werkzeuge{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.w-btn{background:var(--bg2);border:1px solid var(--line);color:var(--text);border-radius:8px;
+  padding:8px 14px;font-size:13px;font-weight:550;transition:.15s}
+.w-btn:hover{border-color:var(--rot);color:var(--rot-hell)}
+.w-btn.gefahr:hover{border-color:var(--err);color:var(--err)}
+details.info{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);
+  padding:0;margin-bottom:22px;overflow:hidden}
+details.info summary{padding:13px 17px;cursor:pointer;font-size:13.5px;font-weight:600;list-style:none;
+  display:flex;align-items:center;gap:9px;user-select:none}
+details.info summary::-webkit-details-marker{display:none}
+details.info summary::before{content:"▸";color:var(--rot-hell);transition:.2s;display:inline-block}
+details.info[open] summary::before{transform:rotate(90deg)}
+details.info summary:hover{background:var(--bg3)}
+.info-inhalt{padding:2px 17px 17px;font-size:13.5px;color:var(--dim);border-top:1px solid var(--line)}
+.info-inhalt p{margin:11px 0}
+.info-inhalt ul{margin:9px 0;padding-left:20px}
+.info-inhalt li{margin:4px 0}
+.info-inhalt code{background:var(--bg4);padding:1px 6px;border-radius:4px;
+  font-family:ui-monospace,Consolas,monospace;font-size:12px;color:var(--text)}
+.info-inhalt strong{color:var(--text)}
+.fuss{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);font-size:12px;
+  color:var(--dimmer);text-align:center}
+
+/* ---------- Moduldetail ---------- */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.62);backdrop-filter:blur(3px);z-index:100;
+  display:none;align-items:flex-start;justify-content:center;padding:34px 18px;overflow-y:auto}
+.overlay.auf{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--line);border-radius:16px;max-width:840px;width:100%;
+  box-shadow:0 22px 70px rgba(0,0,0,.55);animation:auftauchen .18s ease-out}
+@keyframes auftauchen{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+.modal-kopf{display:flex;align-items:flex-start;gap:14px;padding:20px 24px 16px;
+  border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg2);
+  border-radius:16px 16px 0 0;z-index:2}
+.modal-kopf .mk-nr{font-family:ui-monospace,Consolas,monospace;font-size:12px;color:var(--rot-hell);font-weight:600}
+.modal-kopf h3{margin:3px 0 0;font-size:18px;font-weight:650;line-height:1.3}
+.modal-kopf .schliessen{background:var(--bg4);border:none;color:var(--dim);border-radius:8px;
+  padding:7px 12px;font-size:16px;line-height:1;margin-left:auto;transition:.15s}
+.modal-kopf .schliessen:hover{background:var(--err);color:#fff}
+.modal-inhalt{padding:18px 24px 24px}
+.meta-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:11px;margin-bottom:18px}
+.meta{background:var(--bg3);border:1px solid var(--line);border-radius:9px;padding:9px 12px}
+.meta .m-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--dimmer);font-weight:650}
+.meta .m-wert{font-size:13.5px;font-weight:560;margin-top:3px}
+.abschnitt{margin-bottom:17px}
+.abschnitt h4{margin:0 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.6px;
+  color:var(--rot-hell);font-weight:700}
+.abschnitt p{margin:0;font-size:13.5px;color:var(--dim);line-height:1.65}
+.abschnitt p.klar{color:var(--text)}
+table.noten{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:4px;min-width:0}
+table.noten th{background:var(--bg4);color:var(--dim);text-align:left;padding:7px 10px;
+  font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;position:static;cursor:default}
+table.noten td{padding:7px 10px;border-top:1px solid var(--line)}
+table.noten tr{cursor:default}
+table.noten tr:hover{background:transparent}
+.modal-fuss{display:flex;gap:9px;align-items:center;flex-wrap:wrap;padding-top:15px;
+  border-top:1px solid var(--line);margin-top:4px}
+.legende{font-size:11.5px;color:var(--dimmer);margin-top:7px;line-height:1.7}
+.legende b{color:var(--dim);font-weight:600}
+
+@media (max-width:760px){
+  main{padding:16px 13px 60px} header{padding:14px 13px 0}
+  .kopf-zeile h1{font-size:16px}
+  .filter{padding:11px}
+  .overlay{padding:0}
+  .modal{border-radius:0;min-height:100vh}
+  .modal-kopf{border-radius:0}
+}
+
+/* ---------- Druck ---------- */
+@media print{
+  :root{--bg:#fff;--bg2:#fff;--bg3:#fff;--bg4:#f0f0f0;--line:#ccc;--text:#000;--dim:#555;--dimmer:#777}
+  body{background:#fff;color:#000}
+  header{position:static;background:#fff;color:#000;border-bottom:2px solid var(--rot);box-shadow:none;padding:0 0 10px}
+  .kopf-zeile h1{color:var(--rot)} .kopf-zeile .sub{color:#444;opacity:1}
+  .gesamt{background:#fff;color:var(--rot);border:1px solid var(--rot)}
+  nav.tabs,#themaBtn,.werkzeuge,.filter,.treffer,details.info,.add-btn,.del-btn,.pz-check,.overlay{display:none!important}
+  .seite{display:block!important;page-break-before:always}
+  .seite:first-of-type{page-break-before:auto}
+  #seite-katalog{display:none!important}
+  .karte,.sem-box,.plan-zeile,.hinweis{break-inside:avoid;border-color:#ccc}
+  .plan-zeile select{border:none;background:transparent;appearance:none;padding:0;font-weight:600}
+  .karten{grid-template-columns:repeat(2,1fr)}
+  .fuss{color:#666}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="kopf-zeile">
+    <div>
+      <h1>Wahlfach-Planer</h1>
+      <!-- <div class="sub">M.Sc. Informatik / Computer Science · Universität Tübingen · PO 2021 (88|866|-|-|H|2021)</div> -->
+    </div>
+    <div class="kopf-rechts">
+      <div class="gesamt" id="gesamtAnzeige">–</div>
+      <button class="icon-btn" id="themaBtn" title="Hell/Dunkel umschalten">◐</button>
+    </div>
+  </div>
+  <nav class="tabs">
+    <button data-seite="uebersicht" class="aktiv">Übersicht</button>
+    <button data-seite="katalog">Modulkatalog <span class="zahl" id="katalogZahl">0</span></button>
+    <button data-seite="plan">Mein Plan <span class="zahl" id="planZahl">0</span></button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ ÜBERSICHT ============ -->
+<section class="seite aktiv" id="seite-uebersicht">
+  <details class="info">
+    <summary>Wie ist der Master aufgebaut? (Kurzfassung)</summary>
+    <div class="info-inhalt">
+      <p>Der M.Sc. Informatik hat <strong>120 ECTS</strong>: fünf Wahlpflicht-Studienbereiche à 18 CP plus
+      die Masterarbeit mit 30 CP.</p>
+      <ul>
+        <li><code>INFO-PRAK</code> Praktische Informatik – <strong>18 CP</strong></li>
+        <li><code>INFO-TECH</code> Technische Informatik – <strong>18 CP</strong></li>
+        <li><code>INFO-THEO</code> Theoretische Informatik – <strong>18 CP</strong></li>
+        <li><code>INFO-INFO</code> Studienbereich Informatik – <strong>18 CP</strong></li>
+        <li><code>Konto 100</code> INFO BASIS <em>oder</em> INFO FOKUS – <strong>18 CP</strong> (frei belegbar)</li>
+        <li><code>INFO-4999</code> Masterarbeit – <strong>30 CP</strong> (empf. 4. Fachsemester)</li>
+      </ul>
+      <p><strong>Der Clou:</strong> Fast jedes Modul ist mehreren Bereichen zugeordnet. <em>Massively Parallel
+      Computing</em> zählt für PRAK, TECH <em>und</em> INFO – aber natürlich nur einmal. Deshalb wählst du hier
+      pro Modul aus, auf welchen Bereich es angerechnet wird.</p>
+      <p>Laut Zuordnungstabelle steht die Spalte <code>INFO-INFO</code> für
+      <code>INFO – { INFO, BASIS, FOKUS, APPL }</code>. Der Bereich <strong>INFO BASIS / INFO FOKUS</strong>
+      ist also der Puffer: dort passt jedes anrechenbare Modul rein. <em>BASIS</em> = Breite,
+      <em>FOKUS</em> = Vertiefung in einem Thema.</p>
+      <p><strong>Datenquellen:</strong> Struktur aus deinem alma-Studienplaner; Moduldaten aus
+      <a href="https://courses.cs.uni-tuebingen.de/main/module/list-master/" target="_blank" rel="noopener">Veranstaltungsverzeichnis</a>,
+      <a href="https://courses.cs.uni-tuebingen.de/main/zuordnungstabelle-master" target="_blank" rel="noopener">Zuordnungstabelle</a>
+      und den einzelnen Modulbeschreibungen des Fachbereichs Informatik.
+      Verbindlich sind Prüfungsordnung und Modulhandbuch – das hier ist ein Planungshelfer.</p>
+    </div>
+  </details>
+
+  <h2>Studienbereiche</h2>
+  <div class="karten" id="bereichsKarten"></div>
+
+  <h2>Prüfung deiner Planung</h2>
+  <div class="hinweise" id="hinweisListe"></div>
+
+  <h2>Semesterverteilung <span class="anm">Richtwert: 30 CP pro Semester</span></h2>
+  <div class="sem-grid" id="semGrid"></div>
+</section>
+
+<!-- ============ KATALOG ============ -->
+<section class="seite" id="seite-katalog">
+  <div class="filter">
+    <div class="feld wachsen">
+      <label for="suche">Suche</label>
+      <input type="text" id="suche" placeholder="Titel, Nummer, Dozent:in oder Stichwort im Inhalt …" autocomplete="off">
+    </div>
+    <div class="feld">
+      <label for="fLehrform">Lehrform</label>
+      <select id="fLehrform">
+        <option value="">alle</option>
+        <option value="VU">Vorlesung + Übung</option>
+        <option value="V">Vorlesung</option>
+        <option value="S">Seminar</option>
+        <option value="P">Praktikum</option>
+        <option value="VS">Vorlesung + Seminar</option>
+        <option value="F">Forschungsprojekt</option>
+      </select>
+    </div>
+    <div class="feld">
+      <label for="fCp">ECTS</label>
+      <select id="fCp"><option value="">alle</option><option value="3">3 CP</option>
+        <option value="6">6 CP</option><option value="9">9 CP</option><option value="12">12 CP</option></select>
+    </div>
+    <div class="feld">
+      <label for="fTurnus">Turnus</label>
+      <select id="fTurnus"><option value="">alle</option><option value="W">Wintersemester</option>
+        <option value="S">Sommersemester</option><option value="J">jedes Semester</option>
+        <option value="U">unregelmäßig</option></select>
+    </div>
+    <div class="feld">
+      <label for="fSprache">Sprache</label>
+      <select id="fSprache"><option value="">alle</option><option value="Deutsch">Deutsch</option>
+        <option value="Englisch">Englisch</option><option value="Deutsch und Englisch">Deutsch + Englisch</option></select>
+    </div>
+    <div class="feld">
+      <label for="fPruefung">Prüfungsform</label>
+      <select id="fPruefung"><option value="">alle</option><option value="K">Klausur</option>
+        <option value="MP">mündliche Prüfung</option><option value="H">Hausarbeit / Ausarbeitung</option>
+        <option value="R">Referat / Vortrag</option></select>
+    </div>
+    <div class="feld">
+      <label>Studienbereich</label>
+      <div class="chips" id="bereichsChips"></div>
+    </div>
+    <div class="feld">
+      <label>&nbsp;</label>
+      <div class="chips">
+        <button class="chip" id="nurLuecken">nur offene Bereiche</button>
+        <button class="chip" id="ohneUngeplant">ohne „nicht geplant“</button>
+      </div>
+    </div>
+  </div>
+  <div class="treffer" id="trefferText"></div>
+  <div class="tab-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th data-sort="nr">Modul <span class="pfeil"></span></th>
+          <th data-sort="titel">Titel <span class="pfeil"></span></th>
+          <th data-sort="form">Form <span class="pfeil"></span></th>
+          <th data-sort="cp" style="text-align:right">CP <span class="pfeil"></span></th>
+          <th data-sort="sws" style="text-align:right">SWS <span class="pfeil"></span></th>
+          <th data-sort="turnus">Turnus <span class="pfeil"></span></th>
+          <th class="nosort">Geplant für</th>
+          <th class="nosort">Prüfung</th>
+          <th class="nosort">Zählt für</th>
+          <th class="nosort"></th>
+        </tr>
+      </thead>
+      <tbody id="katalogBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ PLAN ============ -->
+<section class="seite" id="seite-plan">
+  <div class="werkzeuge">
+    <button class="w-btn" id="autoBtn">Bereiche automatisch verteilen</button>
+    <button class="w-btn" id="exportBtn">Als JSON exportieren</button>
+    <button class="w-btn" id="importBtn">JSON importieren</button>
+    <button class="w-btn" id="druckBtn">Drucken / PDF</button>
+    <button class="w-btn gefahr" id="leerenBtn">Plan leeren</button>
+    <input type="file" id="importDatei" accept="application/json" hidden>
+  </div>
+  <div id="planInhalt"></div>
+</section>
+
+<!-- <div class="fuss">
+  Inoffizieller Planungshelfer · Moduldaten aus Veranstaltungsverzeichnis, Zuordnungstabelle und
+  Modulbeschreibungen des Fachbereichs Informatik · Speicherung ausschließlich lokal im Browser
+</div> -->
+</main>
+
+<!-- ============ MODULDETAIL ============ -->
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal" role="dialog" aria-modal="true"></div>
+</div>
+
+<script src="module.js"></script>
+<script src="alma-daten.js"></script>
+<script>
+"use strict";
+
+/* ================= Konstanten ================= */
+const BEREICHE = [
+  { id:"PRAK", name:"Praktische Informatik",      code:"INFO-PRAK", cp:18, farbe:"#5b9cf5" },
+  { id:"TECH", name:"Technische Informatik",      code:"INFO-TECH", cp:18, farbe:"#f0b429" },
+  { id:"THEO", name:"Theoretische Informatik",    code:"INFO-THEO", cp:18, farbe:"#ba68f0" },
+  { id:"INFO", name:"Studienbereich Informatik",  code:"INFO-INFO", cp:18, farbe:"#3ecf8e" },
+  { id:"FREI", name:"INFO BASIS oder INFO FOKUS", code:"Konto 100", cp:18, farbe:"#ff8a5b" }
+];
+const THESIS_CP = 30;
+const GESAMT_CP = BEREICHE.reduce((s,b) => s + b.cp, 0) + THESIS_CP;
+
+const TURNUS   = { W:"Wintersemester", S:"Sommersemester", J:"jedes Semester", U:"unregelmäßig" };
+const PRUEFUNG = { K:"Klausur", MP:"mündliche Prüfung", H:"Hausarbeit / Ausarbeitung", R:"Referat / Vortrag" };
+const STATUS   = { o:"obligatorisch", w:"wahlweise" };
+const BENOTUNG = { b:"benotet", ub:"unbenotet" };
+
+const SEMESTER = ["WiSe 2026/27","SoSe 2027","WiSe 2027/28","SoSe 2028","WiSe 2028/29","SoSe 2029"];
+const OHNE_SEM = "— noch offen —";
+const SPEICHER = "tue-msc-info-planer-v1";
+
+/* ================= Daten ================= */
+const MODULE = (window.MODULE_DATEN || []).map(m => ({
+  ...m,
+  // "BIOINF-4510 (bisher: BIO-4510)" -> "BIOINF-4510" für die kompakte Listenansicht
+  nrKurz: m.nr.split(" (")[0],
+  sws: m.workload && m.workload.sws ? m.workload.sws : null,
+  pruefKuerzel: [...new Set((m.leistungen || [])
+    .flatMap(l => (l.pruefung || "").split(",").map(x => x.trim()).filter(Boolean)))],
+  geplantOffen: !/nicht geplant|^-+$|^$/i.test((m.geplant || "").trim())
+}));
+const NACH_NR = new Map(MODULE.map(m => [m.nr, m]));
+
+/* ================= Alma-Daten (Vorlesungszeiten) ================= */
+// Wird aus alma-daten.js geladen (aus alma.uni-tuebingen.de extrahiert)
+// Falls die Datei nicht geladen wurde, leeres Objekt als Fallback.
+const ALMA_DATEN = window.ALMA_DATEN || {};
+
+// Mapping von Wochentagen zu Sortier-Indizes (0=Mo..6=So)
+const TAG_INDEX = { Mo:0, Di:1, Mi:2, Do:3, Fr:4, Sa:5, So:6 };
+const TAG_NAME  = { Mo:"Montag", Di:"Dienstag", Mi:"Mittwoch", Do:"Donnerstag", Fr:"Freitag", Sa:"Samstag", So:"Sonntag" };
+
+function geplantInfo(m){
+  const txt = (m.geplant || "").trim();
+  const jahrMatch = txt.match(/(\d{4})/);
+  const jahr = jahrMatch ? parseInt(jahrMatch[1]) : null;
+  const veraltet = jahr !== null && jahr <= 2024;
+  let html = esc(txt || "—");
+  if(veraltet) html += `<span class="geplant-alt">⚠ vermutlich veraltet</span>`;
+  return { text: txt, jahr, veraltet, html };
+}
+
+function almaFuerModul(m){
+  // Normalisierte Modulnummer ohne Bindestriche
+  const nrFlat = m.nrKurz.replace(/[- ]/g, '');
+  const nrFull = m.nr.replace(/[- ]/g, '');
+
+  // 1) Direkter Treffer über Modulnummer
+  for(const nr of [m.nrKurz, m.nr, nrFlat, nrFull]){
+    if(ALMA_DATEN[nr]) return ALMA_DATEN[nr];
+  }
+
+  // 2) Suche über Titel-Ähnlichkeit (alma-Titel als Teilstring des Modul-Titels oder umgekehrt)
+  const tLow = (m.titel || '').toLowerCase();
+  for(const [key, val] of Object.entries(ALMA_DATEN)){
+    const aLow = (val.titel || key).toLowerCase();
+    if(tLow && aLow && (tLow.includes(aLow) || aLow.includes(tLow))) return val;
+  }
+  return null;
+}
+
+function almaAbschnitt(m){
+  const a = almaFuerModul(m);
+  if(!a) return `<div class="abschnitt"><h4>Termine (alma)</h4>
+    <p class="alma-keine">Keine alma-Daten verfügbar — bitte manuell im
+    <a href="https://alma.uni-tuebingen.de/alma/pages/cm/exa/coursecatalog/showCourseCatalog.xhtml?_flowId=showCourseCatalog-flow&_flowExecutionKey=e1s1" target="_blank" rel="noopener">Vorlesungsverzeichnis</a> prüfen.</p></div>`;
+
+  const alleTermine = (a.gruppen || []).flatMap(g =>
+    (g.termine || []).map(t => ({ ...t, gruppe: g.name })));
+  if(!alleTermine.length) return `<div class="abschnitt"><h4>Termine (alma)</h4>
+    <p class="alma-keine">Keine Termine in alma hinterlegt.</p></div>`;
+
+  return `<div class="abschnitt"><h4>Termine (alma)</h4>
+    <div class="alma-zeiten">${alleTermine.map(t =>
+      `<span class="az-block"><strong>${TAG_NAME[t.tag] || t.tag}</strong>, ${esc(t.start || "?")} – ${esc(t.ende || "?")}
+      · ${esc(t.von || "?")}–${esc(t.bis || "?")} Uhr (${esc(t.rhythmus || "wöchentlich")})
+      · ${esc(t.raum || "—")}<br><small>${esc(t.bemerkung || "")}${t.gruppe ? " · " + esc(t.gruppe) : ""}</small></span>`).join("")}</div></div>`;
+}
+
+/* ================= Zeitmanagement ================= */
+function alleAlmaTermineFuerPlan(){
+  const termine = [];
+  plan.forEach(e => {
+    const m = NACH_NR.get(e.nr); if(!m) return;
+    const a = almaFuerModul(m); if(!a) return;
+    (a.gruppen || []).forEach(g => {
+      (g.termine || []).forEach(t => {
+        termine.push({ modul: m, gruppe: g.name, termin: t });
+      });
+    });
+  });
+  return termine;
+}
+
+function zeitZuMinuten(zeitStr){
+  if(!zeitStr) return null;
+  const [h, m] = zeitStr.split(":").map(Number);
+  return h * 60 + m;
+}
+
+function termineUeberlappen(a, b){
+  // Nur gleicher Tag
+  if(a.tag !== b.tag) return false;
+  const aVon = zeitZuMinuten(a.von), aBis = zeitZuMinuten(a.bis);
+  const bVon = zeitZuMinuten(b.von), bBis = zeitZuMinuten(b.bis);
+  if(aVon == null || aBis == null || bVon == null || bBis == null) return false;
+  // Überlappung wenn nicht: a endet vor b startet ODER b endet vor a startet
+  return !(aBis <= bVon || bBis <= aVon);
+}
+
+function findeKonflikte(){
+  const alle = alleAlmaTermineFuerPlan();
+  const konflikte = [];
+  for(let i = 0; i < alle.length; i++){
+    for(let j = i + 1; j < alle.length; j++){
+      if(termineUeberlappen(alle[i].termin, alle[j].termin)){
+        konflikte.push({ a: alle[i], b: alle[j] });
+      }
+    }
+  }
+  return konflikte;
+}
+
+function zeichneZeitManagement(){
+  if(!plan.length) return "";
+  const alle = alleAlmaTermineFuerPlan();
+  const ohneAlma = plan.filter(e => !almaFuerModul(NACH_NR.get(e.nr)));
+  const konflikte = findeKonflikte();
+
+  let html = `<div class="plan-sem" style="margin-top:18px">
+    <div class="plan-sem-kopf"><h3>⏰ Zeitmanagement</h3>
+      <span class="cp-sum">${alle.length} Termine · ${konflikte.length} Konflikte</span></div>`;
+
+  if(!alle.length){
+    html += `<div class="alma-keine" style="padding:8px 0">Keine alma-Termine für deine gewählten Module hinterlegt.
+      ${ohneAlma.length ? `${ohneAlma.length} Modul${ohneAlma.length>1?"e":"e"} ohne alma-Daten.` : ""}</div></div>`;
+    return html;
+  }
+
+  if(konflikte.length){
+    html += konflikte.map(k => {
+      const ta = k.a.termin, tb = k.b.termin;
+      return `<div class="zeit-konflikt">
+        <strong>⚠ Überlappung:</strong> ${esc(k.a.modul.titel)} (${TAG_NAME[ta.tag]||ta.tag} ${ta.von}–${ta.bis})
+        ↔ ${esc(k.b.modul.titel)} (${TAG_NAME[tb.tag]||tb.tag} ${tb.von}–${tb.bis})</div>`;
+    }).join("");
+  }
+
+  // Alle Termine sortiert nach Tag+Zeit auflisten
+  const sortiert = [...alle].sort((x,y) => {
+    const di = (TAG_INDEX[x.termin.tag] ?? 7) - (TAG_INDEX[y.termin.tag] ?? 7);
+    if(di !== 0) return di;
+    return (zeitZuMinuten(x.termin.von)??0) - (zeitZuMinuten(y.termin.von)??0);
+  });
+  html += `<div class="alma-zeiten" style="margin-top:6px">${sortiert.map(e =>
+    `<span class="az-block"><strong>${TAG_NAME[e.termin.tag]||e.termin.tag}</strong> ${esc(e.termin.von||"?")}–${esc(e.termin.bis||"?")} Uhr
+    · ${esc(e.modul.titel)} · ${esc(e.termin.raum||"—")}</span>`).join("")}</div>`;
+  html += `</div>`;
+  return html;
+}
+
+/* ================= Zustand ================= */
+let plan = [];
+let filterBereiche = new Set();
+let nurLueckenAn = false, ohneUngeplantAn = false;
+let sortSpalte = "nr", sortRichtung = 1;
+
+function laden(){
+  try{
+    const roh = localStorage.getItem(SPEICHER);
+    if(!roh) return;
+    const d = JSON.parse(roh);
+    if(Array.isArray(d.plan)) plan = d.plan.filter(e => NACH_NR.has(e.nr));
+    if(d.thema === "light") document.documentElement.setAttribute("data-theme","light");
+  }catch(e){ console.warn("Gespeicherter Plan unlesbar:", e); }
+}
+function sichern(){
+  try{
+    localStorage.setItem(SPEICHER, JSON.stringify({
+      plan, thema: document.documentElement.getAttribute("data-theme") || "dark" }));
+  }catch(e){ console.warn("Speichern fehlgeschlagen:", e); }
+}
+
+/* ================= Hilfen ================= */
+function esc(s){
+  return String(s ?? "").replace(/[&<>"']/g, c =>
+    ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" })[c]);
+}
+function bereichPasst(m, id){ return id === "FREI" ? true : m.bereiche.includes(id); }
+function bilanz(){
+  const b = {};
+  BEREICHE.forEach(x => b[x.id] = { ist:0, bestanden:0, module:[] });
+  plan.forEach(e => {
+    const m = NACH_NR.get(e.nr); if(!m) return;
+    const z = b[e.bereich]; if(!z) return;
+    z.ist += m.cp;
+    if(e.bestanden) z.bestanden += m.cp;
+    z.module.push({ ...m, bestanden: !!e.bestanden });
+  });
+  return b;
+}
+function bestesBereich(m){
+  const b = bilanz();
+  const k = BEREICHE.filter(x => bereichPasst(m, x.id))
+    .map(x => ({ id:x.id, luecke: x.cp - b[x.id].ist }))
+    .sort((p,q) => q.luecke - p.luecke);
+  return k.length ? k[0].id : "FREI";
+}
+function pruefKurz(m){
+  if(m.pruefKuerzel.length) return m.pruefKuerzel.map(k => PRUEFUNG[k] || k).join(" + ");
+  return m.pruefung ? m.pruefung.split(/[,(]/)[0].trim() : "—";
+}
+
+/* ================= Aktionen ================= */
+function hinzufuegen(nr){
+  if(plan.some(e => e.nr === nr)) return;
+  const m = NACH_NR.get(nr); if(!m) return;
+  plan.push({ nr, bereich: bestesBereich(m), sem: OHNE_SEM, bestanden:false });
+  sichern(); allesZeichnen();
+}
+function entfernen(nr){ plan = plan.filter(e => e.nr !== nr); sichern(); allesZeichnen(); }
+
+function autoVerteilen(){
+  const rest = BEREICHE.reduce((o,b) => (o[b.id] = b.cp, o), {});
+  [...plan].sort((a,c) => {
+    const ma = NACH_NR.get(a.nr), mc = NACH_NR.get(c.nr);
+    return ma.bereiche.length - mc.bereiche.length || mc.cp - ma.cp;
+  }).forEach(e => {
+    const m = NACH_NR.get(e.nr);
+    const ziel = BEREICHE.filter(b => bereichPasst(m,b.id) && b.id !== "FREI")
+      .sort((p,q) => rest[q.id] - rest[p.id])[0];
+    if(ziel && rest[ziel.id] >= m.cp){ e.bereich = ziel.id; rest[ziel.id] -= m.cp; }
+    else { e.bereich = "FREI"; rest.FREI -= m.cp; }
+  });
+  sichern(); allesZeichnen();
+}
+
+/* ================= Moduldetail ================= */
+function detailOeffnen(nr){
+  const m = NACH_NR.get(nr); if(!m) return;
+  const drin = plan.some(e => e.nr === nr);
+  const wl = m.workload || {};
+  const meta = [
+    ["ECTS", m.cp + " CP"],
+    ["Lehrform", m.lehrformLang || "—"],
+    ["Turnus", m.turnusLang || TURNUS[m.turnus]],
+    ["Sprache", m.sprache || "—"],
+    ["Dauer", m.dauer || "—"],
+    ["Kontaktzeit", wl.sws ? wl.sws + " SWS · " + wl.kontakt + " h" : "—"],
+    ["Selbststudium", wl.selbst ? wl.selbst + " h" : "—"],
+    ["Gesamtaufwand", wl.gesamt ? wl.gesamt + " h" : "—"],
+    ["Dozent:in", m.dozent || "—"],
+    ["Zuletzt angeboten", m.zuletzt || "—"],
+    ["Geplant für", m.geplant || "—"]
+  ];
+
+  const noten = (m.leistungen || []).length ? `
+    <div class="abschnitt">
+      <h4>Vergabe von Leistungspunkten &amp; Notenberechnung</h4>
+      <table class="noten">
+        <thead><tr><th>Lehrform</th><th>Status</th><th>SWS</th><th>LP</th>
+          <th>Prüfung</th><th>Dauer</th><th>Benotung</th><th>Anteil Modulnote</th></tr></thead>
+        <tbody>${m.leistungen.map(l => `<tr>
+          <td>${esc(l.art)}${l.kuerzel ? ` <span style="color:var(--dimmer)">(${esc(l.kuerzel)})</span>` : ""}</td>
+          <td>${esc(STATUS[l.status] || l.status || "—")}</td>
+          <td>${esc(l.sws || "—")}</td>
+          <td>${esc(l.lp || "—")}</td>
+          <td>${esc(l.pruefung ? (PRUEFUNG[l.pruefung] || l.pruefung) : "—")}</td>
+          <td>${l.dauer ? esc(l.dauer) + " min" : "—"}</td>
+          <td>${esc(BENOTUNG[l.benotet] || l.benotet || "—")}</td>
+          <td>${l.anteil ? esc(l.anteil) + " %" : "—"}</td></tr>`).join("")}</tbody>
+      </table>
+      <div class="legende"><b>Status:</b> o = obligatorisch · <b>Benotung:</b> b = benotet, ub = unbenotet
+        · <b>Prüfung:</b> K = Klausur, MP = mündliche Prüfung, H = Hausarbeit/Ausarbeitung, R = Referat</div>
+    </div>` : "";
+
+  const feld = (titel, text, klar) => text
+    ? `<div class="abschnitt"><h4>${titel}</h4><p class="${klar ? "klar" : ""}">${esc(text)}</p></div>` : "";
+
+  document.getElementById("modal").innerHTML = `
+    <div class="modal-kopf">
+      <div>
+        <div class="mk-nr">${esc(m.nr)}</div>
+        <h3>${esc(m.titel)}</h3>
+        <div style="margin-top:7px">${m.bereiche.map(x => `<span class="tag t-${x}">${x}</span>`).join("")}
+          ${m.geplantOffen ? "" : `<span class="nichtgeplant">· derzeit nicht geplant</span>`}</div>
+      </div>
+      <button class="schliessen" id="modalZu" title="Schließen (Esc)">✕</button>
+    </div>
+    <div class="modal-inhalt">
+      <div class="meta-grid">${meta.map(([l,w]) => {
+        const info = l === "Geplant für" ? geplantInfo(m) : null;
+        return `<div class="meta"><div class="m-label">${esc(l)}</div><div class="m-wert">${esc(w)}${info && info.veraltet ? ` <span class="geplant-alt" style="display:inline">⚠ vermutlich veraltet</span>` : ""}</div></div>`;
+      }).join("")}</div>
+      ${feld("Prüfungsform", m.pruefung, true)}
+      ${noten}
+      ${feld("Teilnahmevoraussetzungen", m.voraussetzungen, true)}
+      ${feld("Inhalt", m.inhalt)}
+      ${feld("Qualifikationsziele", m.ziele)}
+      ${feld("Literatur / Sonstiges", m.literatur)}
+
+      ${almaAbschnitt(m)}
+
+        ${drin
+          ? `<button class="w-btn gefahr" data-modal-del="${esc(m.nr)}">Aus dem Plan entfernen</button>`
+          : `<button class="add-btn" data-modal-add="${esc(m.nr)}">+ Zum Plan hinzufügen</button>`}
+        <span style="font-size:12px;color:var(--dimmer);margin-left:auto">
+          </span>
+      </div>
+    </div>`;
+  document.getElementById("overlay").classList.add("auf");
+  document.body.style.overflow = "hidden";
+}
+function detailSchliessen(){
+  document.getElementById("overlay").classList.remove("auf");
+  document.body.style.overflow = "";
+}
+
+/* ================= Übersicht ================= */
+function zeichneKarten(){
+  const b = bilanz();
+  document.getElementById("bereichsKarten").innerHTML = BEREICHE.map(x => {
+    const z = b[x.id];
+    const pBest = Math.min(100, z.bestanden / x.cp * 100);
+    const pPlan = Math.min(100 - pBest, (z.ist - z.bestanden) / x.cp * 100);
+    let st = "st-offen", stTxt = (x.cp - z.ist) + " CP fehlen";
+    if(z.ist === x.cp){ st = "st-fertig"; stTxt = "vollständig"; }
+    else if(z.ist > x.cp){ st = "st-zuviel"; stTxt = "+" + (z.ist - x.cp) + " CP über"; }
+    const liste = z.module.length
+      ? z.module.map(m => `<span>${m.bestanden ? "✓" : "○"} <b title="${esc(m.titel)}">${esc(m.titel)}</b> ${m.cp}</span>`).join("")
+      : `<span class="leer">noch nichts eingeplant</span>`;
+    return `<article class="karte ${z.ist >= x.cp ? "fertig" : ""}" style="--akz:${x.farbe}">
+      <h3>${esc(x.name)}</h3><div class="code">${esc(x.code)}</div>
+      <div class="cp"><span class="ist">${z.ist}</span><span class="soll">/ ${x.cp} CP</span>
+        <span class="status ${st}">${stTxt}</span></div>
+      <div class="balken"><i class="best" style="width:${pBest}%"></i>
+        <i style="width:${pPlan}%;background:${x.farbe};opacity:.5"></i></div>
+      <div class="liste">${liste}</div>
+    </article>`;
+  }).join("") + `
+    <article class="karte fertig" style="--akz:#a51e37">
+      <h3>Masterarbeit</h3><div class="code">INFO-4999 · Abschlussmodul</div>
+      <div class="cp"><span class="ist">30</span><span class="soll">/ 30 CP</span>
+        <span class="status st-offen">empf. 4. FS</span></div>
+      <div class="balken"><i style="width:100%;background:#a51e37;opacity:.5"></i></div>
+      <div class="liste"><span class="leer">Pflicht – wird nicht gewählt</span></div>
+    </article>`;
+
+  const geplant = plan.reduce((s,e) => s + NACH_NR.get(e.nr).cp, 0);
+  document.getElementById("gesamtAnzeige").innerHTML = `<b>${geplant + THESIS_CP}</b> / ${GESAMT_CP} CP`;
+}
+
+function zeichneHinweise(){
+  const b = bilanz(), h = [];
+  const geplant = plan.reduce((s,e) => s + NACH_NR.get(e.nr).cp, 0);
+
+  plan.forEach(e => {
+    const m = NACH_NR.get(e.nr);
+    if(!bereichPasst(m, e.bereich)){
+      const bn = BEREICHE.find(x => x.id === e.bereich);
+      h.push(["err", `<strong>${esc(m.nr)}</strong> ist nicht dem Bereich „${esc(bn.name)}“ zugeordnet
+        (laut Zuordnungstabelle nur: ${m.bereiche.join(", ")}). So wird es nicht anerkannt.`]);
+    }
+  });
+  BEREICHE.forEach(x => {
+    const z = b[x.id];
+    if(z.ist > x.cp) h.push(["warn", `<strong>${esc(x.name)}</strong>: ${z.ist} CP eingeplant,
+      gebraucht werden ${x.cp}. ${z.ist - x.cp} CP laufen ins Leere – schieb ein Modul woanders hin.`]);
+  });
+  const offen = BEREICHE.filter(x => b[x.id].ist < x.cp);
+  if(offen.length) h.push(["info",
+    `Noch offen: ${offen.map(x => `<strong>${esc(x.name)}</strong> (${x.cp - b[x.id].ist} CP)`).join(", ")}.`]);
+
+  SEMESTER.forEach(s => {
+    const cp = plan.filter(e => e.sem === s).reduce((a,e) => a + NACH_NR.get(e.nr).cp, 0);
+    if(cp > 36) h.push(["warn", `<strong>${esc(s)}</strong>: ${cp} CP geplant – deutlich über dem 30-CP-Richtwert.`]);
+  });
+  const ohne = plan.filter(e => e.sem === OHNE_SEM).length;
+  if(ohne) h.push(["info", `${ohne} Modul${ohne>1?"e sind":" ist"} noch keinem Semester zugeordnet.`]);
+
+  plan.forEach(e => {
+    if(e.sem === OHNE_SEM) return;
+    const m = NACH_NR.get(e.nr);
+    const winter = e.sem.startsWith("WiSe");
+    if(m.turnus === "W" && !winter)
+      h.push(["warn", `<strong>${esc(m.nr)}</strong> ${esc(m.titel)} läuft nur im <em>Wintersemester</em>, steht aber in ${esc(e.sem)}.`]);
+    if(m.turnus === "S" && winter)
+      h.push(["warn", `<strong>${esc(m.nr)}</strong> ${esc(m.titel)} läuft nur im <em>Sommersemester</em>, steht aber in ${esc(e.sem)}.`]);
+  });
+
+  const ungeplant = plan.filter(e => !NACH_NR.get(e.nr).geplantOffen);
+  if(ungeplant.length) h.push(["warn",
+    `${ungeplant.length} Modul${ungeplant.length>1?"e sind":" ist"} laut Verzeichnis
+     <em>derzeit nicht geplant</em>: ${ungeplant.map(e => `<strong>${esc(e.nr)}</strong>`).join(", ")}.
+     Vor dem Festlegen beim Lehrstuhl nachfragen.`]);
+
+  if(!h.length && geplant === 90)
+    h.push(["ok", "Alles passt: 90 CP Wahlpflicht sauber verteilt, plus 30 CP Masterarbeit."]);
+  if(!plan.length){ h.length = 0; h.push(["info", "Noch nichts geplant. Wechsel zum <strong>Modulkatalog</strong> und leg los."]); }
+
+  const ico = { err:"✕", warn:"!", info:"i", ok:"✓" };
+  document.getElementById("hinweisListe").innerHTML = h.map(([t,txt]) =>
+    `<div class="hinweis h-${t}"><span class="h-ico">${ico[t]}</span><span>${txt}</span></div>`).join("");
+}
+
+function zeichneSemGrid(){
+  const el = document.getElementById("semGrid");
+  const gruppen = [...SEMESTER, OHNE_SEM]
+    .map(s => ({ s, e: plan.filter(x => x.sem === s) })).filter(g => g.e.length);
+  if(!gruppen.length){
+    el.innerHTML = `<div class="leer-box" style="grid-column:1/-1">Noch keine Module eingeplant.</div>`;
+    return;
+  }
+  el.innerHTML = gruppen.map(g => {
+    const cp = g.e.reduce((a,x) => a + NACH_NR.get(x.nr).cp, 0);
+    return `<div class="sem-box">
+      <div class="kopf"><b>${esc(g.s)}</b><i class="${cp>36?"voll":""}">${cp} CP</i></div>
+      <ul>${g.e.map(x => { const m = NACH_NR.get(x.nr);
+        return `<li>${x.bestanden ? "✓" : "○"} <b title="${esc(m.titel)}">${esc(m.titel)}</b> ${m.cp}</li>`;
+      }).join("")}</ul></div>`;
+  }).join("");
+}
+
+/* ================= Katalog ================= */
+function gefilterteModule(){
+  const q = document.getElementById("suche").value.trim().toLowerCase();
+  const fForm = document.getElementById("fLehrform").value;
+  const fCp = document.getElementById("fCp").value;
+  const fTur = document.getElementById("fTurnus").value;
+  const fSpr = document.getElementById("fSprache").value;
+  const fPrf = document.getElementById("fPruefung").value;
+  const b = bilanz();
+  const offen = BEREICHE.filter(x => b[x.id].ist < x.cp).map(x => x.id);
+
+  const liste = MODULE.filter(m => {
+    if(q && !(m.titel.toLowerCase().includes(q) || m.nr.toLowerCase().includes(q) ||
+              m.dozent.toLowerCase().includes(q) || (m.inhalt || "").toLowerCase().includes(q))) return false;
+    if(fForm && m.form !== fForm) return false;
+    if(fCp && m.cp !== +fCp) return false;
+    if(fTur && m.turnus !== fTur) return false;
+    if(fSpr && m.sprache !== fSpr) return false;
+    if(fPrf && !m.pruefKuerzel.includes(fPrf)) return false;
+    if(filterBereiche.size && !m.bereiche.some(x => filterBereiche.has(x))) return false;
+    if(nurLueckenAn && !m.bereiche.some(x => offen.includes(x))) return false;
+    if(ohneUngeplantAn && !m.geplantOffen) return false;
+    return true;
+  });
+
+  liste.sort((a,c) => {
+    const va = a[sortSpalte], vc = c[sortSpalte];
+    if(va == null) return 1;
+    if(vc == null) return -1;
+    if(typeof va === "number") return (va - vc) * sortRichtung;
+    return String(va).localeCompare(String(vc), "de") * sortRichtung;
+  });
+  return liste;
+}
+
+function zeichneKatalog(){
+  const liste = gefilterteModule();
+  const drin = new Set(plan.map(e => e.nr));
+  document.getElementById("katalogZahl").textContent = MODULE.length;
+  document.getElementById("trefferText").textContent =
+    `${liste.length} von ${MODULE.length} Modulen` +
+    (liste.length ? " · Zeile anklicken für alle Details" : " – Filter zu eng?");
+
+  const body = document.getElementById("katalogBody");
+  if(!liste.length){
+    body.innerHTML = `<tr><td colspan="10"><div class="leer-box">
+      <div class="gross">🔍</div>Keine Treffer. Setz die Filter zurück oder such anders.</div></td></tr>`;
+    return;
+  }
+  body.innerHTML = liste.map(m => {
+    const info = geplantInfo(m);
+    return `<tr class="${drin.has(m.nr) ? "drin" : ""}" data-detail="${esc(m.nr)}">
+      <td class="nr" title="${esc(m.nr)}">${esc(m.nrKurz)}</td>
+      <td class="titel">${esc(m.titel)}
+        <small>${esc(m.dozent)} · <span class="sprache">${esc(m.sprache)}</span>
+        ${m.geplantOffen ? "" : `<span class="nichtgeplant">· nicht geplant</span>`}</small></td>
+      <td class="mitte">${esc(m.form)}</td>
+      <td class="cp">${m.cp}</td>
+      <td class="cp" style="font-weight:400;color:var(--dim)">${m.sws ?? "—"}</td>
+      <td><span class="turnus ${m.turnus}">${esc(TURNUS[m.turnus])}</span></td>
+      <td style="font-size:12px">${info.html}</td>
+      <td style="font-size:12px;color:var(--dim)">${esc(pruefKurz(m))}</td>
+      <td>${m.bereiche.map(x => `<span class="tag t-${x}">${x}</span>`).join("")}</td>
+      <td style="text-align:right">${drin.has(m.nr)
+        ? `<button class="add-btn drin-aktiv" data-del="${esc(m.nr)}" title="Aus dem Plan entfernen">✕ entfernen</button>`
+        : `<button class="add-btn" data-add="${esc(m.nr)}">+ hinzufügen</button>`}</td>
+    </tr>`;
+  }).join("");
+}
+
+/* ================= Plan ================= */
+function zeichnePlan(){
+  document.getElementById("planZahl").textContent = plan.length;
+  const el = document.getElementById("planInhalt");
+  if(!plan.length){
+    el.innerHTML = `<div class="tab-wrap"><div class="leer-box"><div class="gross">📋</div>
+      Dein Plan ist leer.<br>Geh in den <strong>Modulkatalog</strong> und füge Module hinzu.</div></div>`;
+    return;
+  }
+  const gruppen = [...SEMESTER, OHNE_SEM]
+    .map(s => ({ s, e: plan.filter(x => x.sem === s) })).filter(g => g.e.length);
+
+  el.innerHTML = gruppen.map(g => {
+    const cp = g.e.reduce((a,x) => a + NACH_NR.get(x.nr).cp, 0);
+    const kls = cp > 36 ? "viel" : (cp >= 24 && cp <= 36 ? "gut" : "");
+    return `<div class="plan-sem">
+      <div class="plan-sem-kopf"><h3>${esc(g.s)}</h3><span class="cp-sum ${kls}">${cp} CP</span></div>
+      ${g.e.map(e => {
+        const m = NACH_NR.get(e.nr);
+        const passt = bereichPasst(m, e.bereich);
+        return `<div class="plan-zeile ${e.bestanden ? "best" : ""}">
+          <span class="pz-nr" title="${esc(m.nr)}">${esc(m.nrKurz)}</span>
+          <span class="pz-titel" data-detail="${esc(m.nr)}" title="Details anzeigen">${esc(m.titel)}
+            <small>${esc(m.lehrformLang)} · ${esc(TURNUS[m.turnus])} · ${esc(pruefKurz(m))}</small></span>
+          <select data-bereich="${esc(m.nr)}" class="${passt ? "" : "warn"}" title="Anrechnung auf Studienbereich">
+            ${BEREICHE.map(x => `<option value="${x.id}"${x.id === e.bereich ? " selected" : ""}>${esc(x.name)}${bereichPasst(m,x.id) ? "" : " ⚠"}</option>`).join("")}
+          </select>
+          <select data-sem="${esc(m.nr)}" title="Semester">
+            ${[OHNE_SEM, ...SEMESTER].map(s => `<option value="${esc(s)}"${s === e.sem ? " selected" : ""}>${esc(s)}</option>`).join("")}
+          </select>
+          <label class="pz-check" title="Modul bereits bestanden">
+            <input type="checkbox" data-best="${esc(m.nr)}"${e.bestanden ? " checked" : ""}> bestanden</label>
+          <span class="pz-cp">${m.cp} CP</span>
+          <button class="del-btn" data-del="${esc(m.nr)}" title="Aus dem Plan entfernen">✕</button>
+        </div>`;
+      }).join("")}</div>`;
+  }).join("") + zeichneZeitManagement();
+}
+
+function allesZeichnen(){ zeichneKarten(); zeichneHinweise(); zeichneSemGrid(); zeichneKatalog(); zeichnePlan(); }
+
+/* ================= Ereignisse ================= */
+document.querySelectorAll("nav.tabs button").forEach(b => {
+  b.addEventListener("click", () => {
+    document.querySelectorAll("nav.tabs button").forEach(x => x.classList.remove("aktiv"));
+    document.querySelectorAll(".seite").forEach(x => x.classList.remove("aktiv"));
+    b.classList.add("aktiv");
+    document.getElementById("seite-" + b.dataset.seite).classList.add("aktiv");
+    window.scrollTo({ top:0, behavior:"smooth" });
+  });
+});
+document.getElementById("themaBtn").addEventListener("click", () => {
+  const hell = document.documentElement.getAttribute("data-theme") === "light";
+  document.documentElement.setAttribute("data-theme", hell ? "dark" : "light");
+  sichern();
+});
+
+document.getElementById("bereichsChips").innerHTML = BEREICHE.filter(x => x.id !== "FREI")
+  .map(x => `<button class="chip" data-chip="${x.id}">${x.id}</button>`).join("");
+document.getElementById("bereichsChips").addEventListener("click", ev => {
+  const btn = ev.target.closest("[data-chip]"); if(!btn) return;
+  const id = btn.dataset.chip;
+  filterBereiche.has(id) ? filterBereiche.delete(id) : filterBereiche.add(id);
+  btn.classList.toggle("an");
+  zeichneKatalog();
+});
+["suche","fLehrform","fCp","fTurnus","fSprache","fPruefung"].forEach(id =>
+  document.getElementById(id).addEventListener("input", zeichneKatalog));
+
+document.getElementById("nurLuecken").addEventListener("click", ev => {
+  nurLueckenAn = !nurLueckenAn; ev.target.classList.toggle("an", nurLueckenAn); zeichneKatalog();
+});
+document.getElementById("ohneUngeplant").addEventListener("click", ev => {
+  ohneUngeplantAn = !ohneUngeplantAn; ev.target.classList.toggle("an", ohneUngeplantAn); zeichneKatalog();
+});
+
+document.getElementById("katalogBody").addEventListener("click", ev => {
+  const add = ev.target.closest("[data-add]");
+  if(add){ ev.stopPropagation(); hinzufuegen(add.dataset.add); return; }
+  const del = ev.target.closest("[data-del]");
+  if(del){ ev.stopPropagation(); entfernen(del.dataset.del); return; }
+  const zeile = ev.target.closest("[data-detail]");
+  if(zeile) detailOeffnen(zeile.dataset.detail);
+});
+
+document.querySelectorAll("thead th[data-sort]").forEach(th => {
+  th.addEventListener("click", () => {
+    const s = th.dataset.sort;
+    sortRichtung = (sortSpalte === s) ? -sortRichtung : 1;
+    sortSpalte = s;
+    document.querySelectorAll("thead th .pfeil").forEach(p => p.textContent = "");
+    th.querySelector(".pfeil").textContent = sortRichtung === 1 ? "▲" : "▼";
+    zeichneKatalog();
+  });
+});
+
+document.getElementById("planInhalt").addEventListener("change", ev => {
+  const t = ev.target;
+  const nr = t.dataset.bereich || t.dataset.sem || t.dataset.best;
+  const e = plan.find(x => x.nr === nr); if(!e) return;
+  if(t.dataset.bereich) e.bereich = t.value;
+  else if(t.dataset.sem) e.sem = t.value;
+  else if(t.dataset.best) e.bestanden = t.checked;
+  sichern(); allesZeichnen();
+});
+document.getElementById("planInhalt").addEventListener("click", ev => {
+  const del = ev.target.closest("[data-del]");
+  if(del){ entfernen(del.dataset.del); return; }
+  const det = ev.target.closest("[data-detail]");
+  if(det) detailOeffnen(det.dataset.detail);
+});
+
+document.getElementById("overlay").addEventListener("click", ev => {
+  if(ev.target.id === "overlay" || ev.target.id === "modalZu"){ detailSchliessen(); return; }
+  const add = ev.target.closest("[data-modal-add]");
+  if(add){ hinzufuegen(add.dataset.modalAdd); detailOeffnen(add.dataset.modalAdd); return; }
+  const del = ev.target.closest("[data-modal-del]");
+  if(del){ entfernen(del.dataset.modalDel); detailOeffnen(del.dataset.modalDel); }
+});
+document.addEventListener("keydown", ev => { if(ev.key === "Escape") detailSchliessen(); });
+
+document.getElementById("autoBtn").addEventListener("click", autoVerteilen);
+document.getElementById("druckBtn").addEventListener("click", () => window.print());
+document.getElementById("leerenBtn").addEventListener("click", () => {
+  if(plan.length && confirm(`Wirklich alle ${plan.length} Module aus dem Plan entfernen?`)){
+    plan = []; sichern(); allesZeichnen();
+  }
+});
+document.getElementById("exportBtn").addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify({ studiengang:"M.Sc. Informatik Tübingen PO 2021", plan }, null, 2)],
+                        { type:"application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "studienplan-informatik-tuebingen.json";
+  a.click(); URL.revokeObjectURL(a.href);
+});
+document.getElementById("importBtn").addEventListener("click", () => document.getElementById("importDatei").click());
+document.getElementById("importDatei").addEventListener("change", ev => {
+  const datei = ev.target.files[0]; if(!datei) return;
+  const leser = new FileReader();
+  leser.onload = () => {
+    try{
+      const d = JSON.parse(leser.result);
+      if(!Array.isArray(d.plan)) throw new Error("Feld 'plan' fehlt");
+      plan = d.plan.filter(e => e && NACH_NR.has(e.nr)).map(e => ({
+        nr: e.nr,
+        bereich: BEREICHE.some(b => b.id === e.bereich) ? e.bereich : bestesBereich(NACH_NR.get(e.nr)),
+        sem: SEMESTER.includes(e.sem) ? e.sem : OHNE_SEM,
+        bestanden: !!e.bestanden
+      }));
+      sichern(); allesZeichnen();
+      alert(`${plan.length} Module importiert.`);
+    }catch(err){ alert("Datei konnte nicht gelesen werden: " + err.message); }
+    ev.target.value = "";
+  };
+  leser.readAsText(datei);
+});
+
+/* ================= Start ================= */
+laden();
+allesZeichnen();
+</script>
+</body>
+</html>
