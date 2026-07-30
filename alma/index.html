@@ -19,6 +19,8 @@
     <meta name="twitter:description" content="Jojo alle Infos sind bestimmt korrekt">
     <meta name="twitter:image" content="https://svenhagenbusch.github.io/alma/image.png">
     <link rel="icon" type="image/png" href="favicon.png">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 <title>Alma(n) Wahlfach-Planer - M.Sc. Informatik Tübingen</title>
 <style>
 :root{
@@ -323,6 +325,21 @@ table.noten tr:hover{background:transparent}
   .modal-kopf{border-radius:0}
 }
 
+/* ---------- Lageplan ---------- */
+.lp-hinweis{font-size:13.5px;color:var(--dim);margin-bottom:14px;line-height:1.7}
+.lp-hinweis a{margin-left:8px}
+.lp-legende{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px}
+.lp-ort{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:13px 15px;transition:.15s}
+.lp-ort:hover{border-color:var(--dimmer)}
+.lp-ort h4{margin:0 0 4px;font-size:13.5px;font-weight:640;color:var(--text)}
+.lp-ort .lp-adr{font-size:12px;color:var(--dim);margin-bottom:6px}
+.lp-ort .lp-raeume{font-size:12px;color:var(--dimmer);line-height:1.7}
+.lp-ort .lp-raeume b{color:var(--dim);font-weight:550}
+.lp-ort .lp-module{margin-top:6px;font-size:11.5px;color:var(--dim);border-top:1px solid var(--line);padding-top:6px}
+.lp-ort .lp-module span{display:inline-block;background:var(--bg4);border-radius:5px;padding:2px 7px;margin:2px 3px 2px 0}
+#lageplanMap .leaflet-popup-content{font-size:13px;line-height:1.5}
+#lageplanMap .leaflet-popup-content b{color:var(--rot)}
+
 /* ---------- Druck ---------- */
 @media print{
   :root{--bg:#fff;--bg2:#fff;--bg3:#fff;--bg4:#f0f0f0;--line:#ccc;--text:#000;--dim:#555;--dimmer:#777}
@@ -353,7 +370,7 @@ table.noten tr:hover{background:transparent}
       <!-- <div class="sub">M.Sc. Informatik / Computer Science · Universität Tübingen · PO 2021 (88|866|-|-|H|2021)</div> -->
     </div>
     <div class="kopf-rechts">
-      <div class="gesamt" id="gesamtAnzeige">–</div>
+      <div class="gesamt" id="gesamtAnzeige">-</div>
       <button class="icon-btn" id="themaBtn" title="Hell/Dunkel umschalten">◐</button>
     </div>
   </div>
@@ -362,6 +379,7 @@ table.noten tr:hover{background:transparent}
     <button data-seite="katalog">Modulkatalog <span class="zahl" id="katalogZahl">0</span></button>
     <button data-seite="plan">Mein Plan <span class="zahl" id="planZahl">0</span></button>
     <button data-seite="kalender">Stundenplan <span class="zahl" id="kalZahl">0</span></button>
+    <button data-seite="lageplan">Lageplan</button>
   </nav>
 </header>
 
@@ -375,25 +393,25 @@ table.noten tr:hover{background:transparent}
       <p>Der M.Sc. Informatik hat <strong>120 ECTS</strong>: fünf Wahlpflicht-Studienbereiche à 18 CP plus
       die Masterarbeit mit 30 CP.</p>
       <ul>
-        <li><code>INFO-PRAK</code> Praktische Informatik – <strong>18 CP</strong></li>
-        <li><code>INFO-TECH</code> Technische Informatik – <strong>18 CP</strong></li>
-        <li><code>INFO-THEO</code> Theoretische Informatik – <strong>18 CP</strong></li>
-        <li><code>INFO-INFO</code> Studienbereich Informatik – <strong>18 CP</strong></li>
-        <li><code>Konto 100</code> INFO BASIS <em>oder</em> INFO FOKUS – <strong>18 CP</strong> (frei belegbar)</li>
-        <li><code>INFO-4999</code> Masterarbeit – <strong>30 CP</strong> (empf. 4. Fachsemester)</li>
+        <li><code>INFO-PRAK</code> Praktische Informatik - <strong>18 CP</strong></li>
+        <li><code>INFO-TECH</code> Technische Informatik - <strong>18 CP</strong></li>
+        <li><code>INFO-THEO</code> Theoretische Informatik - <strong>18 CP</strong></li>
+        <li><code>INFO-INFO</code> Studienbereich Informatik - <strong>18 CP</strong></li>
+        <li><code>Konto 100</code> INFO BASIS <em>oder</em> INFO FOKUS - <strong>18 CP</strong> (frei belegbar)</li>
+        <li><code>INFO-4999</code> Masterarbeit - <strong>30 CP</strong> (empf. 4. Fachsemester)</li>
       </ul>
       <p><strong>Der Clou:</strong> Fast jedes Modul ist mehreren Bereichen zugeordnet. <em>Massively Parallel
-      Computing</em> zählt für PRAK, TECH <em>und</em> INFO – aber natürlich nur einmal. Deshalb wählst du hier
+      Computing</em> zählt für PRAK, TECH <em>und</em> INFO - aber natürlich nur einmal. Deshalb wählst du hier
       pro Modul aus, auf welchen Bereich es angerechnet wird.</p>
       <p>Laut Zuordnungstabelle steht die Spalte <code>INFO-INFO</code> für
-      <code>INFO – { INFO, BASIS, FOKUS, APPL }</code>. Der Bereich <strong>INFO BASIS / INFO FOKUS</strong>
+      <code>INFO - { INFO, BASIS, FOKUS, APPL }</code>. Der Bereich <strong>INFO BASIS / INFO FOKUS</strong>
       ist also der Puffer: dort passt jedes anrechenbare Modul rein. <em>BASIS</em> = Breite,
       <em>FOKUS</em> = Vertiefung in einem Thema.</p>
       <p><strong>Datenquellen:</strong> Struktur aus deinem alma-Studienplaner; Moduldaten aus
       <a href="https://courses.cs.uni-tuebingen.de/main/module/list-master/" target="_blank" rel="noopener">Veranstaltungsverzeichnis</a>,
       <a href="https://courses.cs.uni-tuebingen.de/main/zuordnungstabelle-master" target="_blank" rel="noopener">Zuordnungstabelle</a>
       und den einzelnen Modulbeschreibungen des Fachbereichs Informatik.
-      Verbindlich sind Prüfungsordnung und Modulhandbuch – das hier ist ein Planungshelfer.</p>
+      Verbindlich sind Prüfungsordnung und Modulhandbuch - das hier ist ein Planungshelfer.</p>
     </div>
   </details>
 
@@ -520,6 +538,17 @@ table.noten tr:hover{background:transparent}
 </div> -->
 </main>
 
+<!-- ============ LAGEPLAN ============ -->
+<section class="seite" id="seite-lageplan">
+  <h2>Lageplan - Veranstaltungsorte Informatik</h2>
+  <div class="lp-hinweis">
+    Alle Gebäude, in denen deine geplanten Veranstaltungen stattfinden. Klicke auf einen Marker für Details.
+    <a href="https://uni-tuebingen.de/universitaet/standort-und-anfahrt/lageplaene/uebersichtsplan/" target="_blank" rel="noopener">Offizielle Lagepläne der Uni →</a>
+  </div>
+  <div id="lageplanMap" style="height:520px;border-radius:var(--r);border:1px solid var(--line);margin-bottom:18px;z-index:1"></div>
+  <div class="lp-legende" id="lageplanLegende"></div>
+</section>
+
 <!-- ============ MODULDETAIL ============ -->
 <div class="overlay" id="overlay">
   <div class="modal" id="modal" role="dialog" aria-modal="true"></div>
@@ -613,8 +642,8 @@ function almaAbschnitt(m){
 
   return `<div class="abschnitt"><h4>Termine (alma)</h4>
     <div class="alma-zeiten">${alleTermine.map(t =>
-      `<span class="az-block"><strong>${TAG_NAME[t.tag] || t.tag}</strong>, ${esc(t.start || "?")} – ${esc(t.ende || "?")}
-      · ${esc(t.von || "?")}–${esc(t.bis || "?")} Uhr (${esc(t.rhythmus || "wöchentlich")})
+      `<span class="az-block"><strong>${TAG_NAME[t.tag] || t.tag}</strong>, ${esc(t.start || "?")} - ${esc(t.ende || "?")}
+      · ${esc(t.von || "?")}-${esc(t.bis || "?")} Uhr (${esc(t.rhythmus || "wöchentlich")})
       · ${esc(t.raum || "—")}<br><small>${esc(t.bemerkung || "")}${t.gruppe ? " · " + esc(t.gruppe) : ""}</small></span>`).join("")}</div></div>`;
 }
 
@@ -723,16 +752,16 @@ function kalBlock(e, von0){
   const breite = 100 / e.spalten, links = e.spalte * breite;
   const art    = terminArt(e.termin);
   const tip = [ e.modul.nrKurz + " · " + e.modul.titel,
-                (TAG_NAME[e.tag] || e.tag) + " " + e.termin.von + "–" + e.termin.bis + " Uhr (" + (e.termin.rhythmus || "wöchentlich") + ")",
+                (TAG_NAME[e.tag] || e.tag) + " " + e.termin.von + "-" + e.termin.bis + " Uhr (" + (e.termin.rhythmus || "wöchentlich") + ")",
                 e.termin.raum || "Raum offen",
-                (e.termin.start || "?") + " – " + (e.termin.ende || "?"),
+                (e.termin.start || "?") + " - " + (e.termin.ende || "?"),
                 e.termin.bemerkung || "",
-                e.aus ? "abgewählt – zählt nicht als Konflikt" : "" ].filter(Boolean).join("\n");
+                e.aus ? "abgewählt - zählt nicht als Konflikt" : "" ].filter(Boolean).join("\n");
   return `<div class="kal-block${e.konflikt ? " konflikt" : ""}${e.aus ? " aus" : ""}" data-detail="${esc(e.modul.nr)}" title="${esc(tip)}"
     style="top:${top}px;height:${hoehe}px;left:calc(${links}% + 3px);width:calc(${breite}% - 6px);background:${e.farbe}26;border-left-color:${e.farbe}">
     <button class="kal-schalter" data-kaltoggle="${esc(e.key)}" title="${e.aus ? "Termin wieder einplanen" : "Termin abwählen, z. B. zweite Übungsgruppe"}">${e.aus ? "+" : "⊘"}</button>
     <b>${e.konflikt ? "⚠ " : ""}${esc(e.modul.titel)}</b>
-    <span>${esc(e.termin.von)}–${esc(e.termin.bis)}${art ? " · " + esc(art) : ""}</span>
+    <span>${esc(e.termin.von)}-${esc(e.termin.bis)}${art ? " · " + esc(art) : ""}</span>
     <span>${esc(e.termin.raum || "—")}</span></div>`;
 }
 
@@ -775,14 +804,14 @@ function zeichneKalender(){
   const hin = [];
   konflikte.slice(0, 12).forEach(([a,b]) => {
     const va = terminArt(a.termin), vb = terminArt(b.termin);
-    hin.push(["err", `<strong>${TAG_NAME[a.tag] || a.tag}, ${minutenZuZeit(Math.max(a.von,b.von))}–${minutenZuZeit(Math.min(a.bis,b.bis))} Uhr</strong>:
+    hin.push(["err", `<strong>${TAG_NAME[a.tag] || a.tag}, ${minutenZuZeit(Math.max(a.von,b.von))}-${minutenZuZeit(Math.min(a.bis,b.bis))} Uhr</strong>:
       ${esc(a.modul.titel)}${va ? " (" + esc(va) + ")" : ""} ↔ ${esc(b.modul.titel)}${vb ? " (" + esc(vb) + ")" : ""}.
       ${a.modul.nr === b.modul.nr
-        ? "Gleiches Modul – vermutlich Parallelgruppen. Eine davon im Kalender über ⊘ abwählen."
+        ? "Gleiches Modul - vermutlich Parallelgruppen. Eine davon im Kalender über ⊘ abwählen."
         : "Ein Modul in ein anderes Semester schieben oder gegen ein anderes tauschen."}`]);
   });
   if(konflikte.length > 12) hin.push(["err", `… und ${konflikte.length - 12} weitere Überschneidungen.`]);
-  if(!konflikte.length && aktiv.length) hin.push(["ok", "Keine Überschneidungen – der Stundenplan geht auf."]);
+  if(!konflikte.length && aktiv.length) hin.push(["ok", "Keine Überschneidungen - der Stundenplan geht auf."]);
   if(optionen.length && kalSemester !== ALMA_SEM) hin.push(["info",
     `Die alma-Termine stammen aus dem <strong>${esc(ALMA_SEM)}</strong>. Für andere Semester sind
      Wochentag und Uhrzeit nur ein Anhaltspunkt.`]);
@@ -790,10 +819,10 @@ function zeichneKalender(){
     `Ohne alma-Termine: ${ohneAlma.map(m => `<strong>${esc(m.titel)}</strong>`).join(", ")}.
      Seminare, Praktika und Blockveranstaltungen stehen oft ohne festen Termin im Verzeichnis.`]);
   if(ohneZeit.length) hin.push(["info",
-    `${ohneZeit.length} Termin${ohneZeit.length > 1 ? "e haben" : " hat"} keine verwertbare Uhrzeit – siehe Moduldetails.`]);
+    `${ohneZeit.length} Termin${ohneZeit.length > 1 ? "e haben" : " hat"} keine verwertbare Uhrzeit - siehe Moduldetails.`]);
   const abgewaehlt = mit.filter(e => e.aus);
   if(abgewaehlt.length) hin.push(["info",
-    `${abgewaehlt.length} Termin${abgewaehlt.length > 1 ? "e" : ""} abgewählt (blass dargestellt) – mit + wieder einplanen.`]);
+    `${abgewaehlt.length} Termin${abgewaehlt.length > 1 ? "e" : ""} abgewählt (blass dargestellt) - mit + wieder einplanen.`]);
   const ico = { err:"✕", warn:"!", info:"i", ok:"✓" };
   document.getElementById("kalHinweise").innerHTML = hin.map(([t,x]) =>
     `<div class="hinweis h-${t}"><span class="h-ico">${ico[t]}</span><span>${x}</span></div>`).join("");
@@ -804,7 +833,7 @@ function zeichneKalender(){
     grid.style.gridTemplateColumns = "1fr";
     grid.innerHTML = `<div class="kal-leer">${plan.length
       ? "Für diese Auswahl sind keine alma-Termine hinterlegt."
-      : "Noch keine Module im Plan – im <strong>Modulkatalog</strong> welche auswählen."}</div>`;
+      : "Noch keine Module im Plan - im <strong>Modulkatalog</strong> welche auswählen."}</div>`;
     return;
   }
 
@@ -1020,7 +1049,7 @@ function zeichneKarten(){
       <div class="cp"><span class="ist">30</span><span class="soll">/ 30 CP</span>
         <span class="status st-offen">empf. 4. FS</span></div>
       <div class="balken"><i style="width:100%;background:#a51e37;opacity:.5"></i></div>
-      <div class="liste"><span class="leer">Pflicht – wird nicht gewählt</span></div>
+      <div class="liste"><span class="leer">Pflicht - wird nicht gewählt</span></div>
     </article>`;
 
   const geplant = plan.reduce((s,e) => s + NACH_NR.get(e.nr).cp, 0);
@@ -1042,7 +1071,7 @@ function zeichneHinweise(){
   BEREICHE.forEach(x => {
     const z = b[x.id];
     if(z.ist > x.cp) h.push(["warn", `<strong>${esc(x.name)}</strong>: ${z.ist} CP eingeplant,
-      gebraucht werden ${x.cp}. ${z.ist - x.cp} CP laufen ins Leere – schieb ein Modul woanders hin.`]);
+      gebraucht werden ${x.cp}. ${z.ist - x.cp} CP laufen ins Leere - schieb ein Modul woanders hin.`]);
   });
   const offen = BEREICHE.filter(x => b[x.id].ist < x.cp);
   if(offen.length) h.push(["info",
@@ -1050,7 +1079,7 @@ function zeichneHinweise(){
 
   SEMESTER.forEach(s => {
     const cp = plan.filter(e => e.sem === s).reduce((a,e) => a + NACH_NR.get(e.nr).cp, 0);
-    if(cp > 36) h.push(["warn", `<strong>${esc(s)}</strong>: ${cp} CP geplant – deutlich über dem 30-CP-Richtwert.`]);
+    if(cp > 36) h.push(["warn", `<strong>${esc(s)}</strong>: ${cp} CP geplant - deutlich über dem 30-CP-Richtwert.`]);
   });
   const ohne = plan.filter(e => e.sem === OHNE_SEM).length;
   if(ohne) h.push(["info", `${ohne} Modul${ohne>1?"e sind":" ist"} noch keinem Semester zugeordnet.`]);
@@ -1073,7 +1102,7 @@ function zeichneHinweise(){
 
   const zeitKonflikte = konflikteFinden(kalenderTermine(KAL_ALLE).mit);
   if(zeitKonflikte.length) h.push(["warn",
-    `${zeitKonflikte.length} Terminüberschneidung${zeitKonflikte.length>1?"en":""} zwischen deinen Modulen –
+    `${zeitKonflikte.length} Terminüberschneidung${zeitKonflikte.length>1?"en":""} zwischen deinen Modulen -
      Details im Tab <strong>Stundenplan</strong>.`]);
 
   if(!h.length && geplant === 90)
@@ -1145,7 +1174,7 @@ function zeichneKatalog(){
   document.getElementById("katalogZahl").textContent = MODULE.length;
   document.getElementById("trefferText").textContent =
     `${liste.length} von ${MODULE.length} Modulen` +
-    (liste.length ? " · Zeile anklicken für alle Details" : " – Filter zu eng?");
+    (liste.length ? " · Zeile anklicken für alle Details" : " - Filter zu eng?");
 
   const body = document.getElementById("katalogBody");
   if(!liste.length){
@@ -1353,6 +1382,92 @@ document.getElementById("importDatei").addEventListener("change", ev => {
     ev.target.value = "";
   };
   leser.readAsText(datei);
+});
+
+/* ================= Lageplan ================= */
+// Koordinaten verifiziert über OpenStreetMap Nominatim
+const LP_ORTE = [
+  { id:"sand1", name:"Sand 1 - Informatik / Astronomie", adr:"Sand 1, 72076 Tübingen",
+    lat:48.534551, lng:9.070314, raeume:["Hörsaal A104","Hörsaal A301"],
+    keys:["Informatik/Astronomie","Sand 1"] },
+  { id:"sand6", name:"Sand 6/7 - Informatik / Kriminologie", adr:"Sand 6/7, 72076 Tübingen",
+    lat:48.535288, lng:9.069934, raeume:["Hörsaal 1 F119","F122 Hörsaal 2"],
+    keys:["Informatik/Kriminologie","Sand 6"] },
+  { id:"sand14", name:"Sand 13/14 - Informatik (Wilhelm-Schickard-Institut)", adr:"Sand 13/14, 72076 Tübingen",
+    lat:48.534872, lng:9.071161, raeume:["Seminarraum C215"],
+    keys:["Informatik Sand 14","Sand 13","Sand 14"] },
+  { id:"mvl1", name:"Cyber Valley Campus - MVL 1 (Tübingen AI Center)", adr:"Maria-von-Linden-Str. 1, 72076 Tübingen",
+    lat:48.538631, lng:9.055018, raeume:["Hörsaal A1 (A-206)","Hörsaal A2 (A-223)","Seminarraum A-207","Seminarraum A-222"],
+    keys:["MVL1","Maria-von-Linden"] },
+  { id:"mvl6", name:"Cyber Valley Campus - MVL 6 (Tübingen AI Research Building)", adr:"Maria-von-Linden-Str. 6, 72076 Tübingen",
+    lat:48.538920, lng:9.055909, raeume:["Hörsaal TTR2"],
+    keys:["MVL6"] },
+  { id:"morgen", name:"Hörsaalzentrum Morgenstelle", adr:"Auf der Morgenstelle 16, 72076 Tübingen",
+    lat:48.536928, lng:9.036237, raeume:["Hörsaal N03","Hörsaal N04","Hörsaal N05","Übungsraum 8D09","Übungsraum 8D10"],
+    keys:["Hörsaalzentrum Morgenstelle","Morgenstelle"] },
+  { id:"bio", name:"Bio-Hörsaalgebäude (AdM 3)", adr:"Auf der Morgenstelle 3, 72076 Tübingen",
+    lat:48.538804, lng:9.034161, raeume:["Hörsaal N11"],
+    keys:["Bio Hörsaalgebäude","AdM 3"] }
+];
+
+let lageplanMap = null;
+function ortFuerRaum(raum){
+  if(!raum || raum === "—") return null;
+  const r = raum.toLowerCase();
+  return LP_ORTE.find(o => o.keys.some(k => r.includes(k.toLowerCase())));
+}
+
+function moduleFuerOrt(ort){
+  const treffer = new Set();
+  plan.forEach(e => {
+    const m = NACH_NR.get(e.nr); if(!m) return;
+    const a = almaFuerModul(m); if(!a) return;
+    (a.gruppen || []).forEach(g => (g.termine || []).forEach(t => {
+      if(ortFuerRaum(t.raum) === ort) treffer.add(m.titel);
+    }));
+  });
+  return [...treffer];
+}
+
+function zeichneLageplan(){
+  if(!lageplanMap){
+    lageplanMap = L.map("lageplanMap").setView([48.5375, 9.0535], 14);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom:19
+    }).addTo(lageplanMap);
+  }
+  lageplanMap.eachLayer(l => { if(l instanceof L.Marker) lageplanMap.removeLayer(l); });
+
+  const legendeEl = document.getElementById("lageplanLegende");
+  let legendeHTML = "";
+
+  LP_ORTE.forEach(ort => {
+    const mods = moduleFuerOrt(ort);
+    const popup = `<b>${esc(ort.name)}</b><br>${esc(ort.adr)}<br><br>
+      <strong>Räume:</strong> ${ort.raeume.map(r => esc(r)).join(", ")}
+      ${mods.length ? "<br><br><strong>Deine Module hier:</strong><br>" + mods.map(m => "· " + esc(m)).join("<br>") : ""}`;
+    const marker = L.marker([ort.lat, ort.lng]).addTo(lageplanMap).bindPopup(popup);
+    if(mods.length) marker.setOpacity(1); else marker.setOpacity(0.5);
+
+    legendeHTML += `<div class="lp-ort">
+      <h4>${esc(ort.name)}</h4>
+      <div class="lp-adr">${esc(ort.adr)}</div>
+      <div class="lp-raeume"><b>Räume:</b> ${ort.raeume.join(", ")}</div>
+      ${mods.length ? `<div class="lp-module">${mods.map(m => `<span>${esc(m)}</span>`).join("")}</div>` : ""}
+    </div>`;
+  });
+  legendeEl.innerHTML = legendeHTML;
+
+  setTimeout(() => lageplanMap.invalidateSize(), 200);
+}
+
+/* Lageplan beim Tab-Wechsel initialisieren */
+const origTabClick = document.querySelectorAll("nav.tabs button");
+origTabClick.forEach(b => {
+  b.addEventListener("click", () => {
+    if(b.dataset.seite === "lageplan") setTimeout(zeichneLageplan, 50);
+  });
 });
 
 /* ================= Start ================= */
