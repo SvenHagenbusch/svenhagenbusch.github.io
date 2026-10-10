@@ -316,6 +316,37 @@ table.noten tr:hover{background:transparent}
 .legende{font-size:11.5px;color:var(--dimmer);margin-top:7px;line-height:1.7}
 .legende b{color:var(--dim);font-weight:600}
 
+/* ---------- Eigene Veranstaltungen ---------- */
+.eigen-badge{font-size:10px;font-weight:700;color:var(--rot-hell);border:1px solid rgba(201,69,94,.45);
+  background:rgba(165,30,55,.12);border-radius:4px;padding:1px 6px;margin-left:5px;white-space:nowrap}
+.chip.eigen-neu{background:var(--rot);border-color:var(--rot);color:#fff}
+.chip.eigen-neu:hover{background:var(--rot-hell);border-color:var(--rot-hell);color:#fff}
+.az-block.eigen{border-left:3px solid var(--rot-hell);padding-left:8px}
+.az-block .t-del{background:transparent;border:none;color:var(--dimmer);font-size:12px;padding:0 4px;margin-left:6px}
+.az-block .t-del:hover{color:var(--err)}
+.ed-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:11px;margin-bottom:16px}
+.ed-grid .feld.breit{grid-column:1/-1}
+.ed-grid .feld input,.ed-grid .feld select,.feld textarea{min-width:0;width:100%}
+.feld textarea{background:var(--bg3);border:1px solid var(--line);color:var(--text);border-radius:8px;
+  padding:8px 11px;font-size:13.5px;font-family:inherit;outline:none;resize:vertical;min-height:70px}
+.ed-bereiche{display:flex;gap:12px;flex-wrap:wrap;font-size:13px;padding:6px 0}
+.ed-bereiche label{display:flex;align-items:center;gap:5px;text-transform:none;letter-spacing:0;
+  font-size:13px;color:var(--text);font-weight:500;cursor:pointer}
+.ed-grid .ed-bereiche input{width:15px;height:15px;min-width:0;padding:0;accent-color:var(--rot)}
+.ed-termin{display:flex;flex-wrap:wrap;gap:7px;align-items:flex-end;background:var(--bg3);
+  border:1px solid var(--line);border-radius:9px;padding:9px 10px;margin-bottom:7px}
+.ed-termin .feld{flex:0 0 110px}
+.ed-termin .feld.f-tag{flex-basis:76px}
+.ed-termin .feld.f-art{flex:1 1 130px}
+.ed-termin .feld.f-raum{flex:2 1 220px}
+.ed-termin .feld.f-datum{flex-basis:145px}
+.ed-termin .feld.f-rhythmus{flex-basis:130px}
+.ed-termin .feld input,.ed-termin .feld select{min-width:0;width:100%;padding:6px 8px;font-size:12.5px;background:var(--bg2)}
+.ed-termin .feld label{font-size:10px}
+.ed-termin .del-btn{margin-left:auto;padding:7px 10px}
+.ed-leer{font-size:12.5px;color:var(--dimmer);font-style:italic;margin:4px 0 10px}
+.ed-fehler{color:var(--err);font-size:13px;margin-right:auto}
+
 @media (max-width:760px){
   main{padding:16px 13px 60px} header{padding:14px 13px 0}
   .kopf-zeile h1{font-size:16px}
@@ -476,6 +507,8 @@ table.noten tr:hover{background:transparent}
         <button class="chip" id="nurLuecken">nur offene Bereiche</button>
         <button class="chip" id="ohneUngeplant">ohne „nicht geplant“</button>
         <button class="chip" id="nurAlma">nur in alma</button>
+        <button class="chip" id="nurEigene">nur eigene</button>
+        <button class="chip eigen-neu" id="eigenNeuBtn" title="Fehlende Veranstaltung selbst anlegen">+ Eigene Veranstaltung</button>
       </div>
     </div>
   </div>
@@ -580,16 +613,211 @@ const OHNE_SEM = "— noch offen —";
 const SPEICHER = "tue-msc-info-planer-v1";
 
 /* ================= Daten ================= */
-const MODULE = (window.MODULE_DATEN || []).map(m => ({
-  ...m,
-  // "BIOINF-4510 (bisher: BIO-4510)" -> "BIOINF-4510" für die kompakte Listenansicht
-  nrKurz: m.nr.split(" (")[0],
-  sws: m.workload && m.workload.sws ? m.workload.sws : null,
-  pruefKuerzel: [...new Set((m.leistungen || [])
-    .flatMap(l => (l.pruefung || "").split(",").map(x => x.trim()).filter(Boolean)))],
-  geplantOffen: !/nicht geplant|^-+$|^$/i.test((m.geplant || "").trim())
-}));
+function modulAufbereiten(m){
+  return {
+    ...m,
+    // "BIOINF-4510 (bisher: BIO-4510)" -> "BIOINF-4510" für die kompakte Listenansicht
+    nrKurz: m.nr.split(" (")[0],
+    sws: m.workload && m.workload.sws ? m.workload.sws : null,
+    pruefKuerzel: [...new Set((m.leistungen || [])
+      .flatMap(l => (l.pruefung || "").split(",").map(x => x.trim()).filter(Boolean)))],
+    geplantOffen: !/nicht geplant|^-+$|^$/i.test((m.geplant || "").trim())
+  };
+}
+const MODULE = (window.MODULE_DATEN || []).map(modulAufbereiten);
 const NACH_NR = new Map(MODULE.map(m => [m.nr, m]));
+
+/* ================= Eigene Veranstaltungen ================= */
+// Vom Nutzer ergänzte Module und Termine - nur lokal im Browser gespeichert.
+const EIGEN_SPEICHER = "tue-msc-info-planer-eigene-v1";
+const LEHRFORM = { VU:"Vorlesung + Übung", V:"Vorlesung", S:"Seminar", P:"Praktikum",
+                   VS:"Vorlesung + Seminar", F:"Forschungsprojekt" };
+const RHYTHMEN = ["wöchentlich", "14-täglich", "Einzeltermin", "Block"];
+const LV_START = "12.10.26", LV_ENDE = "05.02.27";   // Vorlesungszeit WiSe 2026/27 als Vorgabe
+
+let eigeneModule = [];    // [{ nr, titel, cp, form, turnus, sprache, bereiche, dozent, pruefung, geplant, inhalt }]
+let eigeneTermine = {};   // { modulNr: [termin, …] } - auch für offizielle Module ohne alma-Daten
+
+function eigeneLaden(){
+  try{
+    const d = JSON.parse(localStorage.getItem(EIGEN_SPEICHER) || "{}");
+    eigeneModule  = Array.isArray(d.module) ? d.module.filter(m => m && m.nr && m.titel) : [];
+    eigeneTermine = d.termine && typeof d.termine === "object" ? d.termine : {};
+  }catch(e){ console.warn("Eigene Veranstaltungen unlesbar:", e); }
+}
+function eigeneSichern(){
+  try{ localStorage.setItem(EIGEN_SPEICHER, JSON.stringify({ module: eigeneModule, termine: eigeneTermine })); }
+  catch(e){ console.warn("Speichern fehlgeschlagen:", e); }
+}
+/* Eigene Module in MODULE / NACH_NR (neu) einhängen */
+function eigeneEinbauen(){
+  for(let i = MODULE.length - 1; i >= 0; i--){
+    if(MODULE[i].eigen){ NACH_NR.delete(MODULE[i].nr); MODULE.splice(i, 1); }
+  }
+  eigeneModule.forEach(e => {
+    if(NACH_NR.has(e.nr)) return;   // Kollision mit offiziellem Modul
+    const m = modulAufbereiten({
+      ...e,
+      eigen: true,
+      lehrformLang: LEHRFORM[e.form] || e.form || "—",
+      turnusLang: TURNUS[e.turnus] || "—",
+      bereiche: e.bereiche || [],
+      dozent: e.dozent || "",
+      workload: {}, leistungen: []
+    });
+    MODULE.push(m); NACH_NR.set(m.nr, m);
+  });
+}
+
+/* "13.10.26" <-> "2026-10-13" für <input type="date"> */
+function datumZuIso(s){
+  const d = datumParsen(s); if(!d) return "";
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+}
+function isoZuDatum(s){
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || "");
+  return m ? `${m[3]}.${m[2]}.${m[1].slice(2)}` : "";
+}
+
+function terminZeile(t){
+  t = t || { tag:"Mo", von:"10:00", bis:"12:00", bemerkung:"Vorlesung", raum:"", start:LV_START, ende:LV_ENDE, rhythmus:"wöchentlich" };
+  return `<div class="ed-termin">
+    <div class="feld f-tag"><label>Tag</label><select name="tag">${Object.keys(TAG_INDEX).map(k =>
+      `<option value="${k}"${k === t.tag ? " selected" : ""}>${k}</option>`).join("")}</select></div>
+    <div class="feld"><label>Von</label><input type="time" name="von" value="${esc(t.von)}" required></div>
+    <div class="feld"><label>Bis</label><input type="time" name="bis" value="${esc(t.bis)}" required></div>
+    <div class="feld f-art"><label>Art</label><input type="text" name="bemerkung" list="edArten" value="${esc(t.bemerkung)}" placeholder="Vorlesung"></div>
+    <div class="feld f-raum"><label>Raum</label><input type="text" name="raum" value="${esc(t.raum === "—" ? "" : t.raum)}" placeholder="z. B. Hörsaal A104 (Informatik/Astronomie)"></div>
+    <div class="feld f-datum"><label>Erster Termin</label><input type="date" name="start" value="${esc(datumZuIso(t.start))}"></div>
+    <div class="feld f-datum"><label>Letzter Termin</label><input type="date" name="ende" value="${esc(datumZuIso(t.ende))}"></div>
+    <div class="feld f-rhythmus"><label>Rhythmus</label><select name="rhythmus">${RHYTHMEN.map(r =>
+      `<option${r === t.rhythmus ? " selected" : ""}>${r}</option>`).join("")}</select></div>
+    <button type="button" class="del-btn" data-ed-zeile-del title="Termin entfernen">✕</button>
+  </div>`;
+}
+
+/* Editor: nr = null -> neues eigenes Modul; eigenes Modul -> alles bearbeiten;
+   offizielles Modul -> nur eigene Termine ergänzen */
+function editorOeffnen(nr){
+  const m = nr ? NACH_NR.get(nr) : null;
+  const voll = !m || m.eigen;
+  const e = m && m.eigen ? eigeneModule.find(x => x.nr === nr) : null;
+  const termine = nr ? (eigeneTermine[nr] || []) : [];
+  const opt = (obj, wert) => Object.entries(obj).map(([k,v]) =>
+    `<option value="${k}"${k === wert ? " selected" : ""}>${esc(v)}</option>`).join("");
+
+  const stamm = voll ? `
+    <div class="ed-grid">
+      <div class="feld breit"><label for="edTitel">Titel *</label>
+        <input id="edTitel" name="titel" required value="${esc(e ? e.titel : "")}" placeholder="z. B. Deep Reinforcement Learning"></div>
+      <div class="feld"><label for="edNr">Modulnummer</label>
+        <input id="edNr" name="nr" value="${esc(e ? e.nr : "")}" placeholder="leer = automatisch"></div>
+      <div class="feld"><label for="edCp">ECTS *</label>
+        <input id="edCp" name="cp" type="number" min="1" max="30" step="1" required value="${esc(e ? e.cp : 6)}"></div>
+      <div class="feld"><label for="edForm">Lehrform</label><select id="edForm" name="form">${opt(LEHRFORM, e ? e.form : "VU")}</select></div>
+      <div class="feld"><label for="edTurnus">Turnus</label><select id="edTurnus" name="turnus">${opt(TURNUS, e ? e.turnus : "W")}</select></div>
+      <div class="feld"><label for="edSprache">Sprache</label><select id="edSprache" name="sprache">${
+        ["Deutsch","Englisch","Deutsch und Englisch"].map(s => `<option${e && e.sprache === s ? " selected" : ""}>${s}</option>`).join("")}</select></div>
+      <div class="feld"><label for="edGeplant">Geplant für</label>
+        <input id="edGeplant" name="geplant" value="${esc(e ? e.geplant : "WiSe 2026/27")}"></div>
+      <div class="feld"><label for="edDozent">Dozent:in</label>
+        <input id="edDozent" name="dozent" value="${esc(e ? e.dozent : "")}"></div>
+      <div class="feld"><label for="edPruefung">Prüfungsform</label>
+        <input id="edPruefung" name="pruefung" value="${esc(e ? e.pruefung : "")}" placeholder="z. B. Klausur"></div>
+      <div class="feld breit"><label>Zählt für (Zuordnungstabelle)</label>
+        <div class="ed-bereiche">${BEREICHE.filter(b => b.id !== "FREI").map(b =>
+          `<label><input type="checkbox" name="bereich" value="${b.id}"${e && e.bereiche.includes(b.id) ? " checked" : ""}> ${b.id} - ${esc(b.name)}</label>`).join("")}
+          <span style="color:var(--dimmer);font-size:12px">INFO BASIS/FOKUS passt immer.</span></div></div>
+      <div class="feld breit"><label for="edInhalt">Notiz / Inhalt</label>
+        <textarea id="edInhalt" name="inhalt">${esc(e ? e.inhalt : "")}</textarea></div>
+    </div>` : `
+    <p style="font-size:13.5px;color:var(--dim);margin:0 0 14px">Hier kannst du Termine ergänzen, die in den
+      alma-Daten fehlen. Sie erscheinen zusätzlich im Stundenplan und werden nur in deinem Browser gespeichert.</p>`;
+
+  document.getElementById("modal").innerHTML = `
+    <form id="edForm" novalidate data-nr="${esc(nr || "")}">
+    <div class="modal-kopf">
+      <div>
+        <div class="mk-nr">${m ? esc(m.nr) : "Eigene Veranstaltung"}</div>
+        <h3>${voll ? (e ? "Veranstaltung bearbeiten" : "Neue Veranstaltung anlegen") : "Termine ergänzen: " + esc(m.titel)}</h3>
+      </div>
+      <button type="button" class="schliessen" id="modalZu" title="Schließen (Esc)">✕</button>
+    </div>
+    <div class="modal-inhalt">
+      ${stamm}
+      <div class="abschnitt"><h4>Termine</h4>
+        <div id="edTermine">${termine.map(terminZeile).join("")}</div>
+        <p class="ed-leer" id="edLeer"${termine.length ? " hidden" : ""}>Noch keine Termine - ohne Termine erscheint die Veranstaltung nicht im Stundenplan.</p>
+        <button type="button" class="w-btn" data-ed-zeile-neu>+ Termin hinzufügen</button>
+        <datalist id="edArten">${["Vorlesung","Übung","Seminar","Praktikum","Tutorium","Kolloquium","Blockveranstaltung"]
+          .map(a => `<option value="${a}">`).join("")}</datalist>
+      </div>
+      <div class="modal-fuss">
+        <span class="ed-fehler" id="edFehler"></span>
+        <button type="button" class="w-btn" data-ed-abbrechen="${esc(nr || "")}">Abbrechen</button>
+        <button type="submit" class="add-btn">Speichern</button>
+      </div>
+    </div>
+    </form>`;
+  document.getElementById("overlay").classList.add("auf");
+  document.body.style.overflow = "hidden";
+  const fokus = document.getElementById("edTitel"); if(fokus) fokus.focus();
+}
+
+function editorSpeichern(form){
+  const nrAlt = form.dataset.nr || null;
+  const fehler = txt => { document.getElementById("edFehler").textContent = txt; };
+  const termine = [...form.querySelectorAll(".ed-termin")].map(z => {
+    const w = n => z.querySelector(`[name="${n}"]`).value.trim();
+    return { tag:w("tag"), von:w("von"), bis:w("bis"), raum:w("raum") || "—", bemerkung:w("bemerkung"),
+             start:isoZuDatum(w("start")), ende:isoZuDatum(w("ende")), rhythmus:w("rhythmus") };
+  });
+  const kaputt = termine.find(t => zeitZuMinuten(t.von) == null || zeitZuMinuten(t.bis) == null ||
+                                    zeitZuMinuten(t.bis) <= zeitZuMinuten(t.von));
+  if(kaputt) return fehler(`Termin am ${TAG_NAME[kaputt.tag]}: „Bis“ muss nach „Von“ liegen.`);
+
+  let nr = nrAlt;
+  const altModul = nrAlt ? NACH_NR.get(nrAlt) : null;
+  if(!altModul || altModul.eigen){
+    const f = n => (form.elements[n].value || "").trim();
+    const titel = f("titel"), cp = parseInt(f("cp"), 10);
+    if(!titel) return fehler("Bitte einen Titel angeben.");
+    if(!(cp > 0)) return fehler("Bitte gültige ECTS angeben.");
+    nr = f("nr").replace(/\s+/g, " ");
+    if(!nr){ let i = 1; while(NACH_NR.has("EIGEN-" + i)) i++; nr = "EIGEN-" + i; }
+    if(nr !== nrAlt && NACH_NR.has(nr)) return fehler(`Die Modulnummer „${nr}“ gibt es schon.`);
+    const daten = { nr, titel, cp, form:f("form"), turnus:f("turnus"), sprache:f("sprache"),
+                    geplant:f("geplant"), dozent:f("dozent"), pruefung:f("pruefung"), inhalt:f("inhalt"),
+                    bereiche:[...form.querySelectorAll('[name="bereich"]:checked')].map(x => x.value) };
+    const idx = eigeneModule.findIndex(x => x.nr === nrAlt);
+    if(idx >= 0) eigeneModule[idx] = daten; else eigeneModule.push(daten);
+    if(nrAlt && nr !== nrAlt){   // Umbenennung: Plan, Termine und Abwahlen mitnehmen
+      plan.forEach(p => { if(p.nr === nrAlt) p.nr = nr; });
+      delete eigeneTermine[nrAlt];
+      ausTermine = new Set([...ausTermine].map(k => k.startsWith(nrAlt + "|") ? nr + k.slice(nrAlt.length) : k));
+    }
+  }
+  if(termine.length) eigeneTermine[nr] = termine; else delete eigeneTermine[nr];
+  eigeneSichern(); eigeneEinbauen(); sichern(); allesZeichnen();
+  detailOeffnen(nr);
+}
+
+function eigenesLoeschen(nr){
+  const m = NACH_NR.get(nr); if(!m || !m.eigen) return;
+  if(!confirm(`„${m.titel}“ endgültig löschen? Das Modul wird auch aus deinem Plan entfernt.`)) return;
+  eigeneModule = eigeneModule.filter(x => x.nr !== nr);
+  delete eigeneTermine[nr];
+  plan = plan.filter(e => e.nr !== nr);
+  eigeneSichern(); eigeneEinbauen(); sichern(); allesZeichnen();
+  detailSchliessen();
+}
+
+function eigenenTerminLoeschen(nr, i){
+  const liste = eigeneTermine[nr]; if(!liste) return;
+  liste.splice(i, 1);
+  if(!liste.length) delete eigeneTermine[nr];
+  eigeneSichern(); allesZeichnen(); detailOeffnen(nr);
+}
 
 /* ================= Alma-Daten (Vorlesungszeiten) ================= */
 // Wird aus alma-daten.js geladen (aus alma.uni-tuebingen.de extrahiert)
@@ -610,7 +838,7 @@ function geplantInfo(m){
   return { text: txt, jahr, veraltet, html };
 }
 
-function almaFuerModul(m){
+function almaOffiziell(m){
   // Normalisierte Modulnummer ohne Bindestriche
   const nrFlat = m.nrKurz.replace(/[- ]/g, '');
   const nrFull = m.nr.replace(/[- ]/g, '');
@@ -619,6 +847,8 @@ function almaFuerModul(m){
   for(const nr of [m.nrKurz, m.nr, nrFlat, nrFull]){
     if(ALMA_DATEN[nr]) return ALMA_DATEN[nr];
   }
+  // Eigene Module nur über die Nummer zuordnen - Titel-Suche würde zu leicht Fremdes finden
+  if(m.eigen) return null;
 
   // 2) Suche über Titel-Ähnlichkeit (alma-Titel als Teilstring des Modul-Titels oder umgekehrt)
   const tLow = (m.titel || '').toLowerCase();
@@ -629,22 +859,35 @@ function almaFuerModul(m){
   return null;
 }
 
+/* alma-Daten plus selbst ergänzte Termine (als zusätzliche Gruppe am Ende,
+   damit die Indizes der alma-Gruppen - und damit abgewählte Termine - stabil bleiben) */
+function almaFuerModul(m){
+  const a = almaOffiziell(m);
+  const extra = eigeneTermine[m.nr];
+  if(!extra || !extra.length) return a;
+  return { titel: a ? a.titel : m.titel,
+           gruppen: [...(a ? a.gruppen || [] : []), { name:"Eigene Termine", eigen:true, termine: extra }] };
+}
+
 function almaAbschnitt(m){
   const a = almaFuerModul(m);
+  const knopf = `<button class="w-btn" data-termin-neu="${esc(m.nr)}" style="margin-top:8px">+ Termin ergänzen</button>`;
   if(!a) return `<div class="abschnitt"><h4>Termine (alma)</h4>
     <p class="alma-keine">Keine alma-Daten verfügbar — bitte manuell im
-    <a href="https://alma.uni-tuebingen.de/alma/pages/cm/exa/coursecatalog/showCourseCatalog.xhtml?_flowId=showCourseCatalog-flow&_flowExecutionKey=e1s1" target="_blank" rel="noopener">Vorlesungsverzeichnis</a> prüfen.</p></div>`;
+    <a href="https://alma.uni-tuebingen.de/alma/pages/cm/exa/coursecatalog/showCourseCatalog.xhtml?_flowId=showCourseCatalog-flow&_flowExecutionKey=e1s1" target="_blank" rel="noopener">Vorlesungsverzeichnis</a> prüfen
+    und bei Bedarf selbst eintragen.</p>${knopf}</div>`;
 
   const alleTermine = (a.gruppen || []).flatMap(g =>
-    (g.termine || []).map(t => ({ ...t, gruppe: g.name })));
+    (g.termine || []).map((t, i) => ({ ...t, gruppe: g.name, eigen: !!g.eigen, idx: i })));
   if(!alleTermine.length) return `<div class="abschnitt"><h4>Termine (alma)</h4>
-    <p class="alma-keine">Keine Termine in alma hinterlegt.</p></div>`;
+    <p class="alma-keine">Keine Termine in alma hinterlegt.</p>${knopf}</div>`;
 
   return `<div class="abschnitt"><h4>Termine (alma)</h4>
     <div class="alma-zeiten">${alleTermine.map(t =>
-      `<span class="az-block"><strong>${TAG_NAME[t.tag] || t.tag}</strong>, ${esc(t.start || "?")} - ${esc(t.ende || "?")}
+      `<span class="az-block${t.eigen ? " eigen" : ""}"><strong>${TAG_NAME[t.tag] || t.tag}</strong>, ${esc(t.start || "?")} - ${esc(t.ende || "?")}
       · ${esc(t.von || "?")}-${esc(t.bis || "?")} Uhr (${esc(t.rhythmus || "wöchentlich")})
-      · ${esc(t.raum || "—")}<br><small>${esc(t.bemerkung || "")}${t.gruppe ? " · " + esc(t.gruppe) : ""}</small></span>`).join("")}</div></div>`;
+      · ${esc(t.raum || "—")}${t.eigen ? `<button class="t-del" data-termin-del="${esc(m.nr)}" data-idx="${t.idx}" title="Eigenen Termin löschen">✕</button>` : ""}
+      <br><small>${esc(t.bemerkung || "")}${t.gruppe ? " · " + esc(t.gruppe) : ""}</small></span>`).join("")}</div>${knopf}</div>`;
 }
 
 /* ================= Stundenplan ================= */
@@ -866,7 +1109,7 @@ let plan = [];
 let ausTermine = new Set();   // abgewählte Einzeltermine, z. B. die zweite Übungsgruppe
 let kalSemester = null;
 let filterBereiche = new Set();
-let nurLueckenAn = false, ohneUngeplantAn = false, nurAlmaAn = false;
+let nurLueckenAn = false, ohneUngeplantAn = false, nurAlmaAn = false, nurEigeneAn = false;
 let sortSpalte = "nr", sortRichtung = 1;
 
 function laden(){
@@ -989,6 +1232,7 @@ function detailOeffnen(nr){
         <div class="mk-nr">${esc(m.nr)}</div>
         <h3>${esc(m.titel)}</h3>
         <div style="margin-top:7px">${m.bereiche.map(x => `<span class="tag t-${x}">${x}</span>`).join("")}
+          ${m.eigen ? `<span class="eigen-badge">eigene Veranstaltung</span>` : ""}
           ${m.geplantOffen ? "" : `<span class="nichtgeplant">· derzeit nicht geplant</span>`}</div>
       </div>
       <button class="schliessen" id="modalZu" title="Schließen (Esc)">✕</button>
@@ -1007,11 +1251,13 @@ function detailOeffnen(nr){
 
       ${almaAbschnitt(m)}
 
+      <div class="modal-fuss">
         ${drin
           ? `<button class="w-btn gefahr" data-modal-del="${esc(m.nr)}">Aus dem Plan entfernen</button>`
           : `<button class="add-btn" data-modal-add="${esc(m.nr)}">+ Zum Plan hinzufügen</button>`}
-        <span style="font-size:12px;color:var(--dimmer);margin-left:auto">
-          </span>
+        ${m.eigen ? `<span style="margin-left:auto;display:flex;gap:8px">
+          <button class="w-btn" data-eigen-edit="${esc(m.nr)}">Bearbeiten</button>
+          <button class="w-btn gefahr" data-eigen-del="${esc(m.nr)}">Löschen</button></span>` : ""}
       </div>
     </div>`;
   document.getElementById("overlay").classList.add("auf");
@@ -1155,6 +1401,7 @@ function gefilterteModule(){
     if(nurLueckenAn && !m.bereiche.some(x => offen.includes(x))) return false;
     if(ohneUngeplantAn && !m.geplantOffen) return false;
     if(nurAlmaAn && !almaFuerModul(m)) return false;
+    if(nurEigeneAn && !m.eigen) return false;
     return true;
   });
 
@@ -1188,7 +1435,7 @@ function zeichneKatalog(){
       <td class="nr" title="${esc(m.nr)}">${esc(m.nrKurz)}</td>
       <td class="titel">${esc(m.titel)}
         <small>${esc(m.dozent)} · <span class="sprache">${esc(m.sprache)}</span>
-        ${almaFuerModul(m) ? `<span class="alma-badge">alma</span>` : ""}${m.geplantOffen ? "" : `<span class="nichtgeplant">· nicht geplant</span>`}</small></td>
+        ${m.eigen ? `<span class="eigen-badge">eigen</span>` : ""}${almaFuerModul(m) ? `<span class="alma-badge">alma</span>` : ""}${m.geplantOffen ? "" : `<span class="nichtgeplant">· nicht geplant</span>`}</small></td>
       <td class="mitte">${esc(m.form)}</td>
       <td class="cp">${m.cp}</td>
       <td class="cp" style="font-weight:400;color:var(--dim)">${m.sws ?? "—"}</td>
@@ -1283,6 +1530,10 @@ document.getElementById("ohneUngeplant").addEventListener("click", ev => {
 document.getElementById("nurAlma").addEventListener("click", ev => {
   nurAlmaAn = !nurAlmaAn; ev.target.classList.toggle("an", nurAlmaAn); zeichneKatalog();
 });
+document.getElementById("nurEigene").addEventListener("click", ev => {
+  nurEigeneAn = !nurEigeneAn; ev.target.classList.toggle("an", nurEigeneAn); zeichneKatalog();
+});
+document.getElementById("eigenNeuBtn").addEventListener("click", () => editorOeffnen(null));
 
 document.getElementById("katalogBody").addEventListener("click", ev => {
   const add = ev.target.closest("[data-add]");
@@ -1337,11 +1588,47 @@ document.getElementById("seite-kalender").addEventListener("click", ev => {
 });
 
 document.getElementById("overlay").addEventListener("click", ev => {
-  if(ev.target.id === "overlay" || ev.target.id === "modalZu"){ detailSchliessen(); return; }
+  // Im Editor schließt ein Klick daneben nicht, sonst wären Eingaben schnell verloren
+  if(ev.target.id === "modalZu" || (ev.target.id === "overlay" && !document.getElementById("edForm"))){
+    detailSchliessen(); return; }
   const add = ev.target.closest("[data-modal-add]");
   if(add){ hinzufuegen(add.dataset.modalAdd); detailOeffnen(add.dataset.modalAdd); return; }
   const del = ev.target.closest("[data-modal-del]");
-  if(del){ entfernen(del.dataset.modalDel); detailOeffnen(del.dataset.modalDel); }
+  if(del){ entfernen(del.dataset.modalDel); detailOeffnen(del.dataset.modalDel); return; }
+
+  /* Eigene Veranstaltungen / Termine */
+  const neu = ev.target.closest("[data-termin-neu]");
+  if(neu){ editorOeffnen(neu.dataset.terminNeu); return; }
+  const tDel = ev.target.closest("[data-termin-del]");
+  if(tDel){ eigenenTerminLoeschen(tDel.dataset.terminDel, +tDel.dataset.idx); return; }
+  const eEdit = ev.target.closest("[data-eigen-edit]");
+  if(eEdit){ editorOeffnen(eEdit.dataset.eigenEdit); return; }
+  const eDel = ev.target.closest("[data-eigen-del]");
+  if(eDel){ eigenesLoeschen(eDel.dataset.eigenDel); return; }
+  const abbr = ev.target.closest("[data-ed-abbrechen]");
+  if(abbr){ abbr.dataset.edAbbrechen ? detailOeffnen(abbr.dataset.edAbbrechen) : detailSchliessen(); return; }
+  if(ev.target.closest("[data-ed-zeile-neu]")){
+    const box = document.getElementById("edTermine");
+    const letzte = box.lastElementChild;
+    box.insertAdjacentHTML("beforeend", terminZeile());
+    if(letzte){   // Zeitraum und Raum der vorigen Zeile übernehmen
+      const neueZeile = box.lastElementChild;
+      ["start","ende","raum","rhythmus"].forEach(n =>
+        neueZeile.querySelector(`[name="${n}"]`).value = letzte.querySelector(`[name="${n}"]`).value);
+    }
+    document.getElementById("edLeer").hidden = true;
+    return;
+  }
+  const zDel = ev.target.closest("[data-ed-zeile-del]");
+  if(zDel){
+    zDel.closest(".ed-termin").remove();
+    document.getElementById("edLeer").hidden = !!document.querySelector("#edTermine .ed-termin");
+  }
+});
+document.getElementById("overlay").addEventListener("submit", ev => {
+  if(ev.target.id !== "edForm") return;
+  ev.preventDefault();
+  editorSpeichern(ev.target);
 });
 document.addEventListener("keydown", ev => { if(ev.key === "Escape") detailSchliessen(); });
 
@@ -1354,7 +1641,8 @@ document.getElementById("leerenBtn").addEventListener("click", () => {
 });
 document.getElementById("exportBtn").addEventListener("click", () => {
   const blob = new Blob([JSON.stringify({ studiengang:"M.Sc. Informatik Tübingen PO 2021", plan,
-                                          ausTermine:[...ausTermine] }, null, 2)],
+                                          ausTermine:[...ausTermine],
+                                          eigeneModule, eigeneTermine }, null, 2)],
                         { type:"application/json" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
@@ -1369,7 +1657,13 @@ document.getElementById("importDatei").addEventListener("change", ev => {
     try{
       const d = JSON.parse(leser.result);
       if(!Array.isArray(d.plan)) throw new Error("Feld 'plan' fehlt");
-      plan = d.plan.filter(e => e && NACH_NR.has(e.nr)).map(e => ({
+      // Eigene Veranstaltungen zuerst, damit Plan-Einträge darauf gültig sind
+      if(Array.isArray(d.eigeneModule) || d.eigeneTermine){
+        eigeneModule  = Array.isArray(d.eigeneModule) ? d.eigeneModule.filter(m => m && m.nr && m.titel) : [];
+        eigeneTermine = d.eigeneTermine && typeof d.eigeneTermine === "object" ? d.eigeneTermine : {};
+        eigeneSichern(); eigeneEinbauen();
+      }
+      plan =d.plan.filter(e => e && NACH_NR.has(e.nr)).map(e => ({
         nr: e.nr,
         bereich: BEREICHE.some(b => b.id === e.bereich) ? e.bereich : bestesBereich(NACH_NR.get(e.nr)),
         sem: SEMESTER.includes(e.sem) ? e.sem : OHNE_SEM,
@@ -1471,6 +1765,8 @@ origTabClick.forEach(b => {
 });
 
 /* ================= Start ================= */
+eigeneLaden();
+eigeneEinbauen();
 laden();
 allesZeichnen();
 </script>
