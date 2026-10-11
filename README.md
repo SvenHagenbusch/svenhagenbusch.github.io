@@ -1,1 +1,1 @@
-Jawoll, so wird's gemacht
+Auf Schultern von Riesen oder Büschen
