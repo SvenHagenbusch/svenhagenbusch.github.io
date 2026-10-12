@@ -69,6 +69,46 @@ window.ALMA_DATEN = {
       }
     ]
   },
+  "ML4370": {
+    "titel": "LLM Engineering",
+    "gruppen": [
+      {
+        "name": "LLM Engineering - 1. Parallelgruppe",
+        "termine": [
+          {
+            "tag": "Do",
+            "von": "14:00",
+            "bis": "16:00",
+            "raum": "Hörsaal A2 (A-223) (Cyber Valley Campus, MVL1)",
+            "bemerkung": "Vorlesung",
+            "start": "15.10.26",
+            "ende": "04.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Do",
+            "von": "12:00",
+            "bis": "14:00",
+            "raum": "Hörsaal A2 (A-223) (Cyber Valley Campus, MVL1)",
+            "bemerkung": "Übung",
+            "start": "22.10.26",
+            "ende": "04.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Fr",
+            "von": "14:00",
+            "bis": "16:00",
+            "raum": "Hörsaal TTR2 (Cyber Valley Campus, MVL6)",
+            "bemerkung": "Übung",
+            "start": "23.10.26",
+            "ende": "05.02.27",
+            "rhythmus": "wöchentlich"
+          }
+        ]
+      }
+    ]
+  },
   "INF4362": {
     "titel": "Praktikum Mobile Roboter",
     "gruppen": [
@@ -189,11 +229,31 @@ window.ALMA_DATEN = {
             "tag": "Do",
             "von": "16:00",
             "bis": "18:00",
-            "raum": "F122 Hörsaal 2 (Informatik/Kriminologie)",
+            "raum": "Hörsaal 1 F119 (Informatik/Kriminologie)",
+            "bemerkung": "Einführung",
+            "start": "15.10.26",
+            "ende": "15.10.26",
+            "rhythmus": "Einzeltermin"
+          },
+          {
+            "tag": "Do",
+            "von": "16:00",
+            "bis": "18:00",
+            "raum": "Hörsaal 1 F119 (Informatik/Kriminologie)",
             "bemerkung": "",
             "start": "22.10.26",
             "ende": "04.02.27",
             "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Do",
+            "von": "16:00",
+            "bis": "18:00",
+            "raum": "Hörsaal N07 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Klausur",
+            "start": "04.02.27",
+            "ende": "04.02.27",
+            "rhythmus": "Einzeltermin"
           }
         ]
       }
@@ -209,7 +269,7 @@ window.ALMA_DATEN = {
             "tag": "Mi",
             "von": "10:00",
             "bis": "12:00",
-            "raum": "Hörsaal A301 [Informatik] (Informatik/Astronomie) Dozent/-in: M.Sc. Jung, Alexander; M.Sc. Palomero Bernardo, Paul",
+            "raum": "Hörsaal A301 [Informatik] (Informatik/Astronomie)",
             "bemerkung": "Vorlesung",
             "start": "14.10.26",
             "ende": "03.02.27",
@@ -219,7 +279,7 @@ window.ALMA_DATEN = {
             "tag": "Mi",
             "von": "08:00",
             "bis": "10:00",
-            "raum": "Hörsaal A301 [Informatik] (Informatik/Astronomie) Dozent/-in: M.Sc. Jung, Alexander; M.Sc. Palomero Bernardo, Paul",
+            "raum": "Hörsaal A301 [Informatik] (Informatik/Astronomie)",
             "bemerkung": "Übung",
             "start": "21.10.26",
             "ende": "03.02.27",
@@ -240,7 +300,7 @@ window.ALMA_DATEN = {
             "von": "14:00",
             "bis": "16:00",
             "raum": "Hörsaal N05 (Hörsaalzentrum Morgenstelle)",
-            "bemerkung": "Vorlesung",
+            "bemerkung": " Vorlesung",
             "start": "14.10.26",
             "ende": "03.02.27",
             "rhythmus": "wöchentlich"
@@ -254,6 +314,26 @@ window.ALMA_DATEN = {
             "start": "21.10.26",
             "ende": "03.02.27",
             "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Mo",
+            "von": "14:00",
+            "bis": "16:30",
+            "raum": "Hörsaal N05 (Hörsaalzentrum Morgenstelle) / Hörsaal N06 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Klausur",
+            "start": "08.02.27",
+            "ende": "08.02.27",
+            "rhythmus": "Einzeltermin"
+          },
+          {
+            "tag": "Fr",
+            "von": "15:00",
+            "bis": "17:30",
+            "raum": "Hörsaal N06 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Nachklausur",
+            "start": "02.04.27",
+            "ende": "02.04.27",
+            "rhythmus": "Einzeltermin"
           }
         ]
       }
@@ -304,6 +384,16 @@ window.ALMA_DATEN = {
             "start": "19.10.26",
             "ende": "21.12.26",
             "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Di",
+            "von": "18:30",
+            "bis": "21:00",
+            "raum": "Hörsaal N06 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Klausur",
+            "start": "22.12.26",
+            "ende": "22.12.26",
+            "rhythmus": "Einzeltermin"
           }
         ]
       }
@@ -319,7 +409,7 @@ window.ALMA_DATEN = {
             "tag": "Di",
             "von": "14:00",
             "bis": "16:00",
-            "raum": "Hörsaal N05 (Hörsaalzentrum Morgenstelle) Dozent/-in: Dr. rer. nat. Kolev, Pavel",
+            "raum": "Hörsaal N05 (Hörsaalzentrum Morgenstelle)",
             "bemerkung": "Vorlesung",
             "start": "13.10.26",
             "ende": "02.02.27",
@@ -344,6 +434,16 @@ window.ALMA_DATEN = {
             "start": "22.10.26",
             "ende": "04.02.27",
             "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Do",
+            "von": "13:00",
+            "bis": "16:00",
+            "raum": "Hörsaal N10 (Bio Hörsaalgebäude AdM 3)",
+            "bemerkung": "Klausur",
+            "start": "18.02.27",
+            "ende": "18.02.27",
+            "rhythmus": "Einzeltermin"
           }
         ]
       }
@@ -404,13 +504,68 @@ window.ALMA_DATEN = {
             "start": "11.01.27",
             "ende": "01.02.27",
             "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Mo",
+            "von": "13:00",
+            "bis": "16:00",
+            "raum": "Hörsaal N10 (Bio Hörsaalgebäude AdM 3)",
+            "bemerkung": "Klausur",
+            "start": "15.02.27",
+            "ende": "15.02.27",
+            "rhythmus": "Einzeltermin"
+          }
+        ]
+      }
+    ]
+  },
+  "ML4501": {
+    "titel": "Tübingen AI exhibition: maintenance and public discourse",
+    "gruppen": [
+      {
+        "name": "Explainable Machine Learning - 1. Parallelgruppe",
+        "termine": [
+          {
+            "tag": "Mi",
+            "von": "14:00",
+            "bis": "16:00",
+            "raum": "Seminarraum A-222 (Cyber Valley Campus, MVL1)",
+            "bemerkung": "In the first 4 weeks of the lecture time, the seminar will take place on Wednesdays, 2:15 pm to 4 pm. Afterwards there will be two block days at the end of the semester, which will be scheduled together with the participants.",
+            "start": "14.10.26",
+            "ende": "04.11.26",
+            "rhythmus": "wöchentlich"
+          }
+        ]
+      },
+      {
+        "name": "Quo Vadis Computer Sciences? - The future of work, research, and teaching in the agentic age - 1. Parallelgruppe",
+        "termine": [
+          {
+            "tag": "Fr",
+            "von": "08:00",
+            "bis": "10:00",
+            "raum": "Hörsaal A1 (A-206) (Cyber Valley Campus, MVL1)",
+            "bemerkung": "Einführung",
+            "start": "16.10.26",
+            "ende": "16.10.26",
+            "rhythmus": "Einzeltermin"
+          },
+          {
+            "tag": "Mi",
+            "von": "12:00",
+            "bis": "14:00",
+            "raum": "—",
+            "bemerkung": "Ort: Maria-von-Linden-Str. 1, Raum A-501 (Level 3)",
+            "start": "28.10.26",
+            "ende": "03.02.27",
+            "rhythmus": "wöchentlich"
           }
         ]
       }
     ]
   },
   "INF4317": {
-    "titel": "a Advanced Computer Architecture",
+    "titel": "Parallele Rechnerarchitekturen",
     "gruppen": [
       {
         "name": "Advanced Computer Architecture - 1. Parallelgruppe",
@@ -445,6 +600,16 @@ window.ALMA_DATEN = {
       {
         "name": "Enterprise Computing - 1. Parallelgruppe",
         "termine": [
+          {
+            "tag": "Mi",
+            "von": "16:00",
+            "bis": "18:00",
+            "raum": "Hörsaal A301 [Informatik] (Informatik/Astronomie)",
+            "bemerkung": "Einführung",
+            "start": "14.10.26",
+            "ende": "14.10.26",
+            "rhythmus": "Einzeltermin"
+          },
           {
             "tag": "Mi",
             "von": "16:00",
@@ -514,6 +679,26 @@ window.ALMA_DATEN = {
             "start": "22.10.26",
             "ende": "04.02.27",
             "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Mi",
+            "von": "11:00",
+            "bis": "14:00",
+            "raum": "Hörsaal N07 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Klausur",
+            "start": "10.02.27",
+            "ende": "10.02.27",
+            "rhythmus": "Einzeltermin"
+          },
+          {
+            "tag": "Mi",
+            "von": "12:00",
+            "bis": "15:00",
+            "raum": "Hörsaal N10 (Bio Hörsaalgebäude AdM 3)",
+            "bemerkung": "Nachklausur",
+            "start": "07.04.27",
+            "ende": "07.04.27",
+            "rhythmus": "Einzeltermin"
           }
         ]
       }
@@ -590,7 +775,7 @@ window.ALMA_DATEN = {
             "von": "14:00",
             "bis": "16:00",
             "raum": "Hörsaal TTR2 (Cyber Valley Campus, MVL6)",
-            "bemerkung": "Vorlesung  Dozent: Dr. Antonio Orvieto",
+            "bemerkung": "Vorlesung",
             "start": "12.10.26",
             "ende": "01.02.27",
             "rhythmus": "wöchentlich"
@@ -600,10 +785,80 @@ window.ALMA_DATEN = {
             "von": "16:00",
             "bis": "17:00",
             "raum": "Hörsaal TTR2 (Cyber Valley Campus, MVL6)",
-            "bemerkung": "Übung  Dozent: Dr. Antonio Orvieto",
+            "bemerkung": "Übung",
             "start": "19.10.26",
             "ende": "01.02.27",
             "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Mo",
+            "von": "16:00",
+            "bis": "18:30",
+            "raum": "Hörsaal N10 (Bio Hörsaalgebäude AdM 3)",
+            "bemerkung": "Klausur",
+            "start": "15.02.27",
+            "ende": "15.02.27",
+            "rhythmus": "Einzeltermin"
+          },
+          {
+            "tag": "Fr",
+            "von": "14:00",
+            "bis": "17:00",
+            "raum": "Hörsaal N05 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Nachklausur",
+            "start": "09.04.27",
+            "ende": "09.04.27",
+            "rhythmus": "Einzeltermin"
+          }
+        ]
+      }
+    ]
+  },
+  "INFO4470": {
+    "titel": "Quantencomputer und Künstliche Intelligenz",
+    "gruppen": [
+      {
+        "name": "Quantencomputer und Künstliche Intelligenz - 1. Parallelgruppe",
+        "termine": [
+          {
+            "tag": "Fr",
+            "von": "10:00",
+            "bis": "12:00",
+            "raum": "Hörsaal TTR2 (Cyber Valley Campus, MVL6)",
+            "bemerkung": "",
+            "start": "16.10.26",
+            "ende": "05.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Fr",
+            "von": "12:00",
+            "bis": "14:00",
+            "raum": "Hörsaal TTR2 (Cyber Valley Campus, MVL6)",
+            "bemerkung": "",
+            "start": "16.10.26",
+            "ende": "05.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Fr",
+            "von": "14:00",
+            "bis": "16:30",
+            "raum": "Hörsaal N05 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Klausur",
+            "start": "12.02.27",
+            "ende": "12.02.27",
+            "rhythmus": "Einzeltermin"
+          },
+          {
+            "tag": "Mo",
+            "von": "14:00",
+            "bis": "16:30",
+            "raum": "Hörsaal N03 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Nachklausur",
+            "start": "22.03.27",
+            "ende": "22.03.27",
+            "rhythmus": "Einzeltermin"
           }
         ]
       }
@@ -639,20 +894,20 @@ window.ALMA_DATEN = {
             "tag": "Mo",
             "von": "08:00",
             "bis": "10:00",
-            "raum": "Seminarraum C215 (Informatik Sand 14)",
+            "raum": "Übungsraum [Informatik] A302 (Informatik/Astronomie)",
             "bemerkung": "Übung",
             "start": "19.10.26",
             "ende": "01.02.27",
             "rhythmus": "wöchentlich"
           },
           {
-            "tag": "Di",
+            "tag": "Mo",
             "von": "08:00",
             "bis": "10:00",
             "raum": "Seminarraum C215 (Informatik Sand 14)",
             "bemerkung": "Übung",
-            "start": "20.10.26",
-            "ende": "02.02.27",
+            "start": "19.10.26",
+            "ende": "01.02.27",
             "rhythmus": "wöchentlich"
           },
           {
@@ -664,6 +919,36 @@ window.ALMA_DATEN = {
             "start": "21.10.26",
             "ende": "03.02.27",
             "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Mi",
+            "von": "08:00",
+            "bis": "10:00",
+            "raum": "Übungsraum [Informatik] A302 (Informatik/Astronomie)",
+            "bemerkung": "Übung",
+            "start": "21.10.26",
+            "ende": "03.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Mo",
+            "von": "10:00",
+            "bis": "12:00",
+            "raum": "Hörsaal N10 (Bio Hörsaalgebäude AdM 3)",
+            "bemerkung": "Klausur Teil 1",
+            "start": "30.11.26",
+            "ende": "30.11.26",
+            "rhythmus": "Einzeltermin"
+          },
+          {
+            "tag": "Mo",
+            "von": "10:00",
+            "bis": "12:00",
+            "raum": "Hörsaal N10 (Bio Hörsaalgebäude AdM 3) / Hörsaal N11 (Bio Hörsaalgebäude AdM 3)",
+            "bemerkung": "Klausur Teil 2",
+            "start": "01.02.27",
+            "ende": "01.02.27",
+            "rhythmus": "Einzeltermin"
           }
         ]
       }
@@ -744,6 +1029,16 @@ window.ALMA_DATEN = {
             "start": "21.10.26",
             "ende": "03.02.27",
             "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Fr",
+            "von": "08:00",
+            "bis": "11:00",
+            "raum": "Hörsaal N10 (Bio Hörsaalgebäude AdM 3)",
+            "bemerkung": "Klausur",
+            "start": "19.02.27",
+            "ende": "19.02.27",
+            "rhythmus": "Einzeltermin"
           }
         ]
       }
@@ -789,11 +1084,41 @@ window.ALMA_DATEN = {
       }
     ]
   },
+  "INF3411": {
+    "titel": "Methoden der Algorithmik",
+    "gruppen": [
+      {
+        "name": "Methoden der Algorithmik - 1. Parallelgruppe",
+        "termine": [
+          {
+            "tag": "Mi",
+            "von": "10:00",
+            "bis": "12:00",
+            "raum": "Hörsaal A2 (A-223) (Cyber Valley Campus, MVL1)",
+            "bemerkung": "Vorlesung",
+            "start": "14.10.26",
+            "ende": "03.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Mi",
+            "von": "08:00",
+            "bis": "10:00",
+            "raum": "Hörsaal A2 (A-223) (Cyber Valley Campus, MVL1)",
+            "bemerkung": "Übung",
+            "start": "21.10.26",
+            "ende": "03.02.27",
+            "rhythmus": "wöchentlich"
+          }
+        ]
+      }
+    ]
+  },
   "INF3223": {
     "titel": "Angewandte Statistik I",
     "gruppen": [
       {
-        "name": "Angewandte Statistik I - 1. Parallelgruppe",
+        "name": "Angewandte Statistik I, Semesterkurs - 1. Parallelgruppe",
         "termine": [
           {
             "tag": "Mi",
@@ -844,6 +1169,16 @@ window.ALMA_DATEN = {
             "start": "22.10.26",
             "ende": "04.02.27",
             "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Do",
+            "von": "16:30",
+            "bis": "19:00",
+            "raum": "Hörsaal N07 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Exam (Klausur)",
+            "start": "11.02.27",
+            "ende": "11.02.27",
+            "rhythmus": "Einzeltermin"
           }
         ]
       }
@@ -859,7 +1194,7 @@ window.ALMA_DATEN = {
             "tag": "Do",
             "von": "08:00",
             "bis": "10:00",
-            "raum": "c.t. (wöchentlich) Hörsaal TTR2 (Cyber Valley Campus, MVL6) Dozent/-in: Prof. Dr. rer. nat. Gehler, Peter",
+            "raum": "Hörsaal TTR2 (Cyber Valley Campus, MVL6)",
             "bemerkung": "Vorlesung",
             "start": "15.10.26",
             "ende": "04.02.27",
@@ -869,7 +1204,7 @@ window.ALMA_DATEN = {
             "tag": "Do",
             "von": "17:00",
             "bis": "18:30",
-            "raum": "Hörsaal A301 [Informatik] (Informatik/Astronomie) Dozent/-in: Prof. Dr. rer. nat. Gehler, Peter",
+            "raum": "Hörsaal A301 [Informatik] (Informatik/Astronomie)",
             "bemerkung": "Übung",
             "start": "22.10.26",
             "ende": "04.02.27",
@@ -934,6 +1269,16 @@ window.ALMA_DATEN = {
             "start": "20.10.26",
             "ende": "02.02.27",
             "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Di",
+            "von": "09:30",
+            "bis": "12:00",
+            "raum": "Hörsaal N10 (Bio Hörsaalgebäude AdM 3)",
+            "bemerkung": "Klausur",
+            "start": "09.02.27",
+            "ende": "09.02.27",
+            "rhythmus": "Einzeltermin"
           }
         ]
       }
@@ -969,7 +1314,7 @@ window.ALMA_DATEN = {
             "tag": "Di",
             "von": "12:00",
             "bis": "14:00",
-            "raum": "—",
+            "raum": "Seminarraum ZMBP 4U09 (ZMBP AdM 32)",
             "bemerkung": "Übung",
             "start": "20.10.26",
             "ende": "02.02.27",
@@ -989,11 +1334,21 @@ window.ALMA_DATEN = {
             "tag": "Do",
             "von": "10:00",
             "bis": "12:00",
-            "raum": "—",
+            "raum": "C4H33 (C-Bau [Mathe/Physik])",
             "bemerkung": "Übung",
             "start": "22.10.26",
             "ende": "04.02.27",
             "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Do",
+            "von": "08:00",
+            "bis": "10:00",
+            "raum": "Hörsaal N10 (Bio Hörsaalgebäude AdM 3) / Hörsaal N11 (Bio Hörsaalgebäude AdM 3)",
+            "bemerkung": "Klausur",
+            "start": "04.02.27",
+            "ende": "04.02.27",
+            "rhythmus": "Einzeltermin"
           }
         ]
       }
@@ -1024,13 +1379,33 @@ window.ALMA_DATEN = {
             "start": "12.10.26",
             "ende": "01.02.27",
             "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Mo",
+            "von": "17:00",
+            "bis": "19:30",
+            "raum": "Hörsaal N05 (Hörsaalzentrum Morgenstelle) / Hörsaal N06 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Klausur",
+            "start": "08.02.27",
+            "ende": "08.02.27",
+            "rhythmus": "Einzeltermin"
+          },
+          {
+            "tag": "Mo",
+            "von": "17:00",
+            "bis": "19:30",
+            "raum": "Hörsaal N06 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Nachklausur",
+            "start": "05.04.27",
+            "ende": "05.04.27",
+            "rhythmus": "Einzeltermin"
           }
         ]
       }
     ]
   },
   "INF3164": {
-    "titel": "/ MEINFM3164 User Experience (früher User Interface Design)",
+    "titel": "User Experience (früher User Interface Design)",
     "gruppen": [
       {
         "name": "User Experience (früher User Interface Design) - 1. Parallelgruppe",
@@ -1039,7 +1414,7 @@ window.ALMA_DATEN = {
             "tag": "Di",
             "von": "12:00",
             "bis": "14:00",
-            "raum": "c.t. (wöchentlich) Hörsaal N11 (Bio Hörsaalgebäude AdM 3) Dozent/-in: Prof. Dr. rer. nat. Henze, Niels",
+            "raum": "Hörsaal N11 (Bio Hörsaalgebäude AdM 3)",
             "bemerkung": "Vorlesung",
             "start": "13.10.26",
             "ende": "02.02.27",
@@ -1049,7 +1424,7 @@ window.ALMA_DATEN = {
             "tag": "Di",
             "von": "14:00",
             "bis": "16:00",
-            "raum": "c.t. (wöchentlich) Übungsraum 8D10 (Hörsaalzentrum Morgenstelle)",
+            "raum": "Übungsraum 8D10 (Hörsaalzentrum Morgenstelle)",
             "bemerkung": "Übung (Gruppe 1)",
             "start": "20.10.26",
             "ende": "02.02.27",
@@ -1059,11 +1434,21 @@ window.ALMA_DATEN = {
             "tag": "Fr",
             "von": "08:00",
             "bis": "10:00",
-            "raum": "c.t. (wöchentlich) Hörsaal A301 [Informatik] (Informatik/Astronomie)",
+            "raum": "Hörsaal A301 [Informatik] (Informatik/Astronomie)",
             "bemerkung": "Übung (Gruppe 2)",
             "start": "23.10.26",
             "ende": "05.02.27",
             "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Do",
+            "von": "12:00",
+            "bis": "14:30",
+            "raum": "Hörsaal N07 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Klausur",
+            "start": "18.02.27",
+            "ende": "18.02.27",
+            "rhythmus": "Einzeltermin"
           }
         ]
       }
@@ -1099,18 +1484,48 @@ window.ALMA_DATEN = {
       }
     ]
   },
-  "INF3146": {
-    "titel": "Computerspiele / Special Effects  1",
+  "INF3213": {
+    "titel": "Web Programming with The Laravel Framework",
     "gruppen": [
       {
-        "name": "Computerspiele / Special Effects  1 - 1. Parallelgruppe",
+        "name": "Programmiertechniken: Programming in Rust - 1. Parallelgruppe",
+        "termine": [
+          {
+            "tag": "Mo",
+            "von": "12:00",
+            "bis": "14:00",
+            "raum": "Übungsraum [Informatik] A302 (Informatik/Astronomie)",
+            "bemerkung": "",
+            "start": "12.10.26",
+            "ende": "01.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Mo",
+            "von": "14:00",
+            "bis": "16:00",
+            "raum": "—",
+            "bemerkung": "Sprechstunde Ort: Raum B221, Sand 13, Fachbereich Informatik",
+            "start": "12.10.26",
+            "ende": "01.02.27",
+            "rhythmus": "wöchentlich"
+          }
+        ]
+      }
+    ]
+  },
+  "INF3146": {
+    "titel": "Computerspiele / Special Effects 1",
+    "gruppen": [
+      {
+        "name": "Computerspiele / Special Effects 1 - 1. Parallelgruppe",
         "termine": [
           {
             "tag": "Di",
             "von": "16:00",
             "bis": "18:00",
             "raum": "—",
-            "bemerkung": "Ort: Maria-von-Linden-Str. 6, Seminarraum 2. OG  Der erste Termin findet im Hörsaal A1 (A-206), EG, Maria-von-Linden-Str. 1, statt.",
+            "bemerkung": "Ort: Maria-von-Linden-Str. 6, Seminarraum 2. OG Der erste Termin findet im Hörsaal A1 (A-206), EG, Maria-von-Linden-Str. 1, statt.",
             "start": "13.10.26",
             "ende": "02.02.27",
             "rhythmus": "wöchentlich"
@@ -1130,7 +1545,7 @@ window.ALMA_DATEN = {
             "von": "16:00",
             "bis": "18:00",
             "raum": "—",
-            "bemerkung": "Ort: Maria-von-Linden-Str. 6, Seminarraum 2. OG  Der erste Termin findet im Hörsaal A1 (A-206), EG, Maria-von-Linden-Str. 1, statt.",
+            "bemerkung": "Ort: Maria-von-Linden-Str. 6, Seminarraum 2. OG Der erste Termin findet im Hörsaal A1 (A-206), EG, Maria-von-Linden-Str. 1, statt.",
             "start": "13.10.26",
             "ende": "02.02.27",
             "rhythmus": "wöchentlich"
@@ -1169,6 +1584,46 @@ window.ALMA_DATEN = {
       }
     ]
   },
+  "INF3332": {
+    "titel": "Internet-Praktikum I",
+    "gruppen": [
+      {
+        "name": "Internet-Praktikum I - 1. Parallelgruppe",
+        "termine": [
+          {
+            "tag": "Mo",
+            "von": "09:00",
+            "bis": "17:00",
+            "raum": "Hörsaal A301 [Informatik] (Informatik/Astronomie)",
+            "bemerkung": "Einführung",
+            "start": "22.02.27",
+            "ende": "22.02.27",
+            "rhythmus": "Einzeltermin"
+          },
+          {
+            "tag": "Mo",
+            "von": "09:00",
+            "bis": "17:00",
+            "raum": "—",
+            "bemerkung": "Ort: B301, Sand 13, 2. OG",
+            "start": "22.02.27",
+            "ende": "12.03.27",
+            "rhythmus": "Blockveranstaltung"
+          },
+          {
+            "tag": "Fr",
+            "von": "10:00",
+            "bis": "12:00",
+            "raum": "Hörsaal 1 F119 (Informatik/Kriminologie)",
+            "bemerkung": "Klausur",
+            "start": "12.03.27",
+            "ende": "12.03.27",
+            "rhythmus": "Einzeltermin"
+          }
+        ]
+      }
+    ]
+  },
   "BIOINF4382": {
     "titel": "Machine Learning for Single-Cell Biology",
     "gruppen": [
@@ -1177,12 +1632,42 @@ window.ALMA_DATEN = {
         "termine": [
           {
             "tag": "Mo",
-            "von": "14:00",
-            "bis": "16:00",
-            "raum": "Hörsaal A104 [Informatik] (Informatik/Astronomie)",
+            "von": "12:00",
+            "bis": "14:00",
+            "raum": "—",
             "bemerkung": "Ort: M3 Institut, Otfried-Müller-Str. 37, Raum 2.208",
             "start": "12.10.26",
             "ende": "01.02.27",
+            "rhythmus": "wöchentlich"
+          }
+        ]
+      }
+    ]
+  },
+  "INF3187": {
+    "titel": "Effective Programming with Effects",
+    "gruppen": [
+      {
+        "name": "Effective Programming with Effects - 1. Parallelgruppe",
+        "termine": [
+          {
+            "tag": "Di",
+            "von": "12:00",
+            "bis": "14:00",
+            "raum": "Seminarraum C215 (Informatik Sand 14)",
+            "bemerkung": "",
+            "start": "13.10.26",
+            "ende": "02.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Di",
+            "von": "14:00",
+            "bis": "16:00",
+            "raum": "Seminarraum C215 (Informatik Sand 14)",
+            "bemerkung": "",
+            "start": "13.10.26",
+            "ende": "02.02.27",
             "rhythmus": "wöchentlich"
           }
         ]
@@ -1209,7 +1694,7 @@ window.ALMA_DATEN = {
             "tag": "Do",
             "von": "12:00",
             "bis": "14:00",
-            "raum": "Seminarraum A-207 (Cyber Valley Campus, MVL1)",
+            "raum": "Hörsaal TTR2 (Cyber Valley Campus, MVL6)",
             "bemerkung": "Übung",
             "start": "22.10.26",
             "ende": "04.02.27",
@@ -1229,7 +1714,7 @@ window.ALMA_DATEN = {
             "tag": "Mi",
             "von": "10:00",
             "bis": "12:00",
-            "raum": "c.t. (wöchentlich) Hörsaal A104 [Informatik] (Informatik/Astronomie) Dozent/-in: Prof. Dr. rer. nat. Henze, Niels",
+            "raum": "Hörsaal A104 [Informatik] (Informatik/Astronomie)",
             "bemerkung": "Vorlesung",
             "start": "14.10.26",
             "ende": "03.02.27",
@@ -1239,7 +1724,7 @@ window.ALMA_DATEN = {
             "tag": "Mi",
             "von": "08:00",
             "bis": "10:00",
-            "raum": "c.t. (wöchentlich) Hörsaal A104 [Informatik] (Informatik/Astronomie)",
+            "raum": "Hörsaal A104 [Informatik] (Informatik/Astronomie)",
             "bemerkung": "Übung",
             "start": "21.10.26",
             "ende": "03.02.27",
@@ -1259,7 +1744,7 @@ window.ALMA_DATEN = {
             "tag": "Di",
             "von": "10:00",
             "bis": "12:00",
-            "raum": "c.t. (wöchentlich) Hörsaal A104 [Informatik] (Informatik/Astronomie) Dozent/-in: Prof. Dr. rer. nat. Henze, Niels",
+            "raum": "Hörsaal A104 [Informatik] (Informatik/Astronomie)",
             "bemerkung": "Vorlesung",
             "start": "13.10.26",
             "ende": "02.02.27",
@@ -1269,11 +1754,161 @@ window.ALMA_DATEN = {
             "tag": "Di",
             "von": "08:00",
             "bis": "10:00",
-            "raum": "c.t. (wöchentlich) Hörsaal A104 [Informatik] (Informatik/Astronomie)",
+            "raum": "Hörsaal A104 [Informatik] (Informatik/Astronomie)",
             "bemerkung": "Übung (Gruppe 1)",
             "start": "20.10.26",
             "ende": "02.02.27",
             "rhythmus": "wöchentlich"
+          }
+        ]
+      }
+    ]
+  },
+  "INF3433": {
+    "titel": "Geometrie und Graphenzeichnen",
+    "gruppen": [
+      {
+        "name": "Kombinatorische Geometrie und Graphenzeichnen - 1. Parallelgruppe",
+        "termine": [
+          {
+            "tag": "Mo",
+            "von": "12:00",
+            "bis": "14:00",
+            "raum": "Hörsaal N10 (Bio Hörsaalgebäude AdM 3)",
+            "bemerkung": "Vorlesung",
+            "start": "12.10.26",
+            "ende": "01.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Mo",
+            "von": "14:00",
+            "bis": "16:00",
+            "raum": "Hörsaal N04 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Übung",
+            "start": "19.10.26",
+            "ende": "01.02.27",
+            "rhythmus": "wöchentlich"
+          }
+        ]
+      }
+    ]
+  },
+  "INFO4665": {
+    "titel": "Health Innovation Lab",
+    "gruppen": [
+      {
+        "name": "Health Innovation Lab - 1. Parallelgruppe",
+        "termine": [
+          {
+            "tag": "Mo",
+            "von": "09:00",
+            "bis": "13:00",
+            "raum": "Seminarraum A-222 (Cyber Valley Campus, MVL1)",
+            "bemerkung": "Info f. Informatikstudierende:  -> Anwesenheit nur bis 11 Uhr nötig",
+            "start": "19.10.26",
+            "ende": "19.10.26",
+            "rhythmus": "Einzeltermin"
+          },
+          {
+            "tag": "Fr",
+            "von": "09:00",
+            "bis": "13:00",
+            "raum": "Seminarraum A-222 (Cyber Valley Campus, MVL1)",
+            "bemerkung": "Info f. Informatikstudierende:  -> Anwesenheit nur bis 11 Uhr nötig",
+            "start": "23.10.26",
+            "ende": "23.10.26",
+            "rhythmus": "Einzeltermin"
+          },
+          {
+            "tag": "Mi",
+            "von": "09:00",
+            "bis": "12:00",
+            "raum": "Seminarraum A-222 (Cyber Valley Campus, MVL1)",
+            "bemerkung": "",
+            "start": "09.12.26",
+            "ende": "09.12.26",
+            "rhythmus": "Einzeltermin"
+          },
+          {
+            "tag": "Mi",
+            "von": "09:00",
+            "bis": "12:00",
+            "raum": "Seminarraum A-222 (Cyber Valley Campus, MVL1)",
+            "bemerkung": "",
+            "start": "27.01.27",
+            "ende": "27.01.27",
+            "rhythmus": "Einzeltermin"
+          }
+        ]
+      }
+    ]
+  },
+  "INF4374": {
+    "titel": "Software Quality",
+    "gruppen": [
+      {
+        "name": "Software Quality - 1. Parallelgruppe",
+        "termine": [
+          {
+            "tag": "Fr",
+            "von": "15:00",
+            "bis": "17:00",
+            "raum": "Hörsaal A301 [Informatik] (Informatik/Astronomie)",
+            "bemerkung": "Vorbesprechung",
+            "start": "23.10.26",
+            "ende": "23.10.26",
+            "rhythmus": "Einzeltermin"
+          },
+          {
+            "tag": "Fr",
+            "von": "15:00",
+            "bis": "18:00",
+            "raum": "Hörsaal A301 [Informatik] (Informatik/Astronomie)",
+            "bemerkung": "Vortragstermin",
+            "start": "22.01.27",
+            "ende": "22.01.27",
+            "rhythmus": "Einzeltermin"
+          }
+        ]
+      }
+    ]
+  },
+  "INFO4999": {
+    "titel": "Software-Architektur-Stile und -Patterns",
+    "gruppen": [
+      {
+        "name": "Software-Architektur-Stile und -Patterns - 1. Parallelgruppe",
+        "termine": [
+          {
+            "tag": "Sa",
+            "von": "09:30",
+            "bis": "13:00",
+            "raum": "—",
+            "bemerkung": "",
+            "start": "24.10.26",
+            "ende": "24.10.26",
+            "rhythmus": "Einzeltermin"
+          },
+          {
+            "tag": "Sa",
+            "von": "09:30",
+            "bis": "13:00",
+            "raum": "—",
+            "bemerkung": "",
+            "start": "12.12.26",
+            "ende": "12.12.26",
+            "rhythmus": "Einzeltermin"
+          },
+          {
+            "tag": "Sa",
+            "von": "09:30",
+            "bis": "13:00",
+            "raum": "—",
+            "bemerkung": "",
+            "start": "23.01.27",
+            "ende": "23.01.27",
+            "rhythmus": "Einzeltermin"
           }
         ]
       }
@@ -1294,6 +1929,36 @@ window.ALMA_DATEN = {
             "start": "12.10.26",
             "ende": "01.02.27",
             "rhythmus": "wöchentlich"
+          }
+        ]
+      }
+    ]
+  },
+  "INFO4352": {
+    "titel": "Pentesting",
+    "gruppen": [
+      {
+        "name": "Pentesting - 1. Parallelgruppe",
+        "termine": [
+          {
+            "tag": "Mo",
+            "von": "09:00",
+            "bis": "18:00",
+            "raum": "Hörsaal A301 [Informatik] (Informatik/Astronomie)",
+            "bemerkung": "",
+            "start": "15.03.27",
+            "ende": "19.03.27",
+            "rhythmus": "Blockveranstaltung"
+          },
+          {
+            "tag": "Do",
+            "von": "10:00",
+            "bis": "12:30",
+            "raum": "Hörsaal 1 F119 (Informatik/Kriminologie)",
+            "bemerkung": "Klausur",
+            "start": "25.03.27",
+            "ende": "25.03.27",
+            "rhythmus": "Einzeltermin"
           }
         ]
       }
@@ -1324,6 +1989,16 @@ window.ALMA_DATEN = {
             "start": "14.10.26",
             "ende": "03.02.27",
             "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Mi",
+            "von": "16:00",
+            "bis": "18:30",
+            "raum": "Hörsaal N06 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Klausur",
+            "start": "03.02.27",
+            "ende": "03.02.27",
+            "rhythmus": "Einzeltermin"
           }
         ]
       }
@@ -1350,7 +2025,7 @@ window.ALMA_DATEN = {
     ]
   },
   "INF3339": {
-    "titel": "c Spezielle Kapitel der Praktischen Informatik: Compilerbau",
+    "titel": "Spezielle Kapitel der Praktischen Informatik: Compilerbau",
     "gruppen": [
       {
         "name": "Spezielle Kapitel der Praktischen Informatik: Compilerbau - 1. Parallelgruppe",
@@ -1369,21 +2044,51 @@ window.ALMA_DATEN = {
       }
     ]
   },
-  "BIOINF4377": {
-    "titel": "From Open Data to Open Science",
+  "MEDI4511": {
+    "titel": "Audiovisuelle Medien II (3D-Animation)",
     "gruppen": [
       {
-        "name": "From Open Data to Open Science - 1. Parallelgruppe",
+        "name": "Audiovisuelle Medien II (3D-Animation) - 1. Parallelgruppe",
         "termine": [
           {
-            "tag": "Di",
-            "von": "16:00",
+            "tag": "Fr",
+            "von": "13:00",
             "bis": "18:00",
-            "raum": "Seminarraum A-222 (Cyber Valley Campus, MVL1)",
+            "raum": "Hörsaal A104 [Informatik] (Informatik/Astronomie)",
             "bemerkung": "",
-            "start": "13.10.26",
-            "ende": "02.02.27",
-            "rhythmus": "wöchentlich"
+            "start": "12.03.27",
+            "ende": "12.03.27",
+            "rhythmus": "Einzeltermin"
+          },
+          {
+            "tag": "Sa",
+            "von": "09:00",
+            "bis": "16:00",
+            "raum": "Hörsaal A104 [Informatik] (Informatik/Astronomie)",
+            "bemerkung": "",
+            "start": "13.03.27",
+            "ende": "13.03.27",
+            "rhythmus": "Einzeltermin"
+          },
+          {
+            "tag": "Fr",
+            "von": "13:00",
+            "bis": "18:00",
+            "raum": "Hörsaal A104 [Informatik] (Informatik/Astronomie)",
+            "bemerkung": "",
+            "start": "19.03.27",
+            "ende": "19.03.27",
+            "rhythmus": "Einzeltermin"
+          },
+          {
+            "tag": "Sa",
+            "von": "09:00",
+            "bis": "16:00",
+            "raum": "Hörsaal A104 [Informatik] (Informatik/Astronomie)",
+            "bemerkung": "",
+            "start": "20.03.27",
+            "ende": "20.03.27",
+            "rhythmus": "Einzeltermin"
           }
         ]
       }
@@ -1399,7 +2104,7 @@ window.ALMA_DATEN = {
             "tag": "Di",
             "von": "10:00",
             "bis": "12:00",
-            "raum": "c.t. (wöchentlich) Seminarraum A-222 (Cyber Valley Campus, MVL1)",
+            "raum": "Seminarraum A-222 (Cyber Valley Campus, MVL1)",
             "bemerkung": "",
             "start": "13.10.26",
             "ende": "02.02.27",
@@ -1429,8 +2134,28 @@ window.ALMA_DATEN = {
       }
     ]
   },
+  "INFO4481": {
+    "titel": "Dualität in Programmiersprachen",
+    "gruppen": [
+      {
+        "name": "Theorie von Programmiersprachen: Duality in Programming Languages - 1. Parallelgruppe",
+        "termine": [
+          {
+            "tag": "Mi",
+            "von": "14:00",
+            "bis": "16:00",
+            "raum": "Übungsraum [Informatik] A302 (Informatik/Astronomie)",
+            "bemerkung": "",
+            "start": "14.10.26",
+            "ende": "03.02.27",
+            "rhythmus": "wöchentlich"
+          }
+        ]
+      }
+    ]
+  },
   "INFO4195": {
-    "titel": "a AI for Scientific Discovery",
+    "titel": "AI for Scientific Discovery",
     "gruppen": [
       {
         "name": "AI for Scientific Discovery - 1. Parallelgruppe",
@@ -1438,8 +2163,18 @@ window.ALMA_DATEN = {
           {
             "tag": "Di",
             "von": "16:30",
+            "bis": "18:00",
+            "raum": "Hörsaal TTR2 (Cyber Valley Campus, MVL6)",
+            "bemerkung": "",
+            "start": "13.10.26",
+            "ende": "13.10.26",
+            "rhythmus": "Einzeltermin"
+          },
+          {
+            "tag": "Di",
+            "von": "16:30",
             "bis": "18:30",
-            "raum": "Hörsaal TTR2 (Cyber Valley Campus, MVL6) Dozent/-in: Prof. Dr. rer. nat. Krenn, Mario",
+            "raum": "Hörsaal TTR2 (Cyber Valley Campus, MVL6)",
             "bemerkung": "",
             "start": "20.10.26",
             "ende": "02.02.27",
