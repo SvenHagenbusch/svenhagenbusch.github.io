@@ -347,6 +347,14 @@ table.noten tr:hover{background:transparent}
 .ed-leer{font-size:12.5px;color:var(--dimmer);font-style:italic;margin:4px 0 10px}
 .ed-fehler{color:var(--err);font-size:13px;margin-right:auto}
 
+/* ---------- Teilen per Code ---------- */
+.code-hinweis{font-size:13px;color:var(--dim);margin:0 0 12px;line-height:1.6}
+.code-ta{width:100%;background:var(--bg3);border:1px solid var(--line);color:var(--text);
+  border-radius:9px;padding:11px 13px;font-family:ui-monospace,Consolas,monospace;font-size:12px;
+  line-height:1.55;resize:vertical;min-height:110px;outline:none;word-break:break-all}
+.code-ta:focus{border-color:var(--rot-hell);box-shadow:0 0 0 3px rgba(165,30,55,.15)}
+.code-status{font-size:12px;color:var(--dimmer);margin-right:auto}
+
 @media (max-width:760px){
   main{padding:16px 13px 60px} header{padding:14px 13px 0}
   .kopf-zeile h1{font-size:16px}
@@ -538,11 +546,10 @@ table.noten tr:hover{background:transparent}
 <section class="seite" id="seite-plan">
   <div class="werkzeuge">
     <button class="w-btn" id="autoBtn">Bereiche automatisch verteilen</button>
-    <button class="w-btn" id="exportBtn">Als JSON exportieren</button>
-    <button class="w-btn" id="importBtn">JSON importieren</button>
+    <button class="w-btn" id="exportBtn">Plan teilen (Code)</button>
+    <button class="w-btn" id="importBtn">Code einlesen</button>
     <button class="w-btn" id="druckBtn">Drucken / PDF</button>
     <button class="w-btn gefahr" id="leerenBtn">Plan leeren</button>
-    <input type="file" id="importDatei" accept="application/json" hidden>
   </div>
   <div id="planInhalt"></div>
 </section>
@@ -1639,44 +1646,205 @@ document.getElementById("leerenBtn").addEventListener("click", () => {
     plan = []; sichern(); allesZeichnen();
   }
 });
-document.getElementById("exportBtn").addEventListener("click", () => {
-  const blob = new Blob([JSON.stringify({ studiengang:"M.Sc. Informatik Tübingen PO 2021", plan,
-                                          ausTermine:[...ausTermine],
-                                          eigeneModule, eigeneTermine }, null, 2)],
-                        { type:"application/json" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "studienplan-informatik-tuebingen.json";
-  a.click(); URL.revokeObjectURL(a.href);
-});
-document.getElementById("importBtn").addEventListener("click", () => document.getElementById("importDatei").click());
-document.getElementById("importDatei").addEventListener("change", ev => {
-  const datei = ev.target.files[0]; if(!datei) return;
-  const leser = new FileReader();
-  leser.onload = () => {
-    try{
-      const d = JSON.parse(leser.result);
-      if(!Array.isArray(d.plan)) throw new Error("Feld 'plan' fehlt");
-      // Eigene Veranstaltungen zuerst, damit Plan-Einträge darauf gültig sind
-      if(Array.isArray(d.eigeneModule) || d.eigeneTermine){
-        eigeneModule  = Array.isArray(d.eigeneModule) ? d.eigeneModule.filter(m => m && m.nr && m.titel) : [];
-        eigeneTermine = d.eigeneTermine && typeof d.eigeneTermine === "object" ? d.eigeneTermine : {};
-        eigeneSichern(); eigeneEinbauen();
-      }
-      plan =d.plan.filter(e => e && NACH_NR.has(e.nr)).map(e => ({
-        nr: e.nr,
-        bereich: BEREICHE.some(b => b.id === e.bereich) ? e.bereich : bestesBereich(NACH_NR.get(e.nr)),
-        sem: SEMESTER.includes(e.sem) ? e.sem : OHNE_SEM,
-        bestanden: !!e.bestanden
-      }));
-      ausTermine = new Set(Array.isArray(d.ausTermine) ? d.ausTermine : []);
-      sichern(); allesZeichnen();
-      alert(`${plan.length} Module importiert.`);
-    }catch(err){ alert("Datei konnte nicht gelesen werden: " + err.message); }
-    ev.target.value = "";
+/* ================= Teilen per Code =================
+   Der Plan wird als kompakter, mit DEFLATE gepackter String ("Code") geteilt.
+   Format:  ALMA1.<base64url(deflate(JSON))>   - dichteste Variante
+   Fallback: ALMA0.<base64url(JSON)>           - falls der Browser nicht packen kann
+   Alte JSON-Exporte (beginnt mit "{") werden beim Einlesen weiter akzeptiert. */
+const CODE_PREFIX = "ALMA1.", CODE_PREFIX_ROH = "ALMA0.";
+
+function bytesZuB64u(bytes){
+  let bin = "";
+  for(let i = 0; i < bytes.length; i += 0x8000)
+    bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+  return btoa(bin).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+}
+function b64uZuBytes(str){
+  let s = str.replace(/-/g,"+").replace(/_/g,"/");
+  while(s.length % 4) s += "=";
+  const bin = atob(s), out = new Uint8Array(bin.length);
+  for(let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+async function komprimieren(text){
+  const strom = new Blob([text]).stream().pipeThrough(new CompressionStream("deflate-raw"));
+  return new Uint8Array(await new Response(strom).arrayBuffer());
+}
+async function dekomprimieren(bytes){
+  const strom = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+  return new TextDecoder().decode(await new Response(strom).arrayBuffer());
+}
+
+/* Aktuellen Zustand in einen möglichst kurzen Code packen */
+async function planAlsCode(){
+  const roh = {
+    v: 1,
+    p: plan.map(e => [e.nr, e.bereich, e.sem, e.bestanden ? 1 : 0]),   // Plan als kompakte Tupel
+    a: [...ausTermine],
+    m: eigeneModule,
+    t: eigeneTermine
   };
-  leser.readAsText(datei);
-});
+  const json = JSON.stringify(roh);
+  if(typeof CompressionStream !== "undefined" && typeof DecompressionStream !== "undefined"){
+    try{ return CODE_PREFIX + bytesZuB64u(await komprimieren(json)); }catch(e){ /* Fallback unten */ }
+  }
+  return CODE_PREFIX_ROH + bytesZuB64u(new TextEncoder().encode(json));
+}
+
+/* Code (oder alter JSON-Export) -> rohes Datenobjekt */
+async function codeAuswerten(text){
+  text = String(text || "").trim();
+  if(!text) throw new Error("Bitte einen Code einfügen.");
+  if(text.startsWith("{")){                       // alter JSON-Export
+    let d;
+    try{ d = JSON.parse(text); }catch(e){ throw new Error("Der Code ist beschädigt oder unvollständig."); }
+    if(!Array.isArray(d.plan)) throw new Error("Im JSON fehlt das Feld „plan“.");
+    return d;
+  }
+  if(text.startsWith(CODE_PREFIX)){
+    if(typeof DecompressionStream === "undefined")
+      throw new Error("Dieser Browser kann den Code nicht entpacken. Bitte einen aktuellen Browser verwenden.");
+    try{
+      return JSON.parse(await dekomprimieren(b64uZuBytes(text.slice(CODE_PREFIX.length))));
+    }catch(e){ throw new Error("Der Code ist beschädigt oder unvollständig."); }
+  }
+  if(text.startsWith(CODE_PREFIX_ROH)){
+    try{
+      return JSON.parse(new TextDecoder().decode(b64uZuBytes(text.slice(CODE_PREFIX_ROH.length))));
+    }catch(e){ throw new Error("Der Code ist beschädigt oder unvollständig."); }
+  }
+  throw new Error("Unbekanntes Format – der Code muss mit „ALMA1.“ beginnen.");
+}
+
+/* Rohes Datenobjekt (neu oder alt) in den Zustand übernehmen */
+function planUebernehmen(d){
+  const alsEintrag = e => Array.isArray(e) ? { nr:e[0], bereich:e[1], sem:e[2], bestanden:!!e[3] }
+                                           : (e && typeof e === "object" ? e : null);
+  const rohPlan = Array.isArray(d.p) ? d.p : (Array.isArray(d.plan) ? d.plan : null);
+  if(!rohPlan) throw new Error("Der Code enthält keinen Plan.");
+  const em = Array.isArray(d.m) ? d.m : (Array.isArray(d.eigeneModule) ? d.eigeneModule : []);
+  const et = (d.t && typeof d.t === "object") ? d.t
+           : (d.eigeneTermine && typeof d.eigeneTermine === "object") ? d.eigeneTermine : {};
+  // Eigene Veranstaltungen zuerst, damit Plan-Einträge darauf gültig sind
+  if(em.length || Object.keys(et).length){
+    eigeneModule  = em.filter(m => m && m.nr && m.titel);
+    eigeneTermine = et;
+    eigeneSichern(); eigeneEinbauen();
+  }
+  plan = rohPlan.map(alsEintrag).filter(e => e && NACH_NR.has(e.nr)).map(e => ({
+    nr: e.nr,
+    bereich: BEREICHE.some(b => b.id === e.bereich) ? e.bereich : bestesBereich(NACH_NR.get(e.nr)),
+    sem: SEMESTER.includes(e.sem) ? e.sem : OHNE_SEM,
+    bestanden: !!e.bestanden
+  }));
+  const a = Array.isArray(d.a) ? d.a : (Array.isArray(d.ausTermine) ? d.ausTermine : []);
+  ausTermine = new Set(a);
+  sichern(); allesZeichnen();
+  return plan.length;
+}
+
+function dialogOeffnen(html){
+  document.getElementById("modal").innerHTML = html;
+  document.getElementById("overlay").classList.add("auf");
+  document.body.style.overflow = "hidden";
+}
+
+async function teilenOeffnen(){
+  dialogOeffnen(`
+    <div class="modal-kopf">
+      <div><div class="mk-nr">Teilen</div><h3>Plan als Code teilen</h3></div>
+      <button type="button" class="schliessen" id="modalZu" title="Schließen (Esc)">✕</button>
+    </div>
+    <div class="modal-inhalt">
+      <p class="code-hinweis">Dieser Code enthält deinen kompletten Plan inklusive eigener Veranstaltungen.
+        Einfach kopieren und verschicken – der Empfänger fügt ihn über „Code einlesen“ wieder ein.</p>
+      <textarea id="codeAusgabe" class="code-ta" readonly spellcheck="false" rows="7">Wird erzeugt …</textarea>
+      <div class="modal-fuss">
+        <span class="code-status" id="codeStatus"></span>
+        <button type="button" class="w-btn" id="codeKopie" disabled>Kopieren</button>
+        <button type="button" class="w-btn" id="codeSpeichern" disabled>Als Datei speichern</button>
+        <button type="button" class="add-btn" id="codeZu">Fertig</button>
+      </div>
+    </div>`);
+  const ta = document.getElementById("codeAusgabe");
+  const status = document.getElementById("codeStatus");
+  let code = "";
+  try{
+    code = await planAlsCode();
+  }catch(e){
+    ta.value = ""; status.textContent = "Fehler: " + e.message; return;
+  }
+  ta.value = code;
+  status.textContent = `Code: ${code.length} Zeichen`;
+  document.getElementById("codeKopie").disabled = false;
+  document.getElementById("codeSpeichern").disabled = false;
+
+  document.getElementById("codeKopie").addEventListener("click", async () => {
+    const btn = document.getElementById("codeKopie");
+    try{ await navigator.clipboard.writeText(code); }
+    catch(e){ ta.select(); document.execCommand("copy"); }
+    btn.textContent = "Kopiert ✓";
+    setTimeout(() => { const b = document.getElementById("codeKopie"); if(b) b.textContent = "Kopieren"; }, 1600);
+  });
+  document.getElementById("codeSpeichern").addEventListener("click", () => {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([code], { type:"text/plain" }));
+    a.download = "studienplan-code.txt";
+    a.click(); URL.revokeObjectURL(a.href);
+  });
+  document.getElementById("codeZu").addEventListener("click", detailSchliessen);
+  ta.focus(); ta.select();
+}
+
+function einlesenOeffnen(){
+  dialogOeffnen(`
+    <div class="modal-kopf">
+      <div><div class="mk-nr">Einlesen</div><h3>Plan aus Code einlesen</h3></div>
+      <button type="button" class="schliessen" id="modalZu" title="Schließen (Esc)">✕</button>
+    </div>
+    <div class="modal-inhalt">
+      <p class="code-hinweis">Füge hier einen geteilten Code ein (beginnt mit „ALMA1.“).
+        Ein alter JSON-Export wird ebenfalls akzeptiert. Achtung: der aktuelle Plan wird ersetzt.</p>
+      <textarea id="codeEingabe" class="code-ta" spellcheck="false" rows="7" placeholder="ALMA1.…"></textarea>
+      <div class="modal-fuss">
+        <span class="ed-fehler" id="codeFehler"></span>
+        <button type="button" class="w-btn" id="codeDateiBtn">Datei wählen …</button>
+        <button type="button" class="w-btn" id="codeAbbrechen">Abbrechen</button>
+        <button type="button" class="add-btn" id="codeEinlesen">Einlesen</button>
+      </div>
+      <input type="file" id="importDatei" accept=".txt,.alma,.json,text/plain,application/json" hidden>
+    </div>`);
+  const ta = document.getElementById("codeEingabe");
+  const fehler = t => { document.getElementById("codeFehler").textContent = t || ""; };
+  document.getElementById("codeAbbrechen").addEventListener("click", detailSchliessen);
+  document.getElementById("codeDateiBtn").addEventListener("click", () => document.getElementById("importDatei").click());
+  document.getElementById("importDatei").addEventListener("change", ev => {
+    const datei = ev.target.files[0]; if(!datei) return;
+    const leser = new FileReader();
+    leser.onload = () => { ta.value = String(leser.result || "").trim(); fehler(""); };
+    leser.onerror = () => fehler("Datei konnte nicht gelesen werden.");
+    leser.readAsText(datei);
+  });
+  const einlesen = async () => {
+    fehler("");
+    const btn = document.getElementById("codeEinlesen");
+    btn.disabled = true;
+    try{
+      const n = planUebernehmen(await codeAuswerten(ta.value));
+      detailSchliessen();
+      alert(`${n} Module importiert.`);
+    }catch(e){
+      fehler(e.message);
+      const b = document.getElementById("codeEinlesen"); if(b) b.disabled = false;
+    }
+  };
+  document.getElementById("codeEinlesen").addEventListener("click", einlesen);
+  ta.addEventListener("keydown", ev => { if(ev.key === "Enter" && (ev.ctrlKey || ev.metaKey)) einlesen(); });
+  ta.focus();
+}
+
+document.getElementById("exportBtn").addEventListener("click", teilenOeffnen);
+document.getElementById("importBtn").addEventListener("click", einlesenOeffnen);
 
 /* ================= Lageplan ================= */
 // Koordinaten verifiziert über OpenStreetMap Nominatim
