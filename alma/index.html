@@ -319,6 +319,9 @@ table.noten tr:hover{background:transparent}
 /* ---------- Eigene Veranstaltungen ---------- */
 .eigen-badge{font-size:10px;font-weight:700;color:var(--rot-hell);border:1px solid rgba(201,69,94,.45);
   background:rgba(165,30,55,.12);border-radius:4px;padding:1px 6px;margin-left:5px;white-space:nowrap}
+.basis-badge{font-size:10px;font-weight:700;color:#c48ef5;border:1px solid rgba(186,104,240,.45);
+  background:rgba(186,104,240,.14);border-radius:4px;padding:1px 6px;margin-left:5px;white-space:nowrap}
+[data-theme="light"] .basis-badge{color:#7d34b8}
 .chip.eigen-neu{background:var(--rot);border-color:var(--rot);color:#fff}
 .chip.eigen-neu:hover{background:var(--rot-hell);border-color:var(--rot-hell);color:#fff}
 .az-block.eigen{border-left:3px solid var(--rot-hell);padding-left:8px}
@@ -596,6 +599,7 @@ table.noten tr:hover{background:transparent}
 
 <script src="module.js"></script>
 <script src="alma-daten.js"></script>
+<script src="bachelor-daten.js"></script>
 <script>
 "use strict";
 
@@ -855,7 +859,8 @@ function almaOffiziell(m){
     if(ALMA_DATEN[nr]) return ALMA_DATEN[nr];
   }
   // Eigene Module nur über die Nummer zuordnen - Titel-Suche würde zu leicht Fremdes finden
-  if(m.eigen) return null;
+  // (gilt auch für die Bachelor-Module aus dem Bereich INFO-BASIS, z. B. INF3143/INF3144 "Bildverarbeitung")
+  if(m.eigen || m.infoBasis) return null;
 
   // 2) Suche über Titel-Ähnlichkeit (alma-Titel als Teilstring des Modul-Titels oder umgekehrt)
   const tLow = (m.titel || '').toLowerCase();
@@ -1239,6 +1244,7 @@ function detailOeffnen(nr){
         <div class="mk-nr">${esc(m.nr)}</div>
         <h3>${esc(m.titel)}</h3>
         <div style="margin-top:7px">${m.bereiche.map(x => `<span class="tag t-${x}">${x}</span>`).join("")}
+          ${m.infoBasis ? `<span class="basis-badge">INFO-BASIS · Bachelor</span>` : ""}
           ${m.eigen ? `<span class="eigen-badge">eigene Veranstaltung</span>` : ""}
           ${m.geplantOffen ? "" : `<span class="nichtgeplant">· derzeit nicht geplant</span>`}</div>
       </div>
@@ -1442,7 +1448,7 @@ function zeichneKatalog(){
       <td class="nr" title="${esc(m.nr)}">${esc(m.nrKurz)}</td>
       <td class="titel">${esc(m.titel)}
         <small>${esc(m.dozent)} · <span class="sprache">${esc(m.sprache)}</span>
-        ${m.eigen ? `<span class="eigen-badge">eigen</span>` : ""}${almaFuerModul(m) ? `<span class="alma-badge">alma</span>` : ""}${m.geplantOffen ? "" : `<span class="nichtgeplant">· nicht geplant</span>`}</small></td>
+        ${m.eigen ? `<span class="eigen-badge">eigen</span>` : ""}${m.infoBasis ? `<span class="basis-badge">INFO-BASIS</span>` : ""}${almaFuerModul(m) ? `<span class="alma-badge">alma</span>` : ""}${m.geplantOffen ? "" : `<span class="nichtgeplant">· nicht geplant</span>`}</small></td>
       <td class="mitte">${esc(m.form)}</td>
       <td class="cp">${m.cp}</td>
       <td class="cp" style="font-weight:400;color:var(--dim)">${m.sws ?? "—"}</td>
@@ -1516,8 +1522,9 @@ document.getElementById("themaBtn").addEventListener("click", () => {
   sichern();
 });
 
-document.getElementById("bereichsChips").innerHTML = BEREICHE.filter(x => x.id !== "FREI")
-  .map(x => `<button class="chip" data-chip="${x.id}">${x.id}</button>`).join("");
+// "FREI" (Konto 100) ist der Bereich der Bachelor-Module aus INFO-BASIS und daher filterbar
+document.getElementById("bereichsChips").innerHTML = BEREICHE
+  .map(x => `<button class="chip" data-chip="${x.id}" title="${esc(x.name)}">${x.id === "FREI" ? "INFO-BASIS" : x.id}</button>`).join("");
 document.getElementById("bereichsChips").addEventListener("click", ev => {
   const btn = ev.target.closest("[data-chip]"); if(!btn) return;
   const id = btn.dataset.chip;

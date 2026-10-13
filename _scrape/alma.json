@@ -1,0 +1,780 @@
+{
+  "INF3142": {
+    "nr": "INF3142",
+    "titel": "Computer Graphics (Grafische Datenverarbeitung)",
+    "nummer": "INF3142",
+    "cp": 9,
+    "art": "Vorlesung/Übung",
+    "verantw": "",
+    "haeufig": "jedes 2. Semester",
+    "gruppen": [
+      {
+        "idx": 1,
+        "termine": [
+          {
+            "tag": "Di",
+            "von": "08:00",
+            "bis": "10:00",
+            "raum": "Hörsaal A1 (A-206) (Cyber Valley Campus, MVL1)",
+            "bemerkung": "Vorlesung",
+            "start": "13.10.26",
+            "ende": "02.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Do",
+            "von": "12:00",
+            "bis": "14:00",
+            "raum": "Hörsaal A1 (A-206) (Cyber Valley Campus, MVL1)",
+            "bemerkung": "Vorlesung",
+            "start": "15.10.26",
+            "ende": "04.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Mi",
+            "von": "12:00",
+            "bis": "14:00",
+            "raum": "Hörsaal A301 [Informatik] (Informatik/Astronomie)",
+            "bemerkung": "Übung",
+            "start": "21.10.26",
+            "ende": "03.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Fr",
+            "von": "08:00",
+            "bis": "11:00",
+            "raum": "Hörsaal N10 (Bio Hörsaalgebäude AdM 3)",
+            "bemerkung": "Klausur",
+            "start": "19.02.27",
+            "ende": "19.02.27",
+            "rhythmus": "Einzeltermin"
+          }
+        ]
+      }
+    ]
+  },
+  "INF3143": {
+    "nr": "INF3143",
+    "titel": "Bildverarbeitung",
+    "nummer": "INF3143",
+    "cp": 6,
+    "art": "Vorlesung/Übung",
+    "verantw": "",
+    "haeufig": "jedes 2. Semester",
+    "gruppen": [
+      {
+        "idx": 1,
+        "termine": [
+          {
+            "tag": "Do",
+            "von": "08:00",
+            "bis": "10:00 c.t.",
+            "raum": "Hörsaal TTR2 (Cyber Valley Campus, MVL6)",
+            "bemerkung": "Vorlesung",
+            "start": "15.10.26",
+            "ende": "04.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Do",
+            "von": "17:00",
+            "bis": "18:30",
+            "raum": "Hörsaal A301 [Informatik] (Informatik/Astronomie)",
+            "bemerkung": "Übung",
+            "start": "22.10.26",
+            "ende": "04.02.27",
+            "rhythmus": "wöchentlich"
+          }
+        ]
+      }
+    ]
+  },
+  "INF3146": {
+    "nr": "INF3146",
+    "titel": "Computerspiele / Special Effects 1",
+    "nummer": "INF3146",
+    "cp": 6,
+    "art": "Praktikum",
+    "verantw": "",
+    "haeufig": "jedes 2. Semester",
+    "gruppen": [
+      {
+        "idx": 1,
+        "termine": [
+          {
+            "tag": "Di",
+            "von": "16:00",
+            "bis": "18:00",
+            "raum": "",
+            "bemerkung": "Ort: Maria-von-Linden-Str. 6, Seminarraum 2. OG Der erste Termin findet im Hörsaal A1 (A-206), EG, Maria-von-Linden-Str. 1, statt.",
+            "start": "13.10.26",
+            "ende": "02.02.27",
+            "rhythmus": "wöchentlich"
+          }
+        ]
+      }
+    ]
+  },
+  "INF3147": {
+    "nr": "INF3147",
+    "titel": "Computerspiele/ Special Effects 2",
+    "nummer": "INF3147",
+    "cp": 6,
+    "art": "Praktikum",
+    "verantw": "",
+    "haeufig": "jedes 2. Semester",
+    "gruppen": [
+      {
+        "idx": 1,
+        "termine": [
+          {
+            "tag": "Di",
+            "von": "16:00",
+            "bis": "18:00",
+            "raum": "",
+            "bemerkung": "Ort: Maria-von-Linden-Str. 6, Seminarraum 2. OG Der erste Termin findet im Hörsaal A1 (A-206), EG, Maria-von-Linden-Str. 1, statt.",
+            "start": "13.10.26",
+            "ende": "02.02.27",
+            "rhythmus": "wöchentlich"
+          }
+        ]
+      }
+    ]
+  },
+  "INF3156": {
+    "nr": "INF3156",
+    "titel": "Artificial Intelligence",
+    "nummer": "INF3156",
+    "cp": 6,
+    "art": "Vorlesung/Übung",
+    "verantw": "",
+    "haeufig": "jedes 2. Semester",
+    "gruppen": [
+      {
+        "idx": 1,
+        "termine": [
+          {
+            "tag": "Do",
+            "von": "10:00",
+            "bis": "12:00",
+            "raum": "Hörsaal 1 F119 (Informatik/Kriminologie)",
+            "bemerkung": "Vorlesung",
+            "start": "15.10.26",
+            "ende": "04.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Do",
+            "von": "12:00",
+            "bis": "14:00",
+            "raum": "Hörsaal 1 F119 (Informatik/Kriminologie)",
+            "bemerkung": "Übung",
+            "start": "22.10.26",
+            "ende": "04.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Do",
+            "von": "16:30",
+            "bis": "19:00",
+            "raum": "Hörsaal N07 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Exam (Klausur)",
+            "start": "11.02.27",
+            "ende": "11.02.27",
+            "rhythmus": "Einzeltermin"
+          }
+        ]
+      }
+    ]
+  },
+  "INF3164": {
+    "nr": "INF3164",
+    "titel": "User Experience (früher User Interface Design)",
+    "nummer": "INF3164 / MEINFM3164",
+    "cp": 6,
+    "art": "Vorlesung/Übung",
+    "verantw": "",
+    "haeufig": "nur im Wintersemester",
+    "gruppen": [
+      {
+        "idx": 1,
+        "termine": [
+          {
+            "tag": "Di",
+            "von": "12:00",
+            "bis": "14:00 c.t.",
+            "raum": "Hörsaal N11 (Bio Hörsaalgebäude AdM 3)",
+            "bemerkung": "Vorlesung",
+            "start": "13.10.26",
+            "ende": "02.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Di",
+            "von": "14:00",
+            "bis": "16:00 c.t.",
+            "raum": "Übungsraum 8D10 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Übung (Gruppe 1)",
+            "start": "20.10.26",
+            "ende": "02.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Fr",
+            "von": "08:00",
+            "bis": "10:00 c.t.",
+            "raum": "Hörsaal A301 [Informatik] (Informatik/Astronomie)",
+            "bemerkung": "Übung (Gruppe 2)",
+            "start": "23.10.26",
+            "ende": "05.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Do",
+            "von": "12:00",
+            "bis": "14:30",
+            "raum": "Hörsaal N07 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Klausur",
+            "start": "18.02.27",
+            "ende": "18.02.27",
+            "rhythmus": "Einzeltermin"
+          }
+        ]
+      }
+    ]
+  },
+  "INF3172": {
+    "nr": "INF3172",
+    "titel": "Grundlagen der Webentwicklung",
+    "nummer": "INF3172",
+    "cp": 6,
+    "art": "Vorlesung/Übung",
+    "verantw": "",
+    "haeufig": "jedes 2. Semester",
+    "gruppen": [
+      {
+        "idx": 1,
+        "termine": [
+          {
+            "tag": "Do",
+            "von": "08:00",
+            "bis": "10:00",
+            "raum": "Hörsaal N11 (Bio Hörsaalgebäude AdM 3)",
+            "bemerkung": "Vorlesung",
+            "start": "15.10.26",
+            "ende": "28.01.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Mo",
+            "von": "12:00",
+            "bis": "14:00",
+            "raum": "Übungsraum 8D09 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Übung",
+            "start": "19.10.26",
+            "ende": "01.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Di",
+            "von": "12:00",
+            "bis": "14:00",
+            "raum": "Seminarraum ZMBP 4U09 (ZMBP AdM 32)",
+            "bemerkung": "Übung",
+            "start": "20.10.26",
+            "ende": "02.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Mi",
+            "von": "08:00",
+            "bis": "10:00",
+            "raum": "Übungsraum 8D09 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Übung",
+            "start": "21.10.26",
+            "ende": "03.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Do",
+            "von": "10:00",
+            "bis": "12:00",
+            "raum": "C4H33 (C-Bau [Mathe/Physik])",
+            "bemerkung": "Übung",
+            "start": "22.10.26",
+            "ende": "04.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Do",
+            "von": "08:00",
+            "bis": "10:00",
+            "raum": "Hörsaal N10 (Bio Hörsaalgebäude AdM 3)",
+            "bemerkung": "Klausur",
+            "start": "04.02.27",
+            "ende": "04.02.27",
+            "rhythmus": "Einzeltermin"
+          }
+        ]
+      }
+    ]
+  },
+  "INF3184": {
+    "nr": "INF3184",
+    "titel": "Einführung in Linux",
+    "nummer": "INF3184",
+    "cp": 3,
+    "art": "Vorlesung/Übung",
+    "verantw": "",
+    "haeufig": "jedes 2. Semester",
+    "gruppen": [
+      {
+        "idx": 1,
+        "termine": [
+          {
+            "tag": "Mi",
+            "von": "14:00",
+            "bis": "16:00",
+            "raum": "Hörsaal N04 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Vorlesung",
+            "start": "14.10.26",
+            "ende": "03.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Mi",
+            "von": "16:00",
+            "bis": "18:00",
+            "raum": "Hörsaal N04 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Übung",
+            "start": "14.10.26",
+            "ende": "27.01.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Mi",
+            "von": "16:00",
+            "bis": "18:30",
+            "raum": "Hörsaal N06 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Klausur",
+            "start": "03.02.27",
+            "ende": "03.02.27",
+            "rhythmus": "Einzeltermin"
+          }
+        ]
+      }
+    ]
+  },
+  "INF3187": {
+    "nr": "INF3187",
+    "titel": "Effective Programming with Effects",
+    "nummer": "INF3187",
+    "cp": 6,
+    "art": "Praktikum",
+    "verantw": "",
+    "haeufig": "jedes 2. Semester",
+    "gruppen": [
+      {
+        "idx": 1,
+        "termine": [
+          {
+            "tag": "Di",
+            "von": "12:00",
+            "bis": "14:00",
+            "raum": "Seminarraum C215 (Informatik Sand 14)",
+            "bemerkung": "",
+            "start": "13.10.26",
+            "ende": "02.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Di",
+            "von": "14:00",
+            "bis": "16:00",
+            "raum": "Seminarraum C215 (Informatik Sand 14)",
+            "bemerkung": "",
+            "start": "13.10.26",
+            "ende": "02.02.27",
+            "rhythmus": "wöchentlich"
+          }
+        ]
+      }
+    ]
+  },
+  "INF3188": {
+    "nr": "INF3188",
+    "titel": "Parallele, nebenläufige und verteilte Programmierung",
+    "nummer": "INF3188",
+    "cp": 9,
+    "art": "Vorlesung/Übung",
+    "verantw": "",
+    "haeufig": "jedes 2. Semester",
+    "gruppen": [
+      {
+        "idx": 1,
+        "termine": [
+          {
+            "tag": "Di",
+            "von": "14:00",
+            "bis": "16:00",
+            "raum": "Hörsaal A301 [Informatik] (Informatik/Astronomie)",
+            "bemerkung": "Vorlesung",
+            "start": "13.10.26",
+            "ende": "02.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Do",
+            "von": "14:00",
+            "bis": "16:00",
+            "raum": "Hörsaal A301 [Informatik] (Informatik/Astronomie)",
+            "bemerkung": "Vorlesung",
+            "start": "15.10.26",
+            "ende": "04.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Di",
+            "von": "16:00",
+            "bis": "18:00",
+            "raum": "Hörsaal A301 [Informatik] (Informatik/Astronomie)",
+            "bemerkung": "Übung",
+            "start": "20.10.26",
+            "ende": "02.02.27",
+            "rhythmus": "wöchentlich"
+          }
+        ]
+      }
+    ]
+  },
+  "INF3213": {
+    "nr": "INF3213",
+    "titel": "Programmiertechniken",
+    "nummer": "INF3213",
+    "cp": 6,
+    "art": "Praktikum",
+    "verantw": "",
+    "haeufig": "jedes 2. Semester",
+    "gruppen": [
+      {
+        "idx": 1,
+        "termine": [
+          {
+            "tag": "Mo",
+            "von": "12:00",
+            "bis": "14:00",
+            "raum": "Übungsraum [Informatik] A302 (Informatik/Astronomie)",
+            "bemerkung": "",
+            "start": "12.10.26",
+            "ende": "01.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Mo",
+            "von": "14:00",
+            "bis": "16:00 s.t.",
+            "raum": "",
+            "bemerkung": "Sprechstunde Ort: Raum B221, Sand 13, Fachbereich Informatik",
+            "start": "12.10.26",
+            "ende": "01.02.27",
+            "rhythmus": "wöchentlich"
+          }
+        ]
+      }
+    ]
+  },
+  "INF3223": {
+    "nr": "INF3223",
+    "titel": "Angewandte Statistik I",
+    "nummer": "INF3223",
+    "cp": 6,
+    "art": "Vorlesung/Übung",
+    "verantw": "",
+    "haeufig": "jedes 2. Semester",
+    "gruppen": [
+      {
+        "idx": 1,
+        "termine": [
+          {
+            "tag": "Mi",
+            "von": "14:00",
+            "bis": "16:00",
+            "raum": "F122 Hörsaal 2 (Informatik/Kriminologie)",
+            "bemerkung": "Vorlesung",
+            "start": "14.10.26",
+            "ende": "03.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Mi",
+            "von": "16:00",
+            "bis": "18:00",
+            "raum": "F122 Hörsaal 2 (Informatik/Kriminologie)",
+            "bemerkung": "Übung",
+            "start": "14.10.26",
+            "ende": "03.02.27",
+            "rhythmus": "wöchentlich"
+          }
+        ]
+      }
+    ]
+  },
+  "INF3240": {
+    "nr": "INF3240",
+    "titel": "Natural Language Processing (NLP): Praktische Einführung mit Python",
+    "nummer": "INF3240",
+    "cp": 3,
+    "art": "Vorlesung/Übung",
+    "verantw": "",
+    "haeufig": "jedes 2. Semester",
+    "gruppen": []
+  },
+  "INF3331": {
+    "nr": "INF3331",
+    "titel": "Grundlagen des Internets",
+    "nummer": "INF3331",
+    "cp": 6,
+    "art": "Vorlesung/Übung",
+    "verantw": "",
+    "haeufig": "jedes 2. Semester",
+    "gruppen": [
+      {
+        "idx": 1,
+        "termine": [
+          {
+            "tag": "Mo",
+            "von": "16:00",
+            "bis": "17:00",
+            "raum": "Hörsaal N03 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Übung",
+            "start": "02.11.26",
+            "ende": "01.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Mo",
+            "von": "17:00",
+            "bis": "19:00",
+            "raum": "Hörsaal N03 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Vorlesung (inverted classroom)",
+            "start": "12.10.26",
+            "ende": "01.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Mo",
+            "von": "17:00",
+            "bis": "19:30",
+            "raum": "Hörsaal N05 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Klausur",
+            "start": "08.02.27",
+            "ende": "08.02.27",
+            "rhythmus": "Einzeltermin"
+          },
+          {
+            "tag": "Mo",
+            "von": "17:00",
+            "bis": "19:30",
+            "raum": "Hörsaal N06 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Nachklausur",
+            "start": "05.04.27",
+            "ende": "05.04.27",
+            "rhythmus": "Einzeltermin"
+          }
+        ]
+      }
+    ]
+  },
+  "INF3332": {
+    "nr": "INF3332",
+    "titel": "Internet-Praktikum I",
+    "nummer": "INF3332",
+    "cp": 6,
+    "art": "Praktikum",
+    "verantw": "",
+    "haeufig": "jedes 2. Semester",
+    "gruppen": [
+      {
+        "idx": 1,
+        "termine": [
+          {
+            "tag": "09:00 - 17:00",
+            "von": "",
+            "bis": "",
+            "raum": "",
+            "bemerkung": "",
+            "start": "",
+            "ende": "",
+            "rhythmus": "Mo"
+          },
+          {
+            "tag": "09:00 - 17:00",
+            "von": "",
+            "bis": "",
+            "raum": "",
+            "bemerkung": "",
+            "start": "",
+            "ende": "",
+            "rhythmus": ""
+          },
+          {
+            "tag": "10:00 - 12:00",
+            "von": "",
+            "bis": "",
+            "raum": "",
+            "bemerkung": "",
+            "start": "",
+            "ende": "",
+            "rhythmus": "Fr"
+          }
+        ]
+      }
+    ]
+  },
+  "INF3339c": {
+    "nr": "INF3339c",
+    "titel": "Spezielle Kapitel der Praktischen Informatik: Compilerbau",
+    "nummer": "INF3339c",
+    "cp": 3,
+    "art": "Vorlesung",
+    "verantw": "",
+    "haeufig": "jedes 2. Semester",
+    "gruppen": [
+      {
+        "idx": 1,
+        "termine": [
+          {
+            "tag": "Do",
+            "von": "17:00",
+            "bis": "19:00",
+            "raum": "Hörsaal TTR2 (Cyber Valley Campus, MVL6)",
+            "bemerkung": "",
+            "start": "15.10.26",
+            "ende": "04.02.27",
+            "rhythmus": "wöchentlich"
+          }
+        ]
+      }
+    ]
+  },
+  "INF3351": {
+    "nr": "INF3351",
+    "titel": "Grundlagen der Robotik",
+    "nummer": "INF3351",
+    "cp": 6,
+    "art": "Vorlesung/Übung",
+    "verantw": "",
+    "haeufig": "jedes 2. Semester",
+    "gruppen": [
+      {
+        "idx": 1,
+        "termine": [
+          {
+            "tag": "Di",
+            "von": "10:00",
+            "bis": "12:00",
+            "raum": "Hörsaal 1 F119 (Informatik/Kriminologie)",
+            "bemerkung": "Vorlesung",
+            "start": "13.10.26",
+            "ende": "02.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Di",
+            "von": "12:00",
+            "bis": "14:00",
+            "raum": "Hörsaal 1 F119 (Informatik/Kriminologie)",
+            "bemerkung": "Übung",
+            "start": "20.10.26",
+            "ende": "02.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Di",
+            "von": "09:30",
+            "bis": "12:00",
+            "raum": "Hörsaal N10 (Bio Hörsaalgebäude AdM 3)",
+            "bemerkung": "Klausur",
+            "start": "09.02.27",
+            "ende": "09.02.27",
+            "rhythmus": "Einzeltermin"
+          }
+        ]
+      }
+    ]
+  },
+  "INF3411": {
+    "nr": "INF3411",
+    "titel": "Methoden der Algorithmik",
+    "nummer": "INF3411",
+    "cp": 6,
+    "art": "Vorlesung/Übung",
+    "verantw": "",
+    "haeufig": "jedes 2. Semester",
+    "gruppen": [
+      {
+        "idx": 1,
+        "termine": [
+          {
+            "tag": "Mi",
+            "von": "10:00",
+            "bis": "12:00",
+            "raum": "Hörsaal A2 (A-223) (Cyber Valley Campus, MVL1)",
+            "bemerkung": "Vorlesung Dozentin: Dr. Alexandra Weinberger",
+            "start": "14.10.26",
+            "ende": "03.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Mi",
+            "von": "08:00",
+            "bis": "10:00",
+            "raum": "Hörsaal A2 (A-223) (Cyber Valley Campus, MVL1)",
+            "bemerkung": "Übung",
+            "start": "21.10.26",
+            "ende": "03.02.27",
+            "rhythmus": "wöchentlich"
+          }
+        ]
+      }
+    ]
+  },
+  "INF3433": {
+    "nr": "INF3433",
+    "titel": "Kombinatorische Geometrie und Graphenzeichnen",
+    "nummer": "INF3433",
+    "cp": null,
+    "art": "Vorlesung",
+    "verantw": "",
+    "haeufig": "unregelmäßig",
+    "gruppen": [
+      {
+        "idx": 1,
+        "termine": [
+          {
+            "tag": "Mo",
+            "von": "12:00",
+            "bis": "14:00 c.t.",
+            "raum": "Hörsaal N10 (Bio Hörsaalgebäude AdM 3)",
+            "bemerkung": "Vorlesung",
+            "start": "12.10.26",
+            "ende": "01.02.27",
+            "rhythmus": "wöchentlich"
+          },
+          {
+            "tag": "Mo",
+            "von": "14:00",
+            "bis": "16:00 c.t.",
+            "raum": "Hörsaal N04 (Hörsaalzentrum Morgenstelle)",
+            "bemerkung": "Übung",
+            "start": "19.10.26",
+            "ende": "01.02.27",
+            "rhythmus": "wöchentlich"
+          }
+        ]
+      }
+    ]
+  }
+}
