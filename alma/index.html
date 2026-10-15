@@ -382,6 +382,31 @@ table.noten tr:hover{background:transparent}
 #lageplanMap .leaflet-popup-content{font-size:13px;line-height:1.5}
 #lageplanMap .leaflet-popup-content b{color:var(--rot)}
 
+/* ---------- Raumbelegung ---------- */
+.rb-karten{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:11px;margin-bottom:14px}
+.rb-karte{background:var(--bg2);border:1px solid var(--line);border-left:4px solid var(--akz,var(--dimmer));
+  border-radius:10px;padding:11px 14px;transition:.15s}
+.rb-karte[data-detail]{cursor:pointer}
+.rb-karte[data-detail]:hover{border-color:var(--akz);transform:translateY(-1px)}
+.rb-karte.frei{--akz:var(--ok)}
+.rb-karte.frei .rb-titel{color:var(--ok)}
+.rb-raum{font-size:12px;color:var(--dim);font-weight:600}
+.rb-raum small{font-weight:400;color:var(--dimmer);font-size:11.5px}
+.rb-titel{font-size:14.5px;font-weight:640;margin:3px 0 2px}
+.rb-meta{font-size:12px;color:var(--dim)}
+.rb-frei{font-size:12.5px;color:var(--dim);margin-bottom:20px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.rb-frei b{color:var(--ok);margin-right:4px}
+.rb-frei .chip{padding:3px 10px;font-size:12px}
+.kal-kopfzelle.rb-raumkopf{cursor:pointer;text-transform:none;letter-spacing:0;font-size:12px;color:var(--text);transition:.12s}
+.kal-kopfzelle.rb-raumkopf:hover{background:var(--bg3)}
+.kal-kopfzelle.rb-raumkopf small{display:block;font-weight:400;color:var(--dimmer);font-size:10.5px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rb-raumkopf.belegt::before{content:"● ";color:var(--err)}
+.rb-raumkopf.frei::before{content:"● ";color:var(--ok)}
+.rb-linie{position:absolute;left:0;right:0;border-top:2px solid var(--err);z-index:5;pointer-events:none}
+.kal-block.rb-aktiv{box-shadow:inset 0 0 0 2px var(--err)}
+.kal-block.rb-einzel{border-style:dashed}
+
 /* ---------- Druck ---------- */
 @media print{
   :root{--bg:#fff;--bg2:#fff;--bg3:#fff;--bg4:#f0f0f0;--line:#ccc;--text:#000;--dim:#555;--dimmer:#777}
@@ -393,7 +418,7 @@ table.noten tr:hover{background:transparent}
   .kal-schalter{display:none!important}
   .seite{display:block!important;page-break-before:always}
   .seite:first-of-type{page-break-before:auto}
-  #seite-katalog{display:none!important}
+  #seite-katalog,#seite-raeume{display:none!important}
   .kal-wrap{overflow:visible} .kal-grid{min-width:0}
   .kal-block{border-color:#bbb} .kal-kopfzelle{background:#f0f0f0}
   .karte,.sem-box,.plan-zeile,.hinweis{break-inside:avoid;border-color:#ccc}
@@ -408,7 +433,7 @@ table.noten tr:hover{background:transparent}
 <header>
   <div class="kopf-zeile">
     <div>
-      <h1>Wahlfach-Planer - Stand 12.10.2026</h1>
+      <h1>Wahlfach-Planer - Stand 15.10.2026</h1>
       <!-- <div class="sub">M.Sc. Informatik / Computer Science · Universität Tübingen · PO 2021 (88|866|-|-|H|2021)</div> -->
     </div>
     <div class="kopf-rechts">
@@ -422,6 +447,7 @@ table.noten tr:hover{background:transparent}
     <button data-seite="plan">Mein Plan <span class="zahl" id="planZahl">0</span></button>
     <button data-seite="kalender">Stundenplan <span class="zahl" id="kalZahl">0</span></button>
     <button data-seite="lageplan">Lageplan</button>
+    <button data-seite="raeume">Raumbelegung</button>
   </nav>
 </header>
 
@@ -573,6 +599,28 @@ table.noten tr:hover{background:transparent}
   <div class="kal-legende" id="kalLegende"></div>
   <div class="kal-wrap"><div class="kal-grid" id="kalGrid"></div></div>
   <div class="hinweise" id="kalHinweise" style="margin-top:14px"></div>
+</section>
+
+<!-- ============ RAUMBELEGUNG ============ -->
+<section class="seite" id="seite-raeume">
+  <div class="filter">
+    <div class="feld"><label for="rbGebaeude">Gebäude</label><select id="rbGebaeude"></select></div>
+    <div class="feld"><label for="rbRaum">Raum</label><select id="rbRaum"></select></div>
+    <div class="feld"><label for="rbTag">Wochentag</label><select id="rbTag"></select></div>
+    <div class="feld"><label for="rbZeit">Uhrzeit</label><input type="time" id="rbZeit"></div>
+    <div class="feld"><label for="rbDatum">Datum (optional)</label><input type="date" id="rbDatum"></div>
+    <div class="feld">
+      <label>&nbsp;</label>
+      <div class="chips">
+        <button class="chip" id="rbJetzt" title="Heute, aktuelle Uhrzeit">Jetzt</button>
+        <button class="chip" id="rbJedeWoche" title="Datum ignorieren: alle Termine dieses Wochentags zeigen">jede Woche</button>
+      </div>
+    </div>
+  </div>
+  <div id="rbStatus"></div>
+  <h2 id="rbTagTitel"></h2>
+  <div class="kal-wrap"><div class="kal-grid" id="rbGrid"></div></div>
+  <div class="hinweise" id="rbHinweise" style="margin-top:14px"></div>
 </section>
 
 <!-- <div class="fuss">
@@ -1504,6 +1552,7 @@ function zeichnePlan(){
 
 function allesZeichnen(){
   zeichneKarten(); zeichneHinweise(); zeichneSemGrid(); zeichneKatalog(); zeichnePlan(); zeichneKalender();
+  zeichneRaeume();
 }
 
 /* ================= Ereignisse ================= */
@@ -1937,6 +1986,283 @@ origTabClick.forEach(b => {
   b.addEventListener("click", () => {
     if(b.dataset.seite === "lageplan") setTimeout(zeichneLageplan, 50);
   });
+});
+
+/* ================= Raumbelegung =================
+   Welche Veranstaltung läuft wann in welchem Raum? Grundlage sind ALLE alma-Termine
+   (nicht nur die des eigenen Plans) plus selbst ergänzte Termine. */
+const RB_ALLE = "";
+let rbGebaeude = RB_ALLE, rbRaum = RB_ALLE;
+let rbTag = "Mo", rbZeit = "08:00", rbDatum = "";   // rbDatum als ISO "2026-10-15"; leer = jede Woche
+let rbAngepasst = false;                             // false -> beim Öffnen des Tabs auf „jetzt“ setzen
+
+function isoAusDate(d){
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+}
+function isoParsen(s){
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || "");
+  return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null;
+}
+function rbJetztSetzen(){
+  const d = new Date();
+  rbDatum = isoAusDate(d);
+  rbZeit  = minutenZuZeit(d.getHours() * 60 + d.getMinutes());
+  rbTag   = TAGE_ALLE[(d.getDay() + 6) % 7];
+}
+rbJetztSetzen();
+
+/* "Hörsaal A1 (A-206) (Cyber Valley Campus, MVL1)" -> { name:"Hörsaal A1 (A-206)", gebaeude:"Cyber Valley Campus, MVL1" } */
+function raumZerlegen(s){
+  const roh = String(s || "").replace(/\s+/g, " ").trim();
+  if(!roh || roh === "—" || roh === "-") return null;
+  const m = /^(.*?)\s*\(([^()]*)\)$/.exec(roh);
+  const name = (m ? m[1] : roh).replace(/\s*\[[^\]]*\]/g, "").trim();   // "[Informatik]" ist nur Rauschen
+  const gebaeude = m ? m[2].trim() : "Sonstige";
+  return { id: gebaeude + "|" + name, name: name || roh, gebaeude };
+}
+
+/* Findet Termin t an diesem Kalendertag (Date, 00:00) statt? Wochentag wird separat geprüft. */
+function terminAmDatum(t, datum){
+  const s = datumParsen(t.start), e = datumParsen(t.ende);
+  if(s && datum < s) return false;
+  if(e && datum > e) return false;
+  const r = String(t.rhythmus || "").toLowerCase();
+  if(r.startsWith("einzel")) return !s || +datum === +s;
+  if(r.startsWith("14") && s) return Math.round((datum - s) / 864e5) % 14 === 0;
+  return true;
+}
+
+/* Alle Termine mit verwertbarem Raum/Uhrzeit, je Raum ein Eintrag ("N05 / N06" -> zwei) */
+function raumBelegungen(){
+  const liste = [], gesehen = new Set();
+  const aufnehmen = (t, titel, modul, gruppe) => {
+    if(!t || gesehen.has(t)) return;
+    gesehen.add(t);
+    const von = zeitZuMinuten(t.von), bis = zeitZuMinuten(t.bis);
+    if(von == null || bis == null || bis <= von || !(t.tag in TAG_INDEX)) return;
+    const farbe = modulFarbe(modul ? modul.nr : titel);
+    String(t.raum || "").split(" / ").map(raumZerlegen).filter(Boolean).forEach(raum =>
+      liste.push({ raum, termin:t, titel, modul, gruppe, tag:t.tag, von, bis, farbe }));
+  };
+  // alma-Eintrag -> Modul: Treffer über die Modulnummer haben Vorrang vor Titel-Treffern
+  const zuModul = new Map();
+  MODULE.forEach(m => {
+    const k = [m.nrKurz, m.nr, m.nrKurz.replace(/[- ]/g, ""), m.nr.replace(/[- ]/g, "")].find(k => ALMA_DATEN[k]);
+    if(k && !zuModul.has(ALMA_DATEN[k])) zuModul.set(ALMA_DATEN[k], m);
+  });
+  MODULE.forEach(m => { const a = almaOffiziell(m); if(a && !zuModul.has(a)) zuModul.set(a, m); });
+
+  Object.values(ALMA_DATEN).forEach(a => {
+    const m = zuModul.get(a) || null;
+    (a.gruppen || []).forEach(g => (g.termine || []).forEach(t => aufnehmen(t, m ? m.titel : a.titel, m, g.name)));
+  });
+  Object.entries(eigeneTermine).forEach(([nr, termine]) => {
+    const m = NACH_NR.get(nr) || null;
+    (termine || []).forEach(t => aufnehmen(t, m ? m.titel : nr, m, "Eigene Termine"));
+  });
+  return liste;
+}
+
+function rbTerminText(b){
+  const t = b.termin, art = terminArt(t) || String(t.bemerkung || "").trim();
+  const wann = /^einzel/i.test(t.rhythmus || "")
+    ? "nur am " + (t.start || "?")
+    : (t.rhythmus || "wöchentlich") + ", " + (t.start || "?") + " - " + (t.ende || "?");
+  return `${t.von}-${t.bis} Uhr${art ? " · " + art : ""} · ${wann}`;
+}
+
+function rbKarte(b){
+  const nr = b.modul ? b.modul.nr : "";
+  return `<div class="rb-karte" style="--akz:${b.farbe}"${nr ? ` data-detail="${esc(nr)}" title="Details anzeigen"` : ""}>
+    <div class="rb-raum">${esc(b.raum.name)} <small>· ${esc(b.raum.gebaeude)}</small></div>
+    <div class="rb-titel">${esc(b.titel)}</div>
+    <div class="rb-meta">${esc(rbTerminText(b))}</div>
+    ${b.modul && b.modul.dozent ? `<div class="rb-meta">${esc(b.modul.dozent)}</div>` : ""}
+  </div>`;
+}
+
+function rbBlock(b, von0, zeit){
+  const top    = (b.von - von0) / 60 * KAL_H;
+  const hoehe  = Math.max(26, (b.bis - b.von) / 60 * KAL_H - 4);
+  const breite = 100 / b.spalten, links = b.spalte * breite;
+  const art    = terminArt(b.termin);
+  const einzel = /^einzel/i.test(b.termin.rhythmus || "");
+  const aktiv  = b.von <= zeit && zeit < b.bis;
+  const tip = [b.titel, b.raum.name + " · " + b.raum.gebaeude, rbTerminText(b),
+               b.termin.bemerkung || "", b.gruppe || ""].filter(Boolean).join("\n");
+  return `<div class="kal-block${aktiv ? " rb-aktiv" : ""}${einzel ? " rb-einzel" : ""}"${b.modul ? ` data-detail="${esc(b.modul.nr)}"` : ""} title="${esc(tip)}"
+    style="top:${top}px;height:${hoehe}px;left:calc(${links}% + 3px);width:calc(${breite}% - 6px);background:${b.farbe}26;border-left-color:${b.farbe}">
+    <b>${esc(b.titel)}</b>
+    <span>${esc(b.termin.von)}-${esc(b.termin.bis)}${art ? " · " + esc(art) : ""}</span>
+    ${einzel ? `<span>nur am ${esc(b.termin.start || "?")}</span>` : ""}</div>`;
+}
+
+/* Wert nur setzen, wenn das Feld nicht gerade bearbeitet wird (sonst springt der Cursor) */
+function rbFeldSetzen(id, wert){
+  const el = document.getElementById(id);
+  if(document.activeElement !== el) el.value = wert;
+}
+
+function zeichneRaeume(){
+  const alle = raumBelegungen();
+  const sortRaum = (a, c) => a.gebaeude.localeCompare(c.gebaeude, "de") || a.name.localeCompare(c.name, "de", { numeric:true });
+  const alleRaeume = [...new Map(alle.map(b => [b.raum.id, b.raum])).values()].sort(sortRaum);
+  const gebaeude = [...new Set(alleRaeume.map(r => r.gebaeude))];
+  if(rbGebaeude && !gebaeude.includes(rbGebaeude)) rbGebaeude = RB_ALLE;
+  const imGebaeude = alleRaeume.filter(r => !rbGebaeude || r.gebaeude === rbGebaeude);
+  if(rbRaum && !imGebaeude.some(r => r.id === rbRaum)) rbRaum = RB_ALLE;
+
+  /* --- Auswahlfelder --- */
+  const opt = (wert, text, an) => `<option value="${esc(wert)}"${an ? " selected" : ""}>${esc(text)}</option>`;
+  document.getElementById("rbGebaeude").innerHTML = opt(RB_ALLE, "— alle Gebäude —", !rbGebaeude) +
+    gebaeude.map(g => opt(g, g, g === rbGebaeude)).join("");
+  document.getElementById("rbRaum").innerHTML = opt(RB_ALLE, "— alle Räume —", !rbRaum) + (rbGebaeude
+    ? imGebaeude.map(r => opt(r.id, r.name, r.id === rbRaum)).join("")
+    : gebaeude.map(g => `<optgroup label="${esc(g)}">${imGebaeude.filter(r => r.gebaeude === g)
+        .map(r => opt(r.id, r.name, r.id === rbRaum)).join("")}</optgroup>`).join(""));
+  const datum = isoParsen(rbDatum);
+  if(datum) rbTag = TAGE_ALLE[(datum.getDay() + 6) % 7];
+  document.getElementById("rbTag").value = rbTag;
+  rbFeldSetzen("rbZeit", rbZeit);
+  rbFeldSetzen("rbDatum", datum ? rbDatum : "");
+  document.getElementById("rbJedeWoche").classList.toggle("an", !datum);
+
+  /* --- Belegung zum gewählten Zeitpunkt --- */
+  const zeit = zeitZuMinuten(rbZeit) ?? 8 * 60;
+  const sichtbar = rbRaum ? imGebaeude.filter(r => r.id === rbRaum) : imGebaeude;
+  const ids = new Set(sichtbar.map(r => r.id));
+  const amTag = alle.filter(b => b.tag === rbTag && ids.has(b.raum.id) && (!datum || terminAmDatum(b.termin, datum)));
+  const laeuft = amTag.filter(b => b.von <= zeit && zeit < b.bis)
+    .sort((a, c) => sortRaum(a.raum, c.raum) || a.von - c.von);
+  const belegt = new Set(laeuft.map(b => b.raum.id));
+  const naechste = id => amTag.filter(b => b.raum.id === id && b.von > zeit).sort((a, c) => a.von - c.von)[0];
+
+  const tagText = datum
+    ? datum.toLocaleDateString("de-DE", { weekday:"long", day:"2-digit", month:"2-digit", year:"numeric" })
+    : "jeden " + TAG_NAME[rbTag];
+  const wann = tagText + ", " + minutenZuZeit(zeit) + " Uhr";
+
+  let status;
+  if(rbRaum){
+    const r = sichtbar[0];
+    if(laeuft.length) status = `<div class="rb-karten">${laeuft.map(rbKarte).join("")}</div>`;
+    else {
+      const n = naechste(rbRaum);
+      status = `<div class="rb-karten"><div class="rb-karte frei">
+        <div class="rb-raum">${esc(r.name)} <small>· ${esc(r.gebaeude)}</small></div>
+        <div class="rb-titel">frei</div>
+        <div class="rb-meta">${n ? `bis ${esc(n.termin.von)} Uhr - danach: ${esc(n.titel)}`
+                                 : "an diesem Tag keine weitere Veranstaltung"}</div>
+      </div></div>`;
+    }
+  } else {
+    const frei = sichtbar.filter(r => !belegt.has(r.id));
+    status = (laeuft.length
+      ? `<div class="rb-karten">${laeuft.map(rbKarte).join("")}</div>`
+      : `<div class="hinweis h-ok" style="margin-bottom:14px"><span class="h-ico">✓</span>
+           <span>Zu diesem Zeitpunkt ist laut alma keiner der Räume belegt.</span></div>`) +
+      (frei.length && laeuft.length ? `<div class="rb-frei"><b>Frei (${frei.length}):</b>${frei.map(r => {
+        const n = naechste(r.id);
+        return `<button class="chip" data-rb-raum="${esc(r.id)}" title="${esc(r.gebaeude + (n
+          ? " · frei bis " + n.termin.von + " Uhr" : " · frei für den Rest des Tages"))}">${esc(r.name)}</button>`;
+      }).join("")}</div>` : "");
+  }
+  document.getElementById("rbStatus").innerHTML =
+    `<h2>Belegung <span class="anm">${esc(wann)} · ${belegt.size} von ${sichtbar.length} Räumen belegt</span></h2>` + status;
+
+  /* --- Tagesübersicht: eine Spalte je Raum --- */
+  document.getElementById("rbTagTitel").innerHTML = `Tagesübersicht <span class="anm">${esc(tagText)} ·
+    rote Linie = gewählte Uhrzeit · Raumname anklicken zum Auswählen</span>`;
+  const grid = document.getElementById("rbGrid");
+  if(!sichtbar.length){
+    grid.style.gridTemplateColumns = "1fr";
+    grid.innerHTML = `<div class="kal-leer">Keine Räume mit alma-Terminen gefunden.</div>`;
+  } else {
+    let minM = 8 * 60, maxM = 18 * 60;
+    amTag.forEach(b => { minM = Math.min(minM, b.von); maxM = Math.max(maxM, b.bis); });
+    minM = Math.min(minM, zeit); maxM = Math.max(maxM, zeit + 30);
+    const von0 = Math.floor(minM / 60) * 60, bis0 = Math.min(24 * 60, Math.ceil(maxM / 60) * 60);
+    const y = m => (m - von0) / 60 * KAL_H;
+    const marken = [];
+    for(let m = von0; m <= bis0; m += 60) marken.push(m);
+    const linien = marken.map(m => `<div class="kal-linie" style="top:${y(m)}px"></div>`).join("") +
+      marken.slice(0, -1).map(m => `<div class="kal-linie halb" style="top:${y(m + 30)}px"></div>`).join("") +
+      `<div class="rb-linie" style="top:${y(zeit)}px"></div>`;
+    const kopf = `<div class="kal-kopfzelle"></div>` + sichtbar.map(r =>
+      `<div class="kal-kopfzelle rb-raumkopf ${belegt.has(r.id) ? "belegt" : "frei"}" data-rb-raum="${esc(r.id)}"
+        title="${esc(r.gebaeude)} - ${rbRaum ? "wieder alle Räume zeigen" : "nur diesen Raum zeigen"}">${esc(r.name)}<small>${esc(r.gebaeude)}</small></div>`).join("");
+    const zeitspur = `<div class="kal-zeitspur" style="height:${y(bis0)}px">` +
+      marken.map(m => `<span class="kal-uhr" style="top:${y(m)}px">${minutenZuZeit(m)}</span>`).join("") + `</div>`;
+    const spuren = sichtbar.map(r => `<div class="kal-spur" style="height:${y(bis0)}px">${linien}` +
+      spaltenVerteilen(amTag.filter(b => b.raum.id === r.id)).map(b => rbBlock(b, von0, zeit)).join("") + `</div>`).join("");
+    grid.style.gridTemplateColumns = `62px repeat(${sichtbar.length},minmax(${rbRaum ? 260 : 150}px,1fr))`;
+    grid.innerHTML = kopf + zeitspur + spuren;
+  }
+
+  /* --- Hinweise --- */
+  const hin = [];
+  if(datum){
+    const daten = alle.flatMap(b => [datumParsen(b.termin.start), datumParsen(b.termin.ende)]).filter(Boolean);
+    if(daten.length){
+      const min = new Date(Math.min(...daten)), max = new Date(Math.max(...daten));
+      if(datum < min || datum > max) hin.push(["warn", `Für den ${datum.toLocaleDateString("de-DE")} liegen keine
+        alma-Daten vor (erfasst: ${min.toLocaleDateString("de-DE")} bis ${max.toLocaleDateString("de-DE")}).`]);
+    }
+  } else {
+    hin.push(["info", `Ohne Datum werden alle Termine dieses Wochentags gezeigt - auch Einzeltermine
+      (gestrichelt) aus anderen Wochen. Für einen konkreten Tag ein Datum wählen oder auf <strong>Jetzt</strong> klicken.`]);
+  }
+  hin.push(["info", `Grundlage sind die alma-Termine der ${new Set(alle.map(b => b.titel)).size} Veranstaltungen
+    dieser Seite (${esc(ALMA_SEM)}) plus deine eigenen Termine. Veranstaltungen anderer Fächer im selben Raum
+    sind nicht erfasst - ein hier freier Raum kann also trotzdem belegt sein.`]);
+  const ico = { err:"✕", warn:"!", info:"i", ok:"✓" };
+  document.getElementById("rbHinweise").innerHTML = hin.map(([t,x]) =>
+    `<div class="hinweis h-${t}"><span class="h-ico">${ico[t]}</span><span>${x}</span></div>`).join("");
+}
+
+document.getElementById("rbTag").innerHTML = TAGE_ALLE.map(t => `<option value="${t}">${TAG_NAME[t]}</option>`).join("");
+document.getElementById("rbGebaeude").addEventListener("change", ev => {
+  rbGebaeude = ev.target.value; rbRaum = RB_ALLE; rbAngepasst = true; zeichneRaeume();
+});
+document.getElementById("rbRaum").addEventListener("change", ev => {
+  rbRaum = ev.target.value; rbAngepasst = true; zeichneRaeume();
+});
+document.getElementById("rbTag").addEventListener("change", ev => {
+  const datum = isoParsen(rbDatum);
+  if(datum){   // Datum innerhalb derselben Woche auf den gewählten Tag verschieben
+    datum.setDate(datum.getDate() + TAG_INDEX[ev.target.value] - (datum.getDay() + 6) % 7);
+    rbDatum = isoAusDate(datum);
+  }
+  rbTag = ev.target.value; rbAngepasst = true; zeichneRaeume();
+});
+document.getElementById("rbZeit").addEventListener("input", ev => {
+  if(zeitZuMinuten(ev.target.value) == null) return;   // unvollständige Eingabe
+  rbZeit = ev.target.value; rbAngepasst = true; zeichneRaeume();
+});
+document.getElementById("rbDatum").addEventListener("input", ev => {
+  rbDatum = ev.target.value; rbAngepasst = true; zeichneRaeume();
+});
+document.getElementById("rbJetzt").addEventListener("click", () => {
+  rbJetztSetzen(); rbAngepasst = false; zeichneRaeume();
+});
+document.getElementById("rbJedeWoche").addEventListener("click", () => {
+  if(rbDatum) rbDatum = "";
+  else {   // zurück zum konkreten Datum: gewählter Wochentag in der aktuellen Woche
+    const d = new Date();
+    d.setDate(d.getDate() + TAG_INDEX[rbTag] - (d.getDay() + 6) % 7);
+    rbDatum = isoAusDate(d);
+  }
+  rbAngepasst = true; zeichneRaeume();
+});
+document.getElementById("seite-raeume").addEventListener("click", ev => {
+  const r = ev.target.closest("[data-rb-raum]");
+  if(r){ rbRaum = rbRaum === r.dataset.rbRaum ? RB_ALLE : r.dataset.rbRaum; rbAngepasst = true; zeichneRaeume(); return; }
+  const det = ev.target.closest("[data-detail]");
+  if(det) detailOeffnen(det.dataset.detail);
+});
+document.querySelector('nav.tabs button[data-seite="raeume"]').addEventListener("click", () => {
+  if(!rbAngepasst) rbJetztSetzen();   // unverändert -> immer die aktuelle Uhrzeit zeigen
+  zeichneRaeume();
 });
 
 /* ================= Start ================= */
