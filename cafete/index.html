@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bestuhlungsplan 1. OG – Zoneneinteilung</title>
+  <!-- Google Font: Inter für klare, moderne Lesbarkeit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS via CDN für responsives Layout ohne eigene CSS-Dateien -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans antialiased min-h-screen py-4 px-3 sm:py-8 sm:px-6">
+
+  <!-- Hauptkarte des statischen Plans -->
+  <main class="max-w-6xl mx-auto bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+
+    <!-- Kopfbereich im Stil des Originalplans (Mensa-Grün) -->
+    <header class="bg-[#567a48] text-white px-5 py-5 sm:px-8 sm:py-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Bestuhlungsplan 1. OG</h1>
+        <p class="text-emerald-100 text-sm sm:text-base mt-0.5 font-medium">
+          Mensa Wilhelmstraße · Universität Tübingen · Übersicht mit Zoneneinteilung
+        </p>
+      </div>
+      <div class="flex flex-wrap items-center gap-2 text-xs font-semibold">
+        <span class="bg-white/15 backdrop-blur-sm border border-white/25 px-3 py-1.5 rounded-full">
+          5 Zonen · 26 Teilzonen (A bis E)
+        </span>
+        <span class="bg-white/15 backdrop-blur-sm border border-white/25 px-3 py-1.5 rounded-full">
+          Stand: 1. Obergeschoss
+        </span>
+      </div>
+    </header>
+
+    <!-- Plan-Container mit voll skalierbarem, statischem Vektor-Grundriss (SVG) -->
+    <section class="p-3 sm:p-6 bg-slate-50 border-b border-slate-200" aria-label="Grundriss 1. Obergeschoss mit Zoneneinteilung">
+      <div class="bg-white rounded-xl border border-slate-200 shadow-inner overflow-hidden">
+        <svg
+          viewBox="0 0 1160 920"
+          class="w-full h-auto block"
+          role="img"
+          aria-labelledby="planTitle planDesc"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <title id="planTitle">Bestuhlungsplan 1. OG mit präziser Zoneneinteilung A bis E</title>
+          <desc id="planDesc">
+            Statischer Architekturplan des 1. Obergeschosses der Mensa Wilhelmstraße mit fünf Hauptzonen (A bis E), unterteilt in 26 präzise Teilzonen mit Richtungsangaben (links, rechts, oben, unten), neutralem Essensausgabebereich im Norden sowie Umgebungskontext aus dem Satellitenbild.
+          </desc>
+
+          <!-- ============================================================
+               DEFINITIONEN: Muster, Tischmodule & Piktogramme
+               ============================================================ -->
+          <defs>
+            <!-- Dezente Schraffur für nicht-öffentliche Technik-/Küchenbereiche -->
+            <pattern id="serviceHatch" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <rect width="10" height="10" fill="#e2e8f0" />
+              <line x1="0" y1="0" x2="0" y2="10" stroke="#cbd5e1" stroke-width="2" />
+            </pattern>
+
+            <!-- Dezentes Pflasterraster für Vorplatz / Innenhof -->
+            <pattern id="courtyardGrid" width="24" height="24" patternUnits="userSpaceOnUse">
+              <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#e2e8f0" stroke-width="0.8" />
+            </pattern>
+
+            <!-- Vertikaler 8er-Tisch (4 Stühle links, 4 Stühle rechts) -->
+            <g id="table-v8">
+              <rect x="6" y="0" width="11" height="38" rx="1.5" fill="currentColor" fill-opacity="0.32" stroke="currentColor" stroke-width="1.1" />
+              <!-- Linke Stühle -->
+              <rect x="1" y="3" width="3.5" height="6" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="1" y="11.5" width="3.5" height="6" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="1" y="20" width="3.5" height="6" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="1" y="28.5" width="3.5" height="6" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <!-- Rechte Stühle -->
+              <rect x="18.5" y="3" width="3.5" height="6" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="18.5" y="11.5" width="3.5" height="6" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="18.5" y="20" width="3.5" height="6" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="18.5" y="28.5" width="3.5" height="6" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+            </g>
+
+            <!-- Vertikaler 6er-Tisch (3 Stühle links, 3 Stühle rechts) -->
+            <g id="table-v6">
+              <rect x="6" y="0" width="11" height="29" rx="1.5" fill="currentColor" fill-opacity="0.32" stroke="currentColor" stroke-width="1.1" />
+              <!-- Linke Stühle -->
+              <rect x="1" y="3" width="3.5" height="6" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="1" y="11.5" width="3.5" height="6" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="1" y="20" width="3.5" height="6" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <!-- Rechte Stühle -->
+              <rect x="18.5" y="3" width="3.5" height="6" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="18.5" y="11.5" width="3.5" height="6" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="18.5" y="20" width="3.5" height="6" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+            </g>
+
+            <!-- Lange horizontale Tischbank (Zone B: 6 Stühle oben, 6 Stühle unten) -->
+            <g id="table-h12">
+              <rect x="0" y="5" width="66" height="10" rx="1.5" fill="currentColor" fill-opacity="0.32" stroke="currentColor" stroke-width="1.1" />
+              <!-- Obere Stühle -->
+              <rect x="3" y="0.5" width="7" height="3.2" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="13.5" y="0.5" width="7" height="3.2" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="24" y="0.5" width="7" height="3.2" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="34.5" y="0.5" width="7" height="3.2" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="45" y="0.5" width="7" height="3.2" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="55.5" y="0.5" width="7" height="3.2" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <!-- Untere Stühle -->
+              <rect x="3" y="16.3" width="7" height="3.2" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="13.5" y="16.3" width="7" height="3.2" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="24" y="16.3" width="7" height="3.2" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="34.5" y="16.3" width="7" height="3.2" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="45" y="16.3" width="7" height="3.2" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="55.5" y="16.3" width="7" height="3.2" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+            </g>
+
+            <!-- Kleiner horizontaler 4er-Tisch -->
+            <g id="table-h4">
+              <rect x="0" y="5" width="24" height="10" rx="1.5" fill="currentColor" fill-opacity="0.32" stroke="currentColor" stroke-width="1.1" />
+              <rect x="3" y="0.5" width="7" height="3.2" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="14" y="0.5" width="7" height="3.2" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="3" y="16.3" width="7" height="3.2" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="14" y="16.3" width="7" height="3.2" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+            </g>
+
+            <!-- Kleiner Wandtisch (Stühle nur oben) -->
+            <g id="table-wall">
+              <rect x="0" y="5" width="26" height="9" rx="1.5" fill="currentColor" fill-opacity="0.32" stroke="currentColor" stroke-width="1.1" />
+              <rect x="3" y="0.5" width="7.5" height="3.2" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="15" y="0.5" width="7.5" height="3.2" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+            </g>
+
+            <!-- Steh-/Hochtisch (Zone E) -->
+            <g id="table-high">
+              <rect x="0" y="4.5" width="34" height="8" rx="1.5" fill="currentColor" fill-opacity="0.35" stroke="currentColor" stroke-width="1.1" />
+              <rect x="2.5" y="0.5" width="5.5" height="2.8" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="10.2" y="0.5" width="5.5" height="2.8" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="18" y="0.5" width="5.5" height="2.8" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="25.8" y="0.5" width="5.5" height="2.8" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="2.5" y="13.7" width="5.5" height="2.8" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="10.2" y="13.7" width="5.5" height="2.8" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="18" y="13.7" width="5.5" height="2.8" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+              <rect x="25.8" y="13.7" width="5.5" height="2.8" rx="0.8" fill="#ffffff" stroke="currentColor" stroke-width="0.9" />
+            </g>
+
+            <!-- Lounge-Tisch (Zone F: 4er-Tisch mit Stühlen rundherum) -->
+            <g id="table-lounge">
+              <rect x="6" y="6" width="22" height="16" rx="2" fill="currentColor" fill-opacity="0.32" stroke="currentColor" stroke-width="1.2" />
+              <rect x="12" y="0.5" width="10" height="4" rx="1" fill="#ffffff" stroke="currentColor" stroke-width="1" />
+              <rect x="12" y="23.5" width="10" height="4" rx="1" fill="#ffffff" stroke="currentColor" stroke-width="1" />
+              <rect x="0.5" y="9" width="4" height="10" rx="1" fill="#ffffff" stroke="currentColor" stroke-width="1" />
+              <rect x="29.5" y="9" width="4" height="10" rx="1" fill="#ffffff" stroke="currentColor" stroke-width="1" />
+            </g>
+
+            <!-- Notausgang-Piktogramm -->
+            <g id="exit-icon">
+              <rect x="0" y="0" width="20" height="14" rx="2.5" fill="#15803d" />
+              <circle cx="11.5" cy="4.2" r="1.4" fill="#ffffff" />
+              <path d="M 8 11 L 10.2 7.5 L 12.6 8.6 L 14.5 11.2 M 9.5 6.4 L 12.8 6.4 L 14.2 5" stroke="#ffffff" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+              <rect x="2.5" y="2.5" width="4" height="9" rx="0.5" fill="none" stroke="#ffffff" stroke-width="1" />
+            </g>
+
+            <!-- Rollstuhl-Symbol (barrierefreier Platz) -->
+            <g id="wheelchair-icon">
+              <circle cx="7" cy="7" r="6.5" fill="#eff6ff" stroke="#2563eb" stroke-width="1" />
+              <circle cx="7.4" cy="3.8" r="1.1" fill="#1d4ed8" />
+              <path d="M 7 5.5 L 7 8 L 9.5 8 L 10.2 10.3 M 5.8 7.5 A 2.2 2.2 0 1 0 8.5 9.8" stroke="#1d4ed8" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+            </g>
+          </defs>
+
+          <!-- ============================================================
+               EBENE 1: UMGEBUNG AUS DEM SATELLITENBILD
+               ============================================================ -->
+          <!-- Hintergrundfläche -->
+          <rect x="0" y="0" width="1160" height="920" fill="#f8fafc" />
+
+          <!-- Rückseite / Anlieferung (oben) -->
+          <rect x="0" y="0" width="1160" height="58" fill="#f1f5f9" />
+          <line x1="0" y1="58" x2="1160" y2="58" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="6 4" />
+          <text x="580" y="34" text-anchor="middle" fill="#64748b" font-size="12" font-weight="600" letter-spacing="1.6">
+            RÜCKSEITE · VERSORGUNG &amp; ANLIEFERUNG
+          </text>
+
+          <!-- Grünfläche / Bäume links (Westseite aus Satellitenbild) -->
+          <rect x="0" y="58" width="96" height="752" fill="#f0fdf4" />
+          <g opacity="0.72">
+            <circle cx="28" cy="330" r="24" fill="#86efac" />
+            <circle cx="42" cy="365" r="28" fill="#4ade80" />
+            <circle cx="22" cy="405" r="26" fill="#22c55e" />
+            <circle cx="38" cy="442" r="22" fill="#86efac" />
+            <circle cx="24" cy="610" r="20" fill="#86efac" />
+            <circle cx="40" cy="642" r="18" fill="#4ade80" />
+          </g>
+          <text x="48" y="210" text-anchor="middle" fill="#15803d" font-size="11" font-weight="600" letter-spacing="1.2" transform="rotate(-90 48 210)">
+            GRÜNFLÄCHE / WESTSEITE
+          </text>
+
+          <!-- Vorplatz / Innenhof unten links (mit markantem Baum aus Satellitenbild) -->
+          <rect x="96" y="405" width="388" height="405" fill="url(#courtyardGrid)" />
+          <text x="275" y="794" text-anchor="middle" fill="#64748b" font-size="11.5" font-weight="600" letter-spacing="1.2">
+            VORPLATZ / INNENHOF
+          </text>
+
+          <!-- Markanter großer Baum im Vorplatz (wie im Satellitenbild unten links) -->
+          <g aria-label="Großer Baum auf dem Vorplatz">
+            <circle cx="282" cy="726" r="56" fill="#166534" fill-opacity="0.08" />
+            <circle cx="268" cy="712" r="40" fill="#4d7c0f" fill-opacity="0.28" />
+            <circle cx="296" cy="722" r="34" fill="#65a30d" fill-opacity="0.34" />
+            <circle cx="256" cy="738" r="30" fill="#3f6212" fill-opacity="0.26" />
+            <circle cx="278" cy="716" r="22" fill="#84cc16" fill-opacity="0.35" />
+            <circle cx="276" cy="722" r="5" fill="#4d7c0f" />
+            <text x="276" y="725" text-anchor="middle" fill="#1a2e05" font-size="9.5" font-weight="700" dy="22">Baum</text>
+          </g>
+
+          <!-- Nebengebäude & Durchgang rechts (wie im Satellitenbild rechts) -->
+          <g aria-label="Nebengebäude Ost">
+            <rect x="1054" y="472" width="94" height="278" rx="6" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.8" stroke-dasharray="5 3" />
+            <!-- Verbindungssteg (aus Satellitenbild sichtbar) -->
+            <rect x="995" y="535" width="59" height="18" fill="#cbd5e1" stroke="#94a3b8" stroke-width="1.2" />
+            <text x="1101" y="605" text-anchor="middle" fill="#475569" font-size="11" font-weight="700" letter-spacing="0.7">NEBEN-</text>
+            <text x="1101" y="621" text-anchor="middle" fill="#475569" font-size="11" font-weight="700" letter-spacing="0.7">GEBÄUDE</text>
+            <text x="980" y="520" text-anchor="middle" fill="#64748b" font-size="9.5" font-weight="600" letter-spacing="0.8">
+              DURCHGANG OST
+            </text>
+          </g>
+
+          <!-- Gehweg & Straße unten (Wilhelmstraße aus Satellitenbild) -->
+          <g aria-label="Straße unten (Wilhelmstraße)">
+            <!-- Gehweg -->
+            <rect x="0" y="810" width="1160" height="28" fill="#e2e8f0" />
+            <line x1="0" y1="810" x2="1160" y2="810" stroke="#cbd5e1" stroke-width="1.5" />
+            <line x1="0" y1="838" x2="1160" y2="838" stroke="#94a3b8" stroke-width="2" />
+            <text x="740" y="828" text-anchor="middle" fill="#64748b" font-size="10" font-weight="600" letter-spacing="1.2">
+              GEHWEG / EINGANGSBEREICH
+            </text>
+
+            <!-- Fahrbahn -->
+            <rect x="0" y="838" width="1160" height="82" fill="#cbd5e1" />
+            <!-- Fahrbahnmarkierung gestrichelt -->
+            <line x1="20" y1="879" x2="1140" y2="879" stroke="#f8fafc" stroke-width="2.5" stroke-dasharray="28 22" opacity="0.85" />
+            <!-- Straßenbeschriftung in Pill-Box -->
+            <rect x="440" y="861" width="280" height="34" rx="17" fill="#334155" />
+            <text x="580" y="883" text-anchor="middle" fill="#ffffff" font-size="13.5" font-weight="700" letter-spacing="1.6">
+              STRAẞE (WILHELMSTRAẞE)
+            </text>
+            <!-- Dezente Straßenbäume am unteren Rand (wie im Satellitenbild) -->
+            <circle cx="145" cy="908" r="24" fill="#3f6212" fill-opacity="0.32" />
+            <circle cx="220" cy="912" r="26" fill="#4d7c0f" fill-opacity="0.32" />
+            <circle cx="885" cy="912" r="25" fill="#3f6212" fill-opacity="0.32" />
+            <circle cx="965" cy="908" r="22" fill="#4d7c0f" fill-opacity="0.32" />
+          </g>
+
+          <!-- ============================================================
+               EBENE 2: GEBÄUDE-GRUNDRISS & RÄUME (1. OG)
+               ============================================================ -->
+
+          <!-- Gestrichelte Terrassen-/Untergeschosskonturen links (wie im Originalplan) -->
+          <path d="M 102 390 L 102 440 L 295 440" fill="none" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="6 4" />
+          <path d="M 272 615 L 272 652 L 485 652" fill="none" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="6 4" />
+
+          <!-- Öffentliche Hauptfläche des 1. OG (Weißer Boden) -->
+          <polygon
+            points="
+              520,60  835,60  835,240  915,240  915,390  905,390  905,575
+              995,575  995,795  485,795  485,615  295,615  295,445  355,445
+              355,390  125,390  125,215  550,215  550,190  520,190
+            "
+            fill="#ffffff"
+          />
+
+          <!-- Nicht-öffentliche Bereiche / Küche / Technik (rechts schraffiert) -->
+          <!-- Küche / Ausgabe-Rückraum oben rechts -->
+          <rect x="835" y="60" width="205" height="165" fill="url(#serviceHatch)" stroke="#334155" stroke-width="2.5" />
+          <text x="938" y="138" text-anchor="middle" fill="#475569" font-size="11.5" font-weight="700">KÜCHE /</text>
+          <text x="938" y="154" text-anchor="middle" fill="#475569" font-size="11.5" font-weight="700">PERSONAL</text>
+
+          <!-- Nebenraum Mitte rechts -->
+          <rect x="915" y="240" width="125" height="150" fill="url(#serviceHatch)" stroke="#334155" stroke-width="2.5" />
+          <text x="977" y="320" text-anchor="middle" fill="#64748b" font-size="10.5" font-weight="600">TECHNIK</text>
+
+          <!-- Zentraler Kern (Aufzug / Schacht oberhalb der Haupttreppe) -->
+          <path d="M 605 318 L 685 318 L 685 385 L 605 385 Z" fill="url(#serviceHatch)" stroke="#475569" stroke-width="2" />
+          <text x="645" y="356" text-anchor="middle" fill="#64748b" font-size="9.5" font-weight="700">KERN</text>
+
+          <!-- Ausgabentheken / Buffets in Zone F (oben & rechts) -->
+          <g fill="#e2e8f0" stroke="#64748b" stroke-width="1.2">
+            <rect x="635" y="72" width="42" height="12" rx="1.5" />
+            <rect x="688" y="72" width="56" height="12" rx="1.5" />
+            <rect x="755" y="72" width="44" height="12" rx="1.5" />
+            <rect x="802" y="108" width="14" height="58" rx="1.5" />
+            <rect x="802" y="178" width="14" height="72" rx="1.5" />
+            <!-- Zwei Info-/Geschirrtresen im Foyer -->
+            <rect x="735" y="358" width="16" height="44" rx="1.5" />
+            <rect x="768" y="358" width="16" height="44" rx="1.5" />
+          </g>
+
+          <!-- ============================================================
+               EBENE 3: HAUPT- & FLUCHTWEGE (DEZENTES SALBEIGRÜN)
+               ============================================================ -->
+          <g fill="none" stroke="#86efac" stroke-opacity="0.38" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Weg durch Westflügel (Zone A) zum Nordtreppenhaus -->
+            <path d="M 140 278 L 468 278 Q 485 278 485 295 L 485 310 Q 485 322 505 322 L 548 322 Q 568 322 568 302 L 568 205" stroke-width="20" />
+            <!-- Abzweig aus Zone F (Nord-Lounge) zum Nordtreppenhaus -->
+            <path d="M 768 122 L 732 122 Q 714 122 714 142 L 714 248 Q 714 275 685 275 L 588 275 Q 568 275 568 255" stroke-width="18" />
+            <!-- Vertikaler Weg von Zone A durch Zone B & E zum Straßensaal -->
+            <path d="M 370 278 L 370 408 L 340 408" stroke-width="16" />
+            <path d="M 480 315 L 480 568 Q 480 595 512 595 L 535 595 Q 555 595 555 618 L 555 645 L 495 645" stroke-width="16" />
+            <!-- Hauptgang (3m) zwischen Zone C und Zone D hoch zum Osttreppenhaus -->
+            <path d="M 748 785 L 748 592 Q 748 565 778 565 L 798 565 Q 825 565 825 530 L 825 495 Q 825 468 852 468 L 868 468 Q 882 468 882 448 L 882 372" stroke-width="24" />
+            <!-- Quergänge im Straßensaal (Zone C & D) -->
+            <path d="M 498 745 L 980 745" stroke-width="12" />
+            <path d="M 758 672 L 980 672" stroke-width="12" />
+          </g>
+
+          <!-- Richtungs-Pfeilspitzen auf den Hauptfluchtwegen -->
+          <g fill="#4ade80" fill-opacity="0.72">
+            <!-- Richtung Nordtreppe -->
+            <polygon points="568,188 556,210 580,210" />
+            <!-- Richtung Osttreppe -->
+            <polygon points="882,356 870,378 894,378" />
+            <!-- Richtung Ausgang West-Terrasse -->
+            <polygon points="325,408 345,398 345,418" />
+          </g>
+
+          <!-- Maßangaben der Hauptgänge (wie im Originalplan) -->
+          <g fill="#166534" font-size="8.5" font-weight="700" opacity="0.75">
+            <text x="748" y="655" text-anchor="middle">3,0 m</text>
+            <text x="568" y="242" text-anchor="middle">1,8 m</text>
+            <text x="882" y="422" text-anchor="middle">1,8 m</text>
+            <text x="714" y="198" text-anchor="middle">1,8 m</text>
+          </g>
+
+          <!-- ============================================================
+               EBENE 4: FARBLICHE ZONENFLÄCHEN, FEINE TEILZONEN (A BIS E)
+                        UND ESSENSAUSGABE (NEUTRAL)
+               ============================================================ -->
+
+          <!-- ==================== ZONE A: WESTFLÜGEL (Teal · 8 Teilzonen) ==================== -->
+          <g id="zone-a" aria-label="Zone A: Westflügel (A-1 links bis A-4 unten)">
+            <!-- Äußerer Zonenhintergrund -->
+            <rect x="131" y="221" width="340" height="162" rx="8" fill="#ccfbf1" fill-opacity="0.34" stroke="#0d9488" stroke-width="1.8" stroke-dasharray="6 3" />
+
+            <!-- Teilzonen-Rahmen: Reihen A-1, A-2, A-3 je links/rechts sowie A-4 oben/unten -->
+            <g fill="#99f6e4" fill-opacity="0.30" stroke="#0d9488" stroke-width="1.15">
+              <!-- A-1 links & rechts (Nordreihe) -->
+              <rect x="135" y="225" width="108" height="43" rx="5" />
+              <rect x="245" y="225" width="109" height="43" rx="5" />
+              <!-- A-2 links & rechts (Mittelreihe) -->
+              <rect x="135" y="283" width="108" height="35" rx="5" />
+              <rect x="245" y="283" width="109" height="35" rx="5" />
+              <!-- A-3 links & rechts (Südreihe) -->
+              <rect x="135" y="333" width="108" height="45" rx="5" />
+              <rect x="245" y="333" width="109" height="45" rx="5" />
+              <!-- A-4 oben & unten (Ostblock rechts vom Gang) -->
+              <rect x="380" y="225" width="86" height="43" rx="5" />
+              <rect x="380" y="283" width="86" height="95" rx="5" />
+            </g>
+
+            <!-- Alle Tische der Zone A in tiefem Teal -->
+            <g style="color: #0f766e;">
+              <!-- A-1: Nordreihe (8 × 8er-Tisch) -->
+              <use href="#table-v8" x="138" y="228" />
+              <use href="#table-v8" x="165" y="228" />
+              <use href="#table-v8" x="192" y="228" />
+              <use href="#table-v8" x="219" y="228" />
+              <use href="#table-v8" x="246" y="228" />
+              <use href="#table-v8" x="273" y="228" />
+              <use href="#table-v8" x="300" y="228" />
+              <use href="#table-v8" x="327" y="228" />
+
+              <!-- A-2: Mittelreihe (7 × 6er-Tisch) -->
+              <use href="#table-v6" x="138" y="286" />
+              <use href="#table-v6" x="165" y="286" />
+              <use href="#table-v6" x="192" y="286" />
+              <use href="#table-v6" x="219" y="286" />
+              <use href="#table-v6" x="246" y="286" />
+              <use href="#table-v6" x="273" y="286" />
+              <use href="#table-v6" x="300" y="286" />
+
+              <!-- A-3: Südreihe (8 × 8er-Tisch) -->
+              <use href="#table-v8" x="138" y="336" />
+              <use href="#table-v8" x="165" y="336" />
+              <use href="#table-v8" x="192" y="336" />
+              <use href="#table-v8" x="219" y="336" />
+              <use href="#table-v8" x="246" y="336" />
+              <use href="#table-v8" x="273" y="336" />
+              <use href="#table-v8" x="300" y="336" />
+              <use href="#table-v8" x="327" y="336" />
+
+              <!-- A-4: Ostblock (rechts vom 1,2m-Gang) -->
+              <use href="#table-v8" x="384" y="228" />
+              <use href="#table-v8" x="411" y="228" />
+              <use href="#table-v8" x="438" y="228" />
+              <use href="#table-v6" x="384" y="286" />
+              <use href="#table-v6" x="411" y="286" />
+              <use href="#table-v8" x="384" y="336" />
+              <use href="#table-v8" x="411" y="336" />
+            </g>
+
+            <!-- Barrierefreie Plätze in Zone A-4 unten -->
+            <use href="#wheelchair-icon" x="444" y="293" />
+            <use href="#wheelchair-icon" x="444" y="348" />
+
+            <!-- Hauptzonen-Badge oberhalb der Wand -->
+            <line x1="300" y1="205" x2="300" y2="221" stroke="#0d9488" stroke-width="2" />
+            <rect x="212" y="177" width="176" height="28" rx="14" fill="#0f766e" />
+            <text x="300" y="195" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="700">
+              ZONE A · Westflügel
+            </text>
+
+            <!-- Präzise Teilzonen-Badges direkt in den Blöcken -->
+            <g font-size="8.5" font-weight="800" text-anchor="middle">
+              <!-- A-1 links & rechts -->
+              <rect x="161" y="238.5" width="56" height="16" rx="8" fill="#ffffff" fill-opacity="0.93" stroke="#0d9488" stroke-width="1.3" />
+              <text x="189" y="249.5" fill="#0f766e">A-1 links</text>
+
+              <rect x="268.5" y="238.5" width="62" height="16" rx="8" fill="#ffffff" fill-opacity="0.93" stroke="#0d9488" stroke-width="1.3" />
+              <text x="299.5" y="249.5" fill="#0f766e">A-1 rechts</text>
+
+              <!-- A-2 links & rechts -->
+              <rect x="161" y="292.5" width="56" height="16" rx="8" fill="#ffffff" fill-opacity="0.93" stroke="#0d9488" stroke-width="1.3" />
+              <text x="189" y="303.5" fill="#0f766e">A-2 links</text>
+
+              <rect x="268.5" y="292.5" width="62" height="16" rx="8" fill="#ffffff" fill-opacity="0.93" stroke="#0d9488" stroke-width="1.3" />
+              <text x="299.5" y="303.5" fill="#0f766e">A-2 rechts</text>
+
+              <!-- A-3 links & rechts -->
+              <rect x="161" y="347.5" width="56" height="16" rx="8" fill="#ffffff" fill-opacity="0.93" stroke="#0d9488" stroke-width="1.3" />
+              <text x="189" y="358.5" fill="#0f766e">A-3 links</text>
+
+              <rect x="268.5" y="347.5" width="62" height="16" rx="8" fill="#ffffff" fill-opacity="0.93" stroke="#0d9488" stroke-width="1.3" />
+              <text x="299.5" y="358.5" fill="#0f766e">A-3 rechts</text>
+
+              <!-- A-4 oben & unten -->
+              <rect x="395" y="238.5" width="56" height="16" rx="8" fill="#ffffff" fill-opacity="0.93" stroke="#0d9488" stroke-width="1.3" />
+              <text x="423" y="249.5" fill="#0f766e">A-4 oben</text>
+
+              <rect x="393" y="317.5" width="60" height="16" rx="8" fill="#ffffff" fill-opacity="0.93" stroke="#0d9488" stroke-width="1.3" />
+              <text x="423" y="328.5" fill="#0f766e">A-4 unten</text>
+            </g>
+          </g>
+
+          <!-- ==================== ZONE B: TERRASSENBEREICH (Amber · 4 Teilzonen) ==================== -->
+          <g id="zone-b" aria-label="Zone B: Terrassenbereich (B-1 oben bis B-2 unten)">
+            <!-- Äußerer Zonenhintergrund -->
+            <rect x="301" y="450" width="164" height="159" rx="8" fill="#fef3c7" fill-opacity="0.38" stroke="#d97706" stroke-width="1.8" stroke-dasharray="6 3" />
+
+            <!-- Teilzonen-Rahmen: B-1 (West) & B-2 (Ost), jeweils oben/unten -->
+            <g fill="#fde68a" fill-opacity="0.34" stroke="#d97706" stroke-width="1.15">
+              <rect x="305" y="453" width="73" height="58" rx="5" />
+              <rect x="305" y="517" width="73" height="89" rx="5" />
+              <rect x="382" y="453" width="79" height="58" rx="5" />
+              <rect x="382" y="517" width="79" height="89" rx="5" />
+            </g>
+
+            <!-- Alle Tische der Zone B in warmem Bernstein -->
+            <g style="color: #b45309;">
+              <!-- Obere Reihe: 4 kleine 4er-Tische + Rollstuhlplatz -->
+              <use href="#table-h4" x="309" y="456" />
+              <use href="#table-h4" x="342" y="456" />
+              <use href="#table-h4" x="386" y="456" />
+              <use href="#table-h4" x="418" y="456" />
+
+              <!-- 2. Reihe: 2 lange Tischbänke -->
+              <use href="#table-h12" x="309" y="486" />
+              <use href="#table-h12" x="389" y="486" />
+
+              <!-- 3. Reihe: 2 lange Tischbänke -->
+              <use href="#table-h12" x="309" y="522" />
+              <use href="#table-h12" x="389" y="522" />
+
+              <!-- 4. Reihe: 2 lange Tischbänke -->
+              <use href="#table-h12" x="309" y="556" />
+              <use href="#table-h12" x="389" y="556" />
+
+              <!-- 5. Reihe entlang der Südwand: 4 kleine Wandtische -->
+              <use href="#table-wall" x="309" y="589" />
+              <use href="#table-wall" x="342" y="589" />
+              <use href="#table-wall" x="389" y="589" />
+              <use href="#table-wall" x="424" y="589" />
+            </g>
+
+            <!-- Barrierefreier Platz in Zone B-2 oben -->
+            <use href="#wheelchair-icon" x="447" y="459" />
+
+            <!-- Hauptzonen-Badge links neben Zone B im Vorplatz -->
+            <line x1="278" y1="528" x2="301" y2="528" stroke="#d97706" stroke-width="2" />
+            <rect x="108" y="514" width="172" height="28" rx="14" fill="#b45309" />
+            <text x="194" y="532" text-anchor="middle" fill="#ffffff" font-size="11.5" font-weight="700">
+              ZONE B · Terrasse
+            </text>
+
+            <!-- Präzise Teilzonen-Badges B-1 oben/unten & B-2 oben/unten -->
+            <g font-size="8.5" font-weight="800" text-anchor="middle">
+              <rect x="313.5" y="474" width="56" height="16" rx="8" fill="#ffffff" fill-opacity="0.93" stroke="#d97706" stroke-width="1.3" />
+              <text x="341.5" y="485" fill="#b45309">B-1 oben</text>
+
+              <rect x="311.5" y="541" width="60" height="16" rx="8" fill="#ffffff" fill-opacity="0.93" stroke="#d97706" stroke-width="1.3" />
+              <text x="341.5" y="552" fill="#b45309">B-1 unten</text>
+
+              <rect x="393.5" y="474" width="56" height="16" rx="8" fill="#ffffff" fill-opacity="0.93" stroke="#d97706" stroke-width="1.3" />
+              <text x="421.5" y="485" fill="#b45309">B-2 oben</text>
+
+              <rect x="391.5" y="541" width="60" height="16" rx="8" fill="#ffffff" fill-opacity="0.93" stroke="#d97706" stroke-width="1.3" />
+              <text x="421.5" y="552" fill="#b45309">B-2 unten</text>
+            </g>
+          </g>
+
+          <!-- ==================== ZONE E: STEHSITZPLÄTZE (Violett · 2 Teilzonen) ==================== -->
+          <g id="zone-e" aria-label="Zone E: Stehsitzplätze (E-1 oben und E-2 unten)">
+            <!-- Äußerer Zonenhintergrund -->
+            <rect x="492" y="458" width="48" height="106" rx="7" fill="#ede9fe" fill-opacity="0.45" stroke="#7c3aed" stroke-width="1.8" stroke-dasharray="5 3" />
+
+            <!-- Teilzonen-Rahmen E-1 oben (3 Tische) & E-2 unten (2 Tische) -->
+            <g fill="#ddd6fe" fill-opacity="0.42" stroke="#7c3aed" stroke-width="1.15">
+              <rect x="495" y="461" width="42" height="60" rx="4" />
+              <rect x="495" y="523" width="42" height="39" rx="4" />
+            </g>
+
+            <!-- 5 Hoch-/Stehtische übereinander -->
+            <g style="color: #6d28d9;">
+              <use href="#table-high" x="499" y="464" />
+              <use href="#table-high" x="499" y="484" />
+              <use href="#table-high" x="499" y="504" />
+              <use href="#table-high" x="499" y="524" />
+              <use href="#table-high" x="499" y="544" />
+            </g>
+
+            <!-- Hauptzonen-Badge direkt unterhalb von Zone E -->
+            <line x1="516" y1="564" x2="516" y2="577" stroke="#7c3aed" stroke-width="2" />
+            <rect x="476" y="576" width="136" height="26" rx="13" fill="#6d28d9" />
+            <text x="544" y="593" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="700">
+              ZONE E · Stehtische
+            </text>
+
+            <!-- Teilzonen-Badges E-1 oben & E-2 unten rechts neben der Trennwand -->
+            <g font-size="8.5" font-weight="800" text-anchor="middle">
+              <line x1="537" y1="490.5" x2="555" y2="490.5" stroke="#7c3aed" stroke-width="1.5" />
+              <rect x="555" y="482" width="56" height="17" rx="8.5" fill="#ffffff" stroke="#7c3aed" stroke-width="1.4" />
+              <text x="583" y="493.5" fill="#6d28d9">E-1 oben</text>
+
+              <line x1="537" y1="542.5" x2="555" y2="542.5" stroke="#7c3aed" stroke-width="1.5" />
+              <rect x="555" y="534" width="60" height="17" rx="8.5" fill="#ffffff" stroke="#7c3aed" stroke-width="1.4" />
+              <text x="585" y="545.5" fill="#6d28d9">E-2 unten</text>
+            </g>
+          </g>
+
+          <!-- ==================== ZONE C: STRAẞE WEST (Blau · 6 Teilzonen) ==================== -->
+          <g id="zone-c" aria-label="Zone C: Straße West (C-1 links bis C-3 rechts)">
+            <!-- Äußerer Zonenhintergrund -->
+            <rect x="492" y="655" width="234" height="134" rx="8" fill="#dbeafe" fill-opacity="0.35" stroke="#2563eb" stroke-width="1.8" stroke-dasharray="6 3" />
+
+            <!-- Teilzonen-Rahmen: C-1, C-2, C-3 jeweils links & rechts -->
+            <g fill="#bfdbfe" fill-opacity="0.34" stroke="#2563eb" stroke-width="1.15">
+              <!-- C-1 links & rechts -->
+              <rect x="496" y="658" width="111" height="36" rx="5" />
+              <rect x="610" y="658" width="112" height="36" rx="5" />
+              <!-- C-2 links & rechts -->
+              <rect x="496" y="701" width="111" height="36" rx="5" />
+              <rect x="610" y="701" width="112" height="36" rx="5" />
+              <!-- C-3 links & rechts -->
+              <rect x="496" y="744" width="111" height="43" rx="5" />
+              <rect x="610" y="744" width="112" height="43" rx="5" />
+            </g>
+
+            <!-- Alle Tische der Zone C in sattem Königsblau -->
+            <g style="color: #1d4ed8;">
+              <!-- C-1: Reihe 1 (7 × 6er-Tisch + Rollstuhlplatz rechts) -->
+              <use href="#table-v6" x="499" y="661" />
+              <use href="#table-v6" x="527" y="661" />
+              <use href="#table-v6" x="555" y="661" />
+              <use href="#table-v6" x="583" y="661" />
+              <use href="#table-v6" x="611" y="661" />
+              <use href="#table-v6" x="639" y="661" />
+              <use href="#table-v6" x="667" y="661" />
+
+              <!-- C-2: Reihe 2 (8 × 6er-Tisch) -->
+              <use href="#table-v6" x="499" y="704" />
+              <use href="#table-v6" x="527" y="704" />
+              <use href="#table-v6" x="555" y="704" />
+              <use href="#table-v6" x="583" y="704" />
+              <use href="#table-v6" x="611" y="704" />
+              <use href="#table-v6" x="639" y="704" />
+              <use href="#table-v6" x="667" y="704" />
+              <use href="#table-v6" x="695" y="704" />
+
+              <!-- C-3: Reihe 3 (8 × 8er-Tisch direkt an der Straßenseite) -->
+              <use href="#table-v8" x="499" y="747" />
+              <use href="#table-v8" x="527" y="747" />
+              <use href="#table-v8" x="555" y="747" />
+              <use href="#table-v8" x="583" y="747" />
+              <use href="#table-v8" x="611" y="747" />
+              <use href="#table-v8" x="639" y="747" />
+              <use href="#table-v8" x="667" y="747" />
+              <use href="#table-v8" x="695" y="747" />
+            </g>
+
+            <!-- Barrierefreier Platz oben rechts in Zone C-1 rechts -->
+            <use href="#wheelchair-icon" x="700" y="668" />
+
+            <!-- Hauptzonen-Badge oberhalb von Zone C -->
+            <line x1="609" y1="644" x2="609" y2="655" stroke="#2563eb" stroke-width="2" />
+            <rect x="521" y="618" width="176" height="27" rx="13.5" fill="#1d4ed8" />
+            <text x="609" y="636" text-anchor="middle" fill="#ffffff" font-size="11.5" font-weight="700">
+              ZONE C · Straße West
+            </text>
+
+            <!-- Präzise Teilzonen-Badges C-1 bis C-3 (jeweils links & rechts) -->
+            <g font-size="8.5" font-weight="800" text-anchor="middle">
+              <!-- C-1 links & rechts -->
+              <rect x="523.5" y="668" width="56" height="16" rx="8" fill="#ffffff" fill-opacity="0.93" stroke="#2563eb" stroke-width="1.3" />
+              <text x="551.5" y="679" fill="#1d4ed8">C-1 links</text>
+
+              <rect x="632" y="668" width="62" height="16" rx="8" fill="#ffffff" fill-opacity="0.93" stroke="#2563eb" stroke-width="1.3" />
+              <text x="663" y="679" fill="#1d4ed8">C-1 rechts</text>
+
+              <!-- C-2 links & rechts -->
+              <rect x="523.5" y="711" width="56" height="16" rx="8" fill="#ffffff" fill-opacity="0.93" stroke="#2563eb" stroke-width="1.3" />
+              <text x="551.5" y="722" fill="#1d4ed8">C-2 links</text>
+
+              <rect x="635" y="711" width="62" height="16" rx="8" fill="#ffffff" fill-opacity="0.93" stroke="#2563eb" stroke-width="1.3" />
+              <text x="666" y="722" fill="#1d4ed8">C-2 rechts</text>
+
+              <!-- C-3 links & rechts -->
+              <rect x="523.5" y="757.5" width="56" height="16" rx="8" fill="#ffffff" fill-opacity="0.93" stroke="#2563eb" stroke-width="1.3" />
+              <text x="551.5" y="768.5" fill="#1d4ed8">C-3 links</text>
+
+              <rect x="635" y="757.5" width="62" height="16" rx="8" fill="#ffffff" fill-opacity="0.93" stroke="#2563eb" stroke-width="1.3" />
+              <text x="666" y="768.5" fill="#1d4ed8">C-3 rechts</text>
+            </g>
+          </g>
+
+          <!-- ==================== ZONE D: STRAẞE OST (Rosé/Koralle · 6 Teilzonen) ==================== -->
+          <g id="zone-d" aria-label="Zone D: Straße Ost (D-1 links bis D-3 rechts)">
+            <!-- Äußerer Zonenhintergrund -->
+            <rect x="772" y="614" width="217" height="175" rx="8" fill="#ffe4e6" fill-opacity="0.35" stroke="#e11d48" stroke-width="1.8" stroke-dasharray="6 3" />
+
+            <!-- Teilzonen-Rahmen: D-1, D-2, D-3 jeweils links & rechts -->
+            <g fill="#fecdd3" fill-opacity="0.34" stroke="#e11d48" stroke-width="1.15">
+              <!-- D-1 links & rechts -->
+              <rect x="776" y="618" width="88" height="46" rx="5" />
+              <rect x="867" y="618" width="118" height="46" rx="5" />
+              <!-- D-2 links & rechts -->
+              <rect x="776" y="680" width="88" height="46" rx="5" />
+              <rect x="867" y="680" width="118" height="46" rx="5" />
+              <!-- D-3 links & rechts -->
+              <rect x="776" y="742" width="88" height="45" rx="5" />
+              <rect x="867" y="742" width="118" height="45" rx="5" />
+            </g>
+
+            <!-- Alle Tische der Zone D in kräftigem Rosé-Rot -->
+            <g style="color: #be123c;">
+              <!-- D-1: Reihe 1 (Rollstuhlplätze links + 6 × 8er-Tisch) -->
+              <use href="#table-v8" x="809" y="622" />
+              <use href="#table-v8" x="839" y="622" />
+              <use href="#table-v8" x="869" y="622" />
+              <use href="#table-v8" x="899" y="622" />
+              <use href="#table-v8" x="929" y="622" />
+              <use href="#table-v8" x="959" y="622" />
+
+              <!-- D-2: Reihe 2 (7 × 8er-Tisch) -->
+              <use href="#table-v8" x="779" y="684" />
+              <use href="#table-v8" x="809" y="684" />
+              <use href="#table-v8" x="839" y="684" />
+              <use href="#table-v8" x="869" y="684" />
+              <use href="#table-v8" x="899" y="684" />
+              <use href="#table-v8" x="929" y="684" />
+              <use href="#table-v8" x="959" y="684" />
+
+              <!-- D-3: Reihe 3 (7 × 8er-Tisch direkt an der Straßenseite) -->
+              <use href="#table-v8" x="779" y="746" />
+              <use href="#table-v8" x="809" y="746" />
+              <use href="#table-v8" x="839" y="746" />
+              <use href="#table-v8" x="869" y="746" />
+              <use href="#table-v8" x="899" y="746" />
+              <use href="#table-v8" x="929" y="746" />
+              <use href="#table-v8" x="959" y="746" />
+            </g>
+
+            <!-- Barrierefreie Plätze links oben in Zone D-1 links -->
+            <use href="#wheelchair-icon" x="783" y="625" />
+            <use href="#wheelchair-icon" x="783" y="643" />
+
+            <!-- Hauptzonen-Badge oberhalb von Zone D -->
+            <line x1="880" y1="600" x2="880" y2="614" stroke="#e11d48" stroke-width="2" />
+            <rect x="796" y="574" width="168" height="27" rx="13.5" fill="#be123c" />
+            <text x="880" y="592" text-anchor="middle" fill="#ffffff" font-size="11.5" font-weight="700">
+              ZONE D · Straße Ost
+            </text>
+
+            <!-- Präzise Teilzonen-Badges D-1 bis D-3 (jeweils links & rechts) -->
+            <g font-size="8.5" font-weight="800" text-anchor="middle">
+              <!-- D-1 links & rechts (links leicht versetzt für freie Rollstuhl-Symbole) -->
+              <rect x="801" y="633" width="56" height="16" rx="8" fill="#ffffff" fill-opacity="0.93" stroke="#e11d48" stroke-width="1.3" />
+              <text x="829" y="644" fill="#be123c">D-1 links</text>
+
+              <rect x="895" y="633" width="62" height="16" rx="8" fill="#ffffff" fill-opacity="0.93" stroke="#e11d48" stroke-width="1.3" />
+              <text x="926" y="644" fill="#be123c">D-1 rechts</text>
+
+              <!-- D-2 links & rechts -->
+              <rect x="792" y="695" width="56" height="16" rx="8" fill="#ffffff" fill-opacity="0.93" stroke="#e11d48" stroke-width="1.3" />
+              <text x="820" y="706" fill="#be123c">D-2 links</text>
+
+              <rect x="895" y="695" width="62" height="16" rx="8" fill="#ffffff" fill-opacity="0.93" stroke="#e11d48" stroke-width="1.3" />
+              <text x="926" y="706" fill="#be123c">D-2 rechts</text>
+
+              <!-- D-3 links & rechts -->
+              <rect x="792" y="756.5" width="56" height="16" rx="8" fill="#ffffff" fill-opacity="0.93" stroke="#e11d48" stroke-width="1.3" />
+              <text x="820" y="767.5" fill="#be123c">D-3 links</text>
+
+              <rect x="895" y="756.5" width="62" height="16" rx="8" fill="#ffffff" fill-opacity="0.93" stroke="#e11d48" stroke-width="1.3" />
+              <text x="926" y="767.5" fill="#be123c">D-3 rechts</text>
+            </g>
+          </g>
+
+          <!-- ==================== ESSENSAUSGABE / FREE-FLOW (NEUTRAL, KEINE SITZZONE) ==================== -->
+          <g id="food-service" aria-label="Essensausgabe und Thekenbereich">
+            <rect x="630" y="102" width="160" height="176" rx="8" fill="#f1f5f9" fill-opacity="0.65" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="5 3" />
+
+            <!-- Ausgabeinseln / Salat- & Beilagentheken (neutrales Schiefergrau) -->
+            <g fill="#e2e8f0" stroke="#64748b" stroke-width="1.2">
+              <rect x="648" y="140" width="32" height="22" rx="2.5" />
+              <rect x="648" y="204" width="32" height="22" rx="2.5" />
+              <rect x="742" y="144" width="26" height="34" rx="2.5" />
+              <rect x="742" y="218" width="26" height="34" rx="2.5" />
+            </g>
+
+            <!-- Dezente Beschriftung des Ausgabebereichs -->
+            <rect x="632" y="286" width="156" height="24" rx="12" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.2" />
+            <text x="710" y="301.5" text-anchor="middle" fill="#475569" font-size="10" font-weight="700" letter-spacing="0.4">
+              ESSENSAUSGABE / THEKEN
+            </text>
+          </g>
+
+          <!-- Einzelner Foyer-Tisch neben der Haupttreppe (wie im Originalplan) -->
+          <g style="color: #64748b;" aria-label="Einzeltisch im Foyer">
+            <use href="#table-lounge" x="772" y="492" />
+          </g>
+
+          <!-- ============================================================
+               EBENE 5: TREPPENHÄUSER, STÜTZEN & AUSSENWÄNDE
+               ============================================================ -->
+
+          <!-- 1. HAUPTTREPPE (Zentrum) -->
+          <g aria-label="Haupttreppe im Zentrum">
+            <rect x="638" y="455" width="102" height="92" fill="#e2e8f0" stroke="#334155" stroke-width="2.2" />
+            <!-- Treppenstufen -->
+            <g stroke="#64748b" stroke-width="1.2">
+              <line x1="650" y1="455" x2="650" y2="547" />
+              <line x1="662" y1="455" x2="662" y2="547" />
+              <line x1="674" y1="455" x2="674" y2="547" />
+              <line x1="686" y1="455" x2="686" y2="547" />
+              <line x1="698" y1="455" x2="698" y2="547" />
+              <line x1="710" y1="455" x2="710" y2="547" />
+              <line x1="722" y1="455" x2="722" y2="547" />
+              <line x1="734" y1="455" x2="734" y2="547" />
+            </g>
+            <!-- Lauflinien mit Pfeilen nach links -->
+            <g stroke="#1e293b" stroke-width="1.5">
+              <line x1="646" y1="474" x2="732" y2="474" />
+              <line x1="646" y1="501" x2="732" y2="501" />
+              <line x1="646" y1="528" x2="732" y2="528" />
+            </g>
+            <g fill="#1e293b">
+              <polygon points="642,474 652,469 652,479" />
+              <polygon points="642,501 652,496 652,506" />
+              <polygon points="642,528 652,523 652,533" />
+            </g>
+            <text x="689" y="562" text-anchor="middle" fill="#334155" font-size="10.5" font-weight="700">
+              HAUPTTREPPE
+            </text>
+          </g>
+
+          <!-- 2. TREPPENHAUS NORD (oben Mitte) -->
+          <g aria-label="Treppenhaus Nord">
+            <rect x="520" y="60" width="95" height="130" fill="#f1f5f9" stroke="#334155" stroke-width="2.2" />
+            <line x1="567" y1="88" x2="567" y2="168" stroke="#334155" stroke-width="1.8" />
+            <!-- Stufen links & rechts -->
+            <g stroke="#64748b" stroke-width="1">
+              <line x1="520" y1="100" x2="615" y2="100" />
+              <line x1="520" y1="112" x2="615" y2="112" />
+              <line x1="520" y1="124" x2="615" y2="124" />
+              <line x1="520" y1="136" x2="615" y2="136" />
+              <line x1="520" y1="148" x2="615" y2="148" />
+              <line x1="520" y1="160" x2="615" y2="160" />
+            </g>
+            <!-- Laufrichtungspfeile -->
+            <line x1="544" y1="96" x2="544" y2="160" stroke="#1e293b" stroke-width="1.5" />
+            <polygon points="544,164 539,154 549,154" fill="#1e293b" />
+            <line x1="590" y1="164" x2="590" y2="100" stroke="#1e293b" stroke-width="1.5" />
+            <polygon points="590,94 585,104 595,104" fill="#1e293b" />
+            <text x="568" y="80" text-anchor="middle" fill="#334155" font-size="9" font-weight="700">TREPPE NORD</text>
+          </g>
+
+          <!-- 3. TREPPENHAUS OST (Mitte rechts) -->
+          <g aria-label="Treppenhaus Ost">
+            <rect x="835" y="240" width="80" height="118" fill="#f1f5f9" stroke="#334155" stroke-width="2.2" />
+            <line x1="875" y1="265" x2="875" y2="338" stroke="#334155" stroke-width="1.8" />
+            <g stroke="#64748b" stroke-width="1">
+              <line x1="835" y1="274" x2="915" y2="274" />
+              <line x1="835" y1="285" x2="915" y2="285" />
+              <line x1="835" y1="296" x2="915" y2="296" />
+              <line x1="835" y1="307" x2="915" y2="307" />
+              <line x1="835" y1="318" x2="915" y2="318" />
+              <line x1="835" y1="329" x2="915" y2="329" />
+            </g>
+            <line x1="855" y1="334" x2="855" y2="274" stroke="#1e293b" stroke-width="1.4" />
+            <polygon points="855,268 850,278 860,278" fill="#1e293b" />
+            <line x1="895" y1="272" x2="895" y2="332" stroke="#1e293b" stroke-width="1.4" />
+            <polygon points="895,337 890,327 900,327" fill="#1e293b" />
+            <text x="875" y="257" text-anchor="middle" fill="#334155" font-size="8.5" font-weight="700">TREPPE OST</text>
+          </g>
+
+          <!-- 4. AUSSENTREPPEN (Terrassenabgänge West & Südwest) -->
+          <g aria-label="Außentreppe Westflügel">
+            <rect x="135" y="390" width="84" height="24" fill="#f1f5f9" stroke="#475569" stroke-width="1.5" />
+            <g stroke="#64748b" stroke-width="1">
+              <line x1="147" y1="390" x2="147" y2="414" />
+              <line x1="159" y1="390" x2="159" y2="414" />
+              <line x1="171" y1="390" x2="171" y2="414" />
+              <line x1="183" y1="390" x2="183" y2="414" />
+              <line x1="195" y1="390" x2="195" y2="414" />
+              <line x1="207" y1="390" x2="207" y2="414" />
+            </g>
+            <line x1="142" y1="402" x2="212" y2="402" stroke="#334155" stroke-width="1.3" />
+            <polygon points="216,402 208,398 208,406" fill="#334155" />
+          </g>
+
+          <g aria-label="Außentreppe Terrassenbereich">
+            <rect x="305" y="615" width="84" height="24" fill="#f1f5f9" stroke="#475569" stroke-width="1.5" />
+            <g stroke="#64748b" stroke-width="1">
+              <line x1="317" y1="615" x2="317" y2="639" />
+              <line x1="329" y1="615" x2="329" y2="639" />
+              <line x1="341" y1="615" x2="341" y2="639" />
+              <line x1="353" y1="615" x2="353" y2="639" />
+              <line x1="365" y1="615" x2="365" y2="639" />
+              <line x1="377" y1="615" x2="377" y2="639" />
+            </g>
+            <line x1="312" y1="627" x2="382" y2="627" stroke="#334155" stroke-width="1.3" />
+            <polygon points="386,627 378,623 378,631" fill="#334155" />
+          </g>
+
+          <!-- Trennwand hinter Zone E (mit Standort-Punkt) -->
+          <line x1="546" y1="454" x2="546" y2="564" stroke="#334155" stroke-width="2.5" />
+
+          <!-- Markante Außenwände des 1. OG -->
+          <path
+            d="
+              M 520 60 L 1040 60
+              M 520 60 L 520 190 L 550 190 L 550 215 L 125 215 L 125 390 L 355 390
+              M 355 445 L 295 445 L 295 615 L 520 615
+              M 485 650 L 485 795 L 995 795 L 995 605 L 820 605
+              M 905 390 L 905 570
+              M 835 225 L 835 360
+            "
+            fill="none"
+            stroke="#1e293b"
+            stroke-width="3.2"
+            stroke-linecap="square"
+            stroke-linejoin="miter"
+          />
+
+          <!-- Tragende Stützen im Grundriss (wie im Originalplan) -->
+          <g fill="#1e293b">
+            <rect x="692" y="232" width="6" height="6" />
+            <rect x="772" y="232" width="6" height="6" />
+            <rect x="520" y="380" width="6" height="6" />
+            <rect x="625" y="454" width="6" height="6" />
+            <rect x="742" y="454" width="6" height="6" />
+            <rect x="895" y="138" width="6" height="6" />
+            <rect x="965" y="138" width="6" height="6" />
+            <rect x="1015" y="312" width="6" height="6" />
+          </g>
+
+          <!-- Notausgangs-Symbole an den 5 Originalpositionen -->
+          <use href="#exit-icon" x="530" y="200" />
+          <use href="#exit-icon" x="348" y="401" />
+          <use href="#exit-icon" x="498" y="638" />
+          <use href="#exit-icon" x="844" y="366" />
+
+          <!-- Standort-Markierung (blauer Punkt aus dem Originalplan) -->
+          <g aria-label="Standort des Originalplans">
+            <circle cx="554" cy="450" r="10" fill="#2563eb" fill-opacity="0.22" />
+            <circle cx="554" cy="450" r="5.5" fill="#1d4ed8" stroke="#ffffff" stroke-width="1.8" />
+            <text x="568" y="454" fill="#1e3a8a" font-size="9.5" font-weight="700">Standort</text>
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         ZONENÜBERSICHT & LEGENDE (STATISCH)
+         ============================================================ -->
+    <section class="p-5 sm:p-8 space-y-6">
+      <div>
+        <h2 class="text-sm font-bold uppercase tracking-wider text-slate-500 mb-3">
+          Zonen &amp; feine Teilzonen im Überblick
+        </h2>
+        <!-- Responsive 3×2-Grid: 5 Bestuhlungszonen (A bis E) + Hinweis zur Essensausgabe -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+          <!-- Zone A -->
+          <div class="rounded-xl border border-teal-200 bg-teal-50/70 p-4 space-y-2.5">
+            <div class="flex items-center gap-3">
+              <span class="shrink-0 w-9 h-9 rounded-lg bg-teal-700 text-white font-extrabold text-base flex items-center justify-center shadow-sm">A</span>
+              <div>
+                <h3 class="font-bold text-teal-950 text-sm">Zone A · Westflügel</h3>
+                <p class="text-[11px] text-teal-700 font-medium">30 Tische · 8 Teilzonen</p>
+              </div>
+            </div>
+            <ul class="space-y-1.5 text-xs text-teal-900/90 pt-1 border-t border-teal-200/70">
+              <li class="flex flex-wrap items-center gap-1.5">
+                <span class="px-1.5 py-0.5 rounded-full bg-white border border-teal-600 text-teal-800 text-[10px] font-extrabold">A-1 links</span>
+                <span class="px-1.5 py-0.5 rounded-full bg-white border border-teal-600 text-teal-800 text-[10px] font-extrabold">A-1 rechts</span>
+                <span>Nordreihe (je 4 × 8er)</span>
+              </li>
+              <li class="flex flex-wrap items-center gap-1.5">
+                <span class="px-1.5 py-0.5 rounded-full bg-white border border-teal-600 text-teal-800 text-[10px] font-extrabold">A-2 links</span>
+                <span class="px-1.5 py-0.5 rounded-full bg-white border border-teal-600 text-teal-800 text-[10px] font-extrabold">A-2 rechts</span>
+                <span>Mittelreihe (4 / 3 × 6er)</span>
+              </li>
+              <li class="flex flex-wrap items-center gap-1.5">
+                <span class="px-1.5 py-0.5 rounded-full bg-white border border-teal-600 text-teal-800 text-[10px] font-extrabold">A-3 links</span>
+                <span class="px-1.5 py-0.5 rounded-full bg-white border border-teal-600 text-teal-800 text-[10px] font-extrabold">A-3 rechts</span>
+                <span>Südreihe (je 4 × 8er)</span>
+              </li>
+              <li class="flex flex-wrap items-center gap-1.5">
+                <span class="px-1.5 py-0.5 rounded-full bg-white border border-teal-600 text-teal-800 text-[10px] font-extrabold">A-4 oben</span>
+                <span class="px-1.5 py-0.5 rounded-full bg-white border border-teal-600 text-teal-800 text-[10px] font-extrabold">A-4 unten</span>
+                <span>Ostblock (3 / 4 Tische · 2 Rollst.)</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Zone B -->
+          <div class="rounded-xl border border-amber-200 bg-amber-50/70 p-4 space-y-2.5">
+            <div class="flex items-center gap-3">
+              <span class="shrink-0 w-9 h-9 rounded-lg bg-amber-700 text-white font-extrabold text-base flex items-center justify-center shadow-sm">B</span>
+              <div>
+                <h3 class="font-bold text-amber-950 text-sm">Zone B · Terrassenbereich</h3>
+                <p class="text-[11px] text-amber-700 font-medium">14 Tische · 4 Teilzonen</p>
+              </div>
+            </div>
+            <ul class="space-y-1.5 text-xs text-amber-900/90 pt-1 border-t border-amber-200/70">
+              <li class="flex items-baseline gap-2">
+                <span class="shrink-0 px-1.5 py-0.5 rounded-full bg-white border border-amber-600 text-amber-800 text-[10px] font-extrabold">B-1 oben</span>
+                <span>West-Nord (2 × 4er · 1 Langtisch)</span>
+              </li>
+              <li class="flex items-baseline gap-2">
+                <span class="shrink-0 px-1.5 py-0.5 rounded-full bg-white border border-amber-600 text-amber-800 text-[10px] font-extrabold">B-1 unten</span>
+                <span>West-Süd (2 Langtische · 2 Wandtische)</span>
+              </li>
+              <li class="flex items-baseline gap-2">
+                <span class="shrink-0 px-1.5 py-0.5 rounded-full bg-white border border-amber-600 text-amber-800 text-[10px] font-extrabold">B-2 oben</span>
+                <span>Ost-Nord (2 × 4er · 1 Langtisch · 1 Rollst.)</span>
+              </li>
+              <li class="flex items-baseline gap-2">
+                <span class="shrink-0 px-1.5 py-0.5 rounded-full bg-white border border-amber-600 text-amber-800 text-[10px] font-extrabold">B-2 unten</span>
+                <span>Ost-Süd (2 Langtische · 2 Wandtische)</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Zone C -->
+          <div class="rounded-xl border border-blue-200 bg-blue-50/70 p-4 space-y-2.5">
+            <div class="flex items-center gap-3">
+              <span class="shrink-0 w-9 h-9 rounded-lg bg-blue-700 text-white font-extrabold text-base flex items-center justify-center shadow-sm">C</span>
+              <div>
+                <h3 class="font-bold text-blue-950 text-sm">Zone C · Straße West</h3>
+                <p class="text-[11px] text-blue-700 font-medium">23 Tische · 6 Teilzonen</p>
+              </div>
+            </div>
+            <ul class="space-y-1.5 text-xs text-blue-900/90 pt-1 border-t border-blue-200/70">
+              <li class="flex flex-wrap items-center gap-1.5">
+                <span class="px-1.5 py-0.5 rounded-full bg-white border border-blue-600 text-blue-800 text-[10px] font-extrabold">C-1 links</span>
+                <span class="px-1.5 py-0.5 rounded-full bg-white border border-blue-600 text-blue-800 text-[10px] font-extrabold">C-1 rechts</span>
+                <span>Nordreihe (4 / 3 × 6er · 1 Rollst.)</span>
+              </li>
+              <li class="flex flex-wrap items-center gap-1.5">
+                <span class="px-1.5 py-0.5 rounded-full bg-white border border-blue-600 text-blue-800 text-[10px] font-extrabold">C-2 links</span>
+                <span class="px-1.5 py-0.5 rounded-full bg-white border border-blue-600 text-blue-800 text-[10px] font-extrabold">C-2 rechts</span>
+                <span>Mittelreihe (je 4 × 6er)</span>
+              </li>
+              <li class="flex flex-wrap items-center gap-1.5">
+                <span class="px-1.5 py-0.5 rounded-full bg-white border border-blue-600 text-blue-800 text-[10px] font-extrabold">C-3 links</span>
+                <span class="px-1.5 py-0.5 rounded-full bg-white border border-blue-600 text-blue-800 text-[10px] font-extrabold">C-3 rechts</span>
+                <span>Fenster Straße (je 4 × 8er)</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Zone D -->
+          <div class="rounded-xl border border-rose-200 bg-rose-50/70 p-4 space-y-2.5">
+            <div class="flex items-center gap-3">
+              <span class="shrink-0 w-9 h-9 rounded-lg bg-rose-700 text-white font-extrabold text-base flex items-center justify-center shadow-sm">D</span>
+              <div>
+                <h3 class="font-bold text-rose-950 text-sm">Zone D · Straße Ost</h3>
+                <p class="text-[11px] text-rose-700 font-medium">20 Tische · 6 Teilzonen</p>
+              </div>
+            </div>
+            <ul class="space-y-1.5 text-xs text-rose-900/90 pt-1 border-t border-rose-200/70">
+              <li class="flex flex-wrap items-center gap-1.5">
+                <span class="px-1.5 py-0.5 rounded-full bg-white border border-rose-600 text-rose-800 text-[10px] font-extrabold">D-1 links</span>
+                <span class="px-1.5 py-0.5 rounded-full bg-white border border-rose-600 text-rose-800 text-[10px] font-extrabold">D-1 rechts</span>
+                <span>Nordreihe (2 / 4 × 8er · 2 Rollst.)</span>
+              </li>
+              <li class="flex flex-wrap items-center gap-1.5">
+                <span class="px-1.5 py-0.5 rounded-full bg-white border border-rose-600 text-rose-800 text-[10px] font-extrabold">D-2 links</span>
+                <span class="px-1.5 py-0.5 rounded-full bg-white border border-rose-600 text-rose-800 text-[10px] font-extrabold">D-2 rechts</span>
+                <span>Mittelreihe (3 / 4 × 8er)</span>
+              </li>
+              <li class="flex flex-wrap items-center gap-1.5">
+                <span class="px-1.5 py-0.5 rounded-full bg-white border border-rose-600 text-rose-800 text-[10px] font-extrabold">D-3 links</span>
+                <span class="px-1.5 py-0.5 rounded-full bg-white border border-rose-600 text-rose-800 text-[10px] font-extrabold">D-3 rechts</span>
+                <span>Fenster Straße (3 / 4 × 8er)</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Zone E -->
+          <div class="rounded-xl border border-violet-200 bg-violet-50/70 p-4 space-y-2.5">
+            <div class="flex items-center gap-3">
+              <span class="shrink-0 w-9 h-9 rounded-lg bg-violet-700 text-white font-extrabold text-base flex items-center justify-center shadow-sm">E</span>
+              <div>
+                <h3 class="font-bold text-violet-950 text-sm">Zone E · Stehsitzplätze</h3>
+                <p class="text-[11px] text-violet-700 font-medium">5 Hochtische · 2 Teilzonen</p>
+              </div>
+            </div>
+            <ul class="space-y-1.5 text-xs text-violet-900/90 pt-1 border-t border-violet-200/70">
+              <li class="flex items-baseline gap-2">
+                <span class="shrink-0 px-1.5 py-0.5 rounded-full bg-white border border-violet-600 text-violet-800 text-[10px] font-extrabold">E-1 oben</span>
+                <span>Stehtische Nord nahe Standort (3 Hochtische)</span>
+              </li>
+              <li class="flex items-baseline gap-2">
+                <span class="shrink-0 px-1.5 py-0.5 rounded-full bg-white border border-violet-600 text-violet-800 text-[10px] font-extrabold">E-2 unten</span>
+                <span>Stehtische Süd Richtung Saal (2 Hochtische)</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Hinweis Essensausgabe (ersetzt ehemalige Zone F) -->
+          <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-2.5">
+            <div class="flex items-center gap-3">
+              <span class="shrink-0 w-9 h-9 rounded-lg bg-slate-500 text-white font-extrabold text-sm flex items-center justify-center shadow-sm">i</span>
+              <div>
+                <h3 class="font-bold text-slate-800 text-sm">Essensausgabe &amp; Theken</h3>
+                <p class="text-[11px] text-slate-500 font-medium">Nordbereich · keine Bestuhlungszone</p>
+              </div>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed pt-1 border-t border-slate-200">
+              Der nördliche Bereich zwischen Nordtreppe und Küche dient als Essensausgabe (Free-Flow, Theken und Ausgabestationen) und ist daher neutral dargestellt.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Symbol-Legende -->
+      <div class="pt-4 border-t border-slate-200 flex flex-wrap items-center gap-x-6 gap-y-3 text-xs text-slate-600">
+        <span class="font-bold uppercase tracking-wider text-slate-500">Legende:</span>
+
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center justify-center px-1.5 py-0.5 rounded-full bg-white border border-slate-600 text-slate-800 text-[9px] font-extrabold">C-1 links</span>
+          <span>Präzise Teilzone</span>
+        </div>
+            </div>
+            <ul class="space-y-1.5 text-xs text-teal-900/90 pt-1 border-t border-teal-200/70">
+              <li class="flex items-baseline gap-2">
+                <span class="shrink-0 px-1.5 py-0.5 rounded-full bg-white border border-teal-600 text-teal-800 text-[10px] font-extrabold">A-1</span>
+                <span>Nordreihe links (8 × 8er-Tisch)</span>
+              </li>
+              <li class="flex items-baseline gap-2">
+                <span class="shrink-0 px-1.5 py-0.5 rounded-full bg-white border border-teal-600 text-teal-800 text-[10px] font-extrabold">A-2</span>
+                <span>Süd-West, äußere Hälfte (8 Tische)</span>
+              </li>
+              <li class="flex items-baseline gap-2">
+                <span class="shrink-0 px-1.5 py-0.5 rounded-full bg-white border border-teal-600 text-teal-800 text-[10px] font-extrabold">A-3</span>
+                <span>Süd-Mitte vor Gang (7 Tische)</span>
+              </li>
+              <li class="flex items-baseline gap-2">
+                <span class="shrink-0 px-1.5 py-0.5 rounded-full bg-white border border-teal-600 text-teal-800 text-[10px] font-extrabold">A-4</span>
+                <span>Ostblock (7 Tische · 2 Rollstuhlplätze)</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Zone B -->
+          <div class="rounded-xl border border-amber-200 bg-amber-50/70 p-4 space-y-2.5">
+            <div class="flex items-center gap-3">
+              <span class="shrink-0 w-9 h-9 rounded-lg bg-amber-700 text-white font-extrabold text-base flex items-center justify-center shadow-sm">B</span>
+              <div>
+                <h3 class="font-bold text-amber-950 text-sm">Zone B · Terrassenbereich</h3>
+                <p class="text-[11px] text-amber-700 font-medium">14 Tische · 2 Teilzonen</p>
+              </div>
+            </div>
+            <ul class="space-y-1.5 text-xs text-amber-900/90 pt-1 border-t border-amber-200/70">
+              <li class="flex items-baseline gap-2">
+                <span class="shrink-0 px-1.5 py-0.5 rounded-full bg-white border border-amber-600 text-amber-800 text-[10px] font-extrabold">B-1</span>
+                <span>Westseite zum Vorplatz (3 Langtische · 4 Kleintische)</span>
+              </li>
+              <li class="flex items-baseline gap-2">
+                <span class="shrink-0 px-1.5 py-0.5 rounded-full bg-white border border-amber-600 text-amber-800 text-[10px] font-extrabold">B-2</span>
+                <span>Ostseite am Durchgang (3 Langtische · 4 Kleintische · 1 Rollstuhlplatz)</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Zone C -->
+          <div class="rounded-xl border border-blue-200 bg-blue-50/70 p-4 space-y-2.5">
+            <div class="flex items-center gap-3">
+              <span class="shrink-0 w-9 h-9 rounded-lg bg-blue-700 text-white font-extrabold text-base flex items-center justify-center shadow-sm">C</span>
+              <div>
+                <h3 class="font-bold text-blue-950 text-sm">Zone C · Straße West</h3>
+                <p class="text-[11px] text-blue-700 font-medium">23 Tische · 3 Reihen-Teilzonen</p>
+              </div>
+            </div>
+            <ul class="space-y-1.5 text-xs text-blue-900/90 pt-1 border-t border-blue-200/70">
+              <li class="flex items-baseline gap-2">
+                <span class="shrink-0 px-1.5 py-0.5 rounded-full bg-white border border-blue-600 text-blue-800 text-[10px] font-extrabold">C-1</span>
+                <span>Nordreihe (7 × 6er-Tisch · 1 Rollstuhlplatz)</span>
+              </li>
+              <li class="flex items-baseline gap-2">
+                <span class="shrink-0 px-1.5 py-0.5 rounded-full bg-white border border-blue-600 text-blue-800 text-[10px] font-extrabold">C-2</span>
+                <span>Mittelreihe (8 × 6er-Tisch)</span>
+              </li>
+              <li class="flex items-baseline gap-2">
+                <span class="shrink-0 px-1.5 py-0.5 rounded-full bg-white border border-blue-600 text-blue-800 text-[10px] font-extrabold">C-3</span>
+                <span>Fensterreihe Wilhelmstraße (8 × 8er-Tisch)</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Zone D -->
+          <div class="rounded-xl border border-rose-200 bg-rose-50/70 p-4 space-y-2.5">
+            <div class="flex items-center gap-3">
+              <span class="shrink-0 w-9 h-9 rounded-lg bg-rose-700 text-white font-extrabold text-base flex items-center justify-center shadow-sm">D</span>
+              <div>
+                <h3 class="font-bold text-rose-950 text-sm">Zone D · Straße Ost</h3>
+                <p class="text-[11px] text-rose-700 font-medium">20 Tische · 3 Reihen-Teilzonen</p>
+              </div>
+            </div>
+            <ul class="space-y-1.5 text-xs text-rose-900/90 pt-1 border-t border-rose-200/70">
+              <li class="flex items-baseline gap-2">
+                <span class="shrink-0 px-1.5 py-0.5 rounded-full bg-white border border-rose-600 text-rose-800 text-[10px] font-extrabold">D-1</span>
+                <span>Nordreihe (6 × 8er-Tisch · 2 Rollstuhlplätze)</span>
+              </li>
+              <li class="flex items-baseline gap-2">
+                <span class="shrink-0 px-1.5 py-0.5 rounded-full bg-white border border-rose-600 text-rose-800 text-[10px] font-extrabold">D-2</span>
+                <span>Mittelreihe (7 × 8er-Tisch)</span>
+              </li>
+              <li class="flex items-baseline gap-2">
+                <span class="shrink-0 px-1.5 py-0.5 rounded-full bg-white border border-rose-600 text-rose-800 text-[10px] font-extrabold">D-3</span>
+                <span>Fensterreihe Wilhelmstraße (7 × 8er-Tisch)</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Zone E -->
+          <div class="rounded-xl border border-violet-200 bg-violet-50/70 p-4 space-y-2.5">
+            <div class="flex items-center gap-3">
+              <span class="shrink-0 w-9 h-9 rounded-lg bg-violet-700 text-white font-extrabold text-base flex items-center justify-center shadow-sm">E</span>
+              <div>
+                <h3 class="font-bold text-violet-950 text-sm">Zone E · Stehsitzplätze</h3>
+                <p class="text-[11px] text-violet-700 font-medium">5 Hochtische · 2 Teilzonen</p>
+              </div>
+            </div>
+            <ul class="space-y-1.5 text-xs text-violet-900/90 pt-1 border-t border-violet-200/70">
+              <li class="flex items-baseline gap-2">
+                <span class="shrink-0 px-1.5 py-0.5 rounded-full bg-white border border-violet-600 text-violet-800 text-[10px] font-extrabold">E-1</span>
+                <span>Stehtische Nord nahe Standort (3 Hochtische)</span>
+              </li>
+              <li class="flex items-baseline gap-2">
+                <span class="shrink-0 px-1.5 py-0.5 rounded-full bg-white border border-violet-600 text-violet-800 text-[10px] font-extrabold">E-2</span>
+                <span>Stehtische Süd Richtung Saal (2 Hochtische)</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Zone F -->
+          <div class="rounded-xl border border-lime-200 bg-lime-50/70 p-4 space-y-2.5">
+            <div class="flex items-center gap-3">
+              <span class="shrink-0 w-9 h-9 rounded-lg bg-lime-700 text-white font-extrabold text-base flex items-center justify-center shadow-sm">F</span>
+              <div>
+                <h3 class="font-bold text-lime-950 text-sm">Zone F · Nord-Lounge</h3>
+                <p class="text-[11px] text-lime-700 font-medium">4 Einzeltische · 2 Teilzonen</p>
+              </div>
+            </div>
+            <ul class="space-y-1.5 text-xs text-lime-900/90 pt-1 border-t border-lime-200/70">
+              <li class="flex items-baseline gap-2">
+                <span class="shrink-0 px-1.5 py-0.5 rounded-full bg-white border border-lime-600 text-lime-800 text-[10px] font-extrabold">F-1</span>
+                <span>Lounge West Richtung Nordtreppe (2 × 4er-Tisch)</span>
+              </li>
+              <li class="flex items-baseline gap-2">
+                <span class="shrink-0 px-1.5 py-0.5 rounded-full bg-white border border-lime-600 text-lime-800 text-[10px] font-extrabold">F-2</span>
+                <span>Lounge Ost an der Ausgabetheke (2 × 4er-Tisch)</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Symbol-Legende -->
+      <div class="pt-4 border-t border-slate-200 flex flex-wrap items-center gap-x-6 gap-y-3 text-xs text-slate-600">
+        <span class="font-bold uppercase tracking-wider text-slate-500">Legende:</span>
+
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center justify-center px-1.5 py-0.5 rounded-full bg-white border border-slate-600 text-slate-800 text-[9px] font-extrabold">A-1</span>
+          <span>Teilzone</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-5 h-3 rounded-sm bg-emerald-200 border border-emerald-400"></span>
+          <span>Haupt- &amp; Fluchtwege</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center justify-center w-5 h-3.5 rounded-sm bg-green-700 text-white text-[9px] font-bold">E</span>
+          <span>Notausgang</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-blue-100 border border-blue-600 text-blue-700 text-[9px] font-bold">R</span>
+          <span>Rollstuhlplatz</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-3.5 h-3.5 rounded-full bg-blue-700 ring-2 ring-blue-200"></span>
+          <span>Standort (Originalplan)</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-5 h-3.5 rounded-sm bg-slate-200 border border-slate-400"></span>
+          <span>Küche / Technik (nicht öffentlich)</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+</body>
+</html>
